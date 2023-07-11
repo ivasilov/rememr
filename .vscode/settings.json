@@ -1,0 +1,16 @@
+{
+  "editor.formatOnSave": true,
+  "editor.detectIndentation": false,
+  "editor.rulers": [120],
+  "editor.tabSize": 2,
+  "search.exclude": {
+    "**/node_modules": true,
+    "build/**": true
+  },
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "deno.enablePaths": ["./supabase/functions"],
+  "deno.importMap": "./supabase/functions/import_map.json",
+  "deno.enable": true,
+  "deno.unstable": true
+}

@@ -1,0 +1,4 @@
+ALTER TABLE
+  tags
+ADD
+  PRIMARY KEY (id);

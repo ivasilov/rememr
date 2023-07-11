@@ -1,0 +1,4 @@
+# .prettierignore
+build/
+tailwind.generated.css
+.next

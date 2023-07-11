@@ -1,0 +1,1 @@
+CREATE POLICY "Authenticated users can delete their own bookmarks" ON bookmarks FOR DELETE USING (auth.uid() = user_id);

@@ -1,0 +1,13 @@
+ALTER TABLE
+  bookmarks
+ALTER COLUMN
+  user_id
+SET
+  NOT NULL;
+
+ALTER TABLE
+  tags
+ALTER COLUMN
+  user_id
+SET
+  NOT NULL;
