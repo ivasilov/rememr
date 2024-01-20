@@ -1,11 +1,14 @@
 'use server';
 import { Bookmarks } from '@/src/components/bookmarks';
-import { checkAuthentication, createSupabaseServerComponentClient } from '@/src/lib/supabase';
+import { checkAuthentication } from '@/src/lib/supabase';
+import { createClient } from '@/src/utils/supabase/server';
+import { cookies } from 'next/headers';
 
 const BookmarksPage = async () => {
   await checkAuthentication();
 
-  const supabase = createSupabaseServerComponentClient();
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
   const {
     data: bookmarks,
     error,

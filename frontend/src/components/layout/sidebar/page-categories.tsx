@@ -1,10 +1,10 @@
 'use client';
 
 import { TagType } from '@/src/lib/supabase';
-import { createSupabaseBrowserClient } from '@/src/lib/supabase.client';
 import { faTag } from '@fortawesome/free-solid-svg-icons';
 
 import { classNames } from '@/src/lib/classnames';
+import { createClient } from '@/src/utils/supabase/client';
 import { sortBy } from 'lodash';
 import { useEffect, useState } from 'react';
 import { PageLink } from '.';
@@ -13,7 +13,7 @@ export const PageCategories = ({ className }: { className?: string }) => {
   const [tags, setTags] = useState<TagType[]>([]);
 
   useEffect(() => {
-    const supabase = createSupabaseBrowserClient();
+    const supabase = createClient();
     supabase
       .from('tags')
       .select()

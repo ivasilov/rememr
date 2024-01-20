@@ -1,9 +1,11 @@
 'use server';
-import { createSupabaseServerActionClient } from '@/src/lib/supabase';
+import { createClient } from '@/src/utils/supabase/server';
 import { revalidatePath } from 'next/cache';
+import { cookies } from 'next/headers';
 
 export const deleteBookmark = async (id: string) => {
-  const supabase = createSupabaseServerActionClient();
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
 
   await supabase.from('bookmarks').delete().eq('id', id);
 

@@ -1,4 +1,4 @@
-import { createSupabaseBrowserClient } from '@/src/lib/supabase.client';
+import { createClient } from '@/src/utils/supabase/client';
 import AsyncCreatableSelect from 'react-select/async-creatable';
 import { FilterOptionOption } from 'react-select/dist/declarations/src/filters';
 import { MultiValue } from 'react-select/dist/declarations/src/types';
@@ -28,7 +28,7 @@ const filterPage: (option: FilterOptionOption<IdName>, inputValue: string) => bo
 
 export const EditPagesForBookmark = ({ pages, onChange }: Props) => {
   const availablePages = async (_inputValue: string): Promise<IdName[]> => {
-    const supabase = createSupabaseBrowserClient();
+    const supabase = createClient();
     // TODO: the input value should be passed to the backend for filtering on the backend
     const { data: tags } = await supabase.from('tags').select();
 

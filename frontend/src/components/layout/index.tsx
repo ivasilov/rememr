@@ -1,9 +1,9 @@
 'use client';
-import { createSupabaseBrowserClient } from '@/src/lib/supabase.client';
 import { faBars, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { Menu, Transition } from '@headlessui/react';
 
 import { classNames } from '@/src/lib/classnames';
+import { createClient } from '@/src/utils/supabase/client';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Fragment, PropsWithChildren, useCallback, useState } from 'react';
@@ -13,7 +13,7 @@ import { Sidebar } from './sidebar';
 
 export const Layout = ({ children }: PropsWithChildren<{}>) => {
   const router = useRouter();
-  const supabase = createSupabaseBrowserClient();
+  const supabase = createClient();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const signOut = useCallback(async () => {

@@ -8,7 +8,7 @@ export const ReadOnlyPage = (props: { page: { id: string; name: string; bookmark
   return (
     <>
       <Heading page={page} />
-      <Bookmarks bookmarks={page.bookmarks} />
+      <Bookmarks bookmarks={page.bookmarks} count={page.bookmarks.length} />
     </>
   );
 };

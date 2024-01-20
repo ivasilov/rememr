@@ -1,18 +1,11 @@
-import { createServerActionClient, createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { createClient } from '../utils/supabase/server';
 import { Database } from './database.types';
 
-export const createSupabaseServerComponentClient = () => {
-  return createServerComponentClient<Database>({ cookies });
-};
-
-export const createSupabaseServerActionClient = () => {
-  return createServerActionClient<Database>({ cookies });
-};
-
 export const checkAuthentication = async () => {
-  const supabase = createSupabaseServerComponentClient();
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
 
   const {
     data: { user },

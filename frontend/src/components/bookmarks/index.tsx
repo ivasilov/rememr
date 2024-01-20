@@ -1,9 +1,10 @@
 'use client';
-import { classNames } from '@/src/lib/classnames';
-import { BookmarkType } from '@/src/lib/supabase';
-import { createSupabaseBrowserClient } from '@/src/lib/supabase.client';
 import { isNumber, last } from 'lodash';
 import { useCallback, useState } from 'react';
+
+import { classNames } from '@/src/lib/classnames';
+import { BookmarkType } from '@/src/lib/supabase';
+import { createClient } from '@/src/utils/supabase/client';
 import { Bookmark } from '../bookmark';
 import { LoadMoreBookmarks } from './load-more-bookmarks';
 
@@ -13,7 +14,7 @@ type BookmarksProps = {
   count: number;
 };
 
-const supabase = createSupabaseBrowserClient();
+const supabase = createClient();
 
 export const Bookmarks = ({ className, bookmarks: firstBookmarks, count: initialCount }: BookmarksProps) => {
   const [bookmarks, setBookmarks] = useState(firstBookmarks || []);

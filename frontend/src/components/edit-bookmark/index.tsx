@@ -1,7 +1,7 @@
 import { FormGroup } from '@/src/components/form-group';
 import { Button } from '@/src/components/ui/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/src/components/ui/dialog';
-import { createSupabaseBrowserClient } from '@/src/lib/supabase.client';
+import { createClient } from '@/src/utils/supabase/client';
 import { uniqBy } from 'lodash';
 import React, { useCallback, useEffect, useState } from 'react';
 import { EditPagesForBookmark, IdName } from '../edit-pages-for-bookmark';
@@ -15,7 +15,7 @@ interface Props {
 }
 
 export const EditBookmarkDialog = ({ bookmark, isOpen, onClose }: Props) => {
-  const supabase = createSupabaseBrowserClient();
+  const supabase = createClient();
   const [name, setName] = useState('');
   const [url, setUrl] = useState('');
 

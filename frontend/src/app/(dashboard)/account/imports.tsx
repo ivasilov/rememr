@@ -3,7 +3,7 @@ import { FormGroup } from '@/src/components/form-group';
 import { Button } from '@/src/components/ui/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader } from '@/src/components/ui/dialog';
 import { Input } from '@/src/components/ui/input';
-import { createSupabaseBrowserClient } from '@/src/lib/supabase.client';
+import { createClient } from '@/src/utils/supabase/client';
 import { upperFirst } from 'lodash';
 import { useState } from 'react';
 
@@ -25,7 +25,7 @@ export const Imports = () => {
 };
 
 const UploadDialog = (props: { type: 'pinboard' | 'onetab'; onClose: () => void }) => {
-  const supabase = createSupabaseBrowserClient();
+  const supabase = createClient();
 
   const [state, setState] = useState<{ file: { name: string } | undefined }>({
     file: undefined,
