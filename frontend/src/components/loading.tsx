@@ -2,8 +2,8 @@ import { Spinner } from './spinner';
 
 export const Loading = () => {
   return (
-    <div className="grow flex h-full">
-      <div className="self-center mx-auto">
+    <div className="flex h-full grow">
+      <div className="mx-auto self-center">
         <Spinner size="3x" />
       </div>
     </div>

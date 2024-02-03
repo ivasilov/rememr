@@ -28,11 +28,11 @@ export const PageCategories = ({ className }: { className?: string }) => {
     const sorted = sortBy(tags, p => p.name);
 
     return (
-      <div className="space-y-1">
-        <h3 className={classNames(className, 'px-1 font-medium text-gray-500')} id="projects-headline">
+      <div className="h-full space-y-1">
+        <h3 className={classNames(className, 'px-1 text-base font-medium text-gray-500')} id="projects-headline">
           Tags
         </h3>
-        <div className="space-y-1" role="group" aria-labelledby="projects-headline">
+        <div className="relative h-full space-y-1 overflow-y-auto" role="group" aria-labelledby="projects-headline">
           {sorted.map(page => (
             <PageLink key={page.id} name={page.name} className={className} href={`/tags/${page.id}`} icon={faTag} />
           ))}

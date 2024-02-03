@@ -27,7 +27,7 @@ export const PageLink = ({
   const classes = classNames(
     className,
     current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-    'group flex items-center px-2 py-2 text-base font-medium rounded-md',
+    'group flex items-center px-2 py-2 text-sm font-medium rounded-md',
   );
 
   return (
@@ -47,7 +47,7 @@ export const PageLink = ({
 
 const PageLinks = ({ className }: { className?: string }) => {
   return (
-    <nav className="flex-1 space-y-8 px-2" aria-label="Sidebar">
+    <nav className="h-full flex-1 space-y-8 px-2" aria-label="Sidebar">
       <div className="space-y-1">
         <PageLink key="all-bookmarks" name="All bookmarks" href="/bookmarks" icon={faHome} className={className} />
         <PageLink key="reading-list" name="Reading list" href="/bookmarks/unread" icon={faBook} className={className} />
@@ -133,7 +133,7 @@ export const Sidebar = ({ open, setOpen }: { open: boolean; setOpen: Dispatch<Se
               <h1 className="mx-4 text-2xl">rememr</h1>
             </div>
           </Link>
-          <div className="mt-5 flex flex-grow flex-col">
+          <div className="mt-5 flex h-full flex-col">
             <PageLinks className="text-sm" />
           </div>
         </div>

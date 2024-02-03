@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { Button } from '@/src/components/ui/button';
 import { BookmarkType } from '@/src/lib/supabase';
-import { faFloppyDisk, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
 import { DeleteBookmarkDialog } from '../delete-bookmark';
 import { EditBookmarkDialog } from '../edit-bookmark';
@@ -22,19 +22,25 @@ export const Bookmark = (props: { bookmark: BookmarkType }) => {
   } catch {}
 
   return (
-    <Card className="flex overflow-hidden px-6 py-4">
+    <Card className="group flex overflow-hidden px-6 py-4">
       <img
         className="mr-5 w-5 object-contain"
         alt="bookmark favicon"
         src={`https://s2.googleusercontent.com/s2/favicons?domain=${bookmark.url}&sz=16`}
       />
-      <div>
-        <div className="font-bold text-black">
-          <a href={bookmark.url}>{bookmark.name}</a>
+      <div className="flex w-full  justify-between">
+        <div className="flex grow flex-col">
+          <a className="font-bold text-black" href={bookmark.url}>
+            {bookmark.name}
+          </a>
+          <span className="font-normal">{hostname}</span>
+        </div>
+
+        <div className="min-w-[84px] space-x-2">
           <Button
             size="sm"
-            className="ml-2"
             variant="outline"
+            className="hidden group-hover:inline-flex"
             onClick={() =>
               setState({
                 editBookmarkDialogShown: true,
@@ -42,11 +48,11 @@ export const Bookmark = (props: { bookmark: BookmarkType }) => {
               })
             }
           >
-            <Icon name={faFloppyDisk} size="1x" />
+            <Icon name={faPencil} size="1x" />
           </Button>
           <Button
             size="sm"
-            className="ml-2"
+            className="hidden group-hover:inline-flex"
             variant="destructive"
             onClick={() =>
               setState({
@@ -58,7 +64,6 @@ export const Bookmark = (props: { bookmark: BookmarkType }) => {
             <Icon name={faTrash} size="1x" />
           </Button>
         </div>
-        <span className="font-normal">{hostname}</span>
       </div>
       <DeleteBookmarkDialog
         isOpen={deleteBookmarkDialogShown}

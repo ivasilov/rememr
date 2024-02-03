@@ -3,9 +3,22 @@ import { FormGroup } from '@/src/components/form-group';
 import { Button } from '@/src/components/ui/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader } from '@/src/components/ui/dialog';
 import { Input } from '@/src/components/ui/input';
-import { createClient } from '@/src/utils/supabase/client';
+import { Progress } from '@/src/components/ui/progress';
 import { upperFirst } from 'lodash';
-import { useState } from 'react';
+import { ChangeEventHandler, useState } from 'react';
+import { importOnetabBookmarks } from './importers/onetab';
+import { importPinboardBookmarks } from './importers/pinboard';
+
+function readFile(file: Blob) {
+  return new Promise((resolve, reject) => {
+    var fr = new FileReader();
+    fr.onload = () => {
+      resolve(fr.result);
+    };
+    fr.onerror = reject;
+    fr.readAsDataURL(file);
+  });
+}
 
 export const Imports = () => {
   const [state, setState] = useState<{ dialogShown: boolean; type: string | undefined }>({
@@ -25,38 +38,38 @@ export const Imports = () => {
 };
 
 const UploadDialog = (props: { type: 'pinboard' | 'onetab'; onClose: () => void }) => {
-  const supabase = createClient();
+  const [loading, setLoading] = useState(false);
+  const [progressValue, setProgressValue] = useState(0);
 
-  const [state, setState] = useState<{ file: { name: string } | undefined }>({
-    file: undefined,
-  });
+  console.log(progressValue);
+  const [file, setFile] = useState<File | undefined>(undefined);
 
-  const handleChange = (e: any) => {
+  const handleChange: ChangeEventHandler<HTMLInputElement> = e => {
     if (e && e.target && e.target.validity.valid && e.target.files && e.target.files[0]) {
-      setState({ ...state, file: e.target.files[0] });
+      setFile(e.target.files[0]);
     }
   };
 
   const onSubmit = async () => {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    const id = user?.id;
+    setLoading(true);
+    try {
+      if (file) {
+        const text = await file.text();
 
-    if (state.file) {
-      const { data } = await supabase.storage.from('uploads').createSignedUploadUrl(`${id}/${props.type}.json`);
-      if (data) {
-        const { error } = await supabase.storage
-          .from('uploads')
-          .uploadToSignedUrl(data.path, data.token, state.file as any, { upsert: true });
-
-        if (!error) {
-          const { error: functionError } = await supabase.functions.invoke('import-bookmarks');
-          if (!functionError) {
-            props.onClose();
-          }
+        if (props.type === 'onetab') {
+          await importOnetabBookmarks(text);
+        }
+        if (props.type === 'pinboard') {
+          await importPinboardBookmarks(text, (current, max) => {
+            console.log(current, max);
+            setProgressValue((current / max) * 100);
+          });
         }
       }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -64,11 +77,15 @@ const UploadDialog = (props: { type: 'pinboard' | 'onetab'; onClose: () => void 
     <Dialog open onOpenChange={props.onClose}>
       <DialogContent>
         <DialogHeader>{`Import ${upperFirst(props.type)} data`}</DialogHeader>
-        <div>
+        {loading ? (
+          <div className="flex h-[60px] items-center">
+            <Progress value={progressValue} />
+          </div>
+        ) : (
           <FormGroup htmlFor="file-upload" label="File to be imported">
             <Input id="file-upload" type="file" onChange={handleChange} />
           </FormGroup>
-        </div>
+        )}
         <DialogFooter>
           <Button onClick={props.onClose}>Cancel</Button>
           <Button onClick={onSubmit}>Save</Button>
