@@ -1,6 +1,9 @@
 {
   "private": true,
-  "scripts": {},
+  "scripts": {
+    "lint:prettier": "prettier --check '**/*.{js,jsx,ts,tsx,css,md,mdx,json}'",
+    "fix:prettier": "prettier --write '**/*.{js,jsx,ts,tsx,css,md,mdx,json}'"
+  },
   "dependencies": {
     "prettier": "^3.0.0",
     "prettier-plugin-organize-imports": "^3.2.2",
