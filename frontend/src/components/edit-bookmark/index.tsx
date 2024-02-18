@@ -12,6 +12,8 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from '../ui/input';
 import { Switch } from '../ui/switch';
 
+const formId = 'edit-bookmark';
+
 interface Props {
   isOpen: boolean;
   bookmark: { id: string };
@@ -89,7 +91,7 @@ export const EditBookmarkDialog = ({ bookmark, isOpen, onClose }: Props) => {
           <DialogTitle>Editing bookmark</DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col space-y-4">
+          <form id={formId} onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col space-y-4">
             <FormField
               control={form.control}
               name="name"
@@ -150,7 +152,7 @@ export const EditBookmarkDialog = ({ bookmark, isOpen, onClose }: Props) => {
           <Button variant="secondary" onClick={onClose}>
             Cancel
           </Button>
-          <Button variant="default" type="submit" form="myform">
+          <Button variant="default" type="submit" form={formId}>
             Save
           </Button>
         </DialogFooter>
