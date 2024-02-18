@@ -1,25 +1,25 @@
-'use client';
-import { faBars, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
-import { Menu, Transition } from '@headlessui/react';
+'use client'
+import { faBars, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
+import { Menu, Transition } from '@headlessui/react'
 
-import { classNames } from '@/src/lib/classnames';
-import { createClient } from '@/src/utils/supabase/client';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { Fragment, PropsWithChildren, useCallback, useState } from 'react';
-import { Icon } from '../icon';
-import { Avatar, AvatarFallback } from '../ui/avatar';
-import { Sidebar } from './sidebar';
+import { classNames } from '@/src/lib/classnames'
+import { createClient } from '@/src/utils/supabase/client'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { Fragment, PropsWithChildren, useCallback, useState } from 'react'
+import { Icon } from '../icon'
+import { Avatar, AvatarFallback } from '../ui/avatar'
+import { Sidebar } from './sidebar'
 
 export const Layout = ({ children }: PropsWithChildren<{}>) => {
-  const router = useRouter();
-  const supabase = createClient();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const router = useRouter()
+  const supabase = createClient()
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   const signOut = useCallback(async () => {
-    await supabase.auth.signOut();
-    router.refresh();
-  }, [router, supabase.auth]);
+    await supabase.auth.signOut()
+    router.refresh()
+  }, [router, supabase.auth])
 
   return (
     <>
@@ -110,5 +110,5 @@ export const Layout = ({ children }: PropsWithChildren<{}>) => {
         </main>
       </div>
     </>
-  );
-};
+  )
+}

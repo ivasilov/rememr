@@ -1,31 +1,31 @@
-'use client';
+'use client'
 
-import { TagType } from '@/src/lib/supabase';
-import { faTag } from '@fortawesome/free-solid-svg-icons';
+import { TagType } from '@/src/lib/supabase'
+import { faTag } from '@fortawesome/free-solid-svg-icons'
 
-import { classNames } from '@/src/lib/classnames';
-import { createClient } from '@/src/utils/supabase/client';
-import { sortBy } from 'lodash';
-import { useEffect, useState } from 'react';
-import { PageLink } from '.';
+import { classNames } from '@/src/lib/classnames'
+import { createClient } from '@/src/utils/supabase/client'
+import { sortBy } from 'lodash'
+import { useEffect, useState } from 'react'
+import { PageLink } from '.'
 
 export const PageCategories = ({ className }: { className?: string }) => {
-  const [tags, setTags] = useState<TagType[]>([]);
+  const [tags, setTags] = useState<TagType[]>([])
 
   useEffect(() => {
-    const supabase = createClient();
+    const supabase = createClient()
     supabase
       .from('tags')
       .select()
       .then(({ data }) => {
         if (data) {
-          setTags(data);
+          setTags(data)
         }
-      });
-  }, []);
+      })
+  }, [])
 
   if (tags) {
-    const sorted = sortBy(tags, p => p.name);
+    const sorted = sortBy(tags, p => p.name)
 
     return (
       <div className="h-full space-y-1">
@@ -38,8 +38,8 @@ export const PageCategories = ({ className }: { className?: string }) => {
           ))}
         </div>
       </div>
-    );
+    )
   }
 
-  return <div>Error happened.</div>;
-};
+  return <div>Error happened.</div>
+}

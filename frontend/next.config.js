@@ -11,8 +11,8 @@ const nextConfig = {
         destination: '/bookmarks',
         permanent: true,
       },
-    ];
+    ]
   },
-};
+}
 
-module.exports = nextConfig;
+module.exports = nextConfig

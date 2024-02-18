@@ -1,30 +1,30 @@
-'use client';
-import { FormGroup } from '@/src/components/form-group';
-import { Button } from '@/src/components/ui/button';
-import { Dialog, DialogContent, DialogFooter, DialogHeader } from '@/src/components/ui/dialog';
-import { Input } from '@/src/components/ui/input';
-import { Progress } from '@/src/components/ui/progress';
-import { upperFirst } from 'lodash';
-import { ChangeEventHandler, useState } from 'react';
-import { importOnetabBookmarks } from './importers/onetab';
-import { importPinboardBookmarks } from './importers/pinboard';
+'use client'
+import { FormGroup } from '@/src/components/form-group'
+import { Button } from '@/src/components/ui/button'
+import { Dialog, DialogContent, DialogFooter, DialogHeader } from '@/src/components/ui/dialog'
+import { Input } from '@/src/components/ui/input'
+import { Progress } from '@/src/components/ui/progress'
+import { upperFirst } from 'lodash'
+import { ChangeEventHandler, useState } from 'react'
+import { importOnetabBookmarks } from './importers/onetab'
+import { importPinboardBookmarks } from './importers/pinboard'
 
 function readFile(file: Blob) {
   return new Promise((resolve, reject) => {
-    var fr = new FileReader();
+    var fr = new FileReader()
     fr.onload = () => {
-      resolve(fr.result);
-    };
-    fr.onerror = reject;
-    fr.readAsDataURL(file);
-  });
+      resolve(fr.result)
+    }
+    fr.onerror = reject
+    fr.readAsDataURL(file)
+  })
 }
 
 export const Imports = () => {
   const [state, setState] = useState<{ dialogShown: boolean; type: string | undefined }>({
     dialogShown: false,
     type: undefined,
-  });
+  })
 
   return (
     <>
@@ -34,44 +34,44 @@ export const Imports = () => {
         <UploadDialog type={state.type} onClose={() => setState({ dialogShown: false, type: undefined })} />
       ) : null}
     </>
-  );
-};
+  )
+}
 
 const UploadDialog = (props: { type: 'pinboard' | 'onetab'; onClose: () => void }) => {
-  const [loading, setLoading] = useState(false);
-  const [progressValue, setProgressValue] = useState(0);
+  const [loading, setLoading] = useState(false)
+  const [progressValue, setProgressValue] = useState(0)
 
-  console.log(progressValue);
-  const [file, setFile] = useState<File | undefined>(undefined);
+  console.log(progressValue)
+  const [file, setFile] = useState<File | undefined>(undefined)
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = e => {
     if (e && e.target && e.target.validity.valid && e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
+      setFile(e.target.files[0])
     }
-  };
+  }
 
   const onSubmit = async () => {
-    setLoading(true);
+    setLoading(true)
     try {
       if (file) {
-        const text = await file.text();
+        const text = await file.text()
 
         if (props.type === 'onetab') {
-          await importOnetabBookmarks(text);
+          await importOnetabBookmarks(text)
         }
         if (props.type === 'pinboard') {
           await importPinboardBookmarks(text, (current, max) => {
-            console.log(current, max);
-            setProgressValue((current / max) * 100);
-          });
+            console.log(current, max)
+            setProgressValue((current / max) * 100)
+          })
         }
       }
     } catch (error) {
-      console.log(error);
+      console.log(error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <Dialog open onOpenChange={props.onClose}>
@@ -92,5 +92,5 @@ const UploadDialog = (props: { type: 'pinboard' | 'onetab'; onClose: () => void 
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}

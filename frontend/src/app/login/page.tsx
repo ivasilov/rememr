@@ -1,25 +1,25 @@
-'use client';
+'use client'
 
-import { Input } from '@/src/components/ui/input';
-import { createClient } from '@/src/utils/supabase/client';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { Input } from '@/src/components/ui/input'
+import { createClient } from '@/src/utils/supabase/client'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 export default function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const router = useRouter();
-  const supabase = createClient();
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const router = useRouter()
+  const supabase = createClient()
 
   const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    e.preventDefault()
     await supabase.auth.signInWithPassword({
       email,
       password,
-    });
-    router.push('/');
-  };
+    })
+    router.push('/')
+  }
 
   return (
     <div className="flex h-screen flex-row justify-center py-12">
@@ -52,5 +52,5 @@ export default function Login() {
         </form>
       </div>
     </div>
-  );
+  )
 }

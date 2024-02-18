@@ -1,39 +1,39 @@
-import { createClient } from '@/src/utils/supabase/client';
-import AsyncCreatableSelect from 'react-select/async-creatable';
-import { FilterOptionOption } from 'react-select/dist/declarations/src/filters';
-import { MultiValue } from 'react-select/dist/declarations/src/types';
-import styles from './react-select.module.css';
+import { createClient } from '@/src/utils/supabase/client'
+import AsyncCreatableSelect from 'react-select/async-creatable'
+import { FilterOptionOption } from 'react-select/dist/declarations/src/filters'
+import { MultiValue } from 'react-select/dist/declarations/src/types'
+import styles from './react-select.module.css'
 
-export type IdName = { id?: string; name: string };
+export type IdName = { id?: string; name: string }
 
 type Mutable<Type> = {
-  -readonly [Key in keyof Type]: Type[Key];
-};
+  -readonly [Key in keyof Type]: Type[Key]
+}
 
 interface Props {
-  pages: IdName[];
-  onChange: (p: IdName[]) => void;
+  pages: IdName[]
+  onChange: (p: IdName[]) => void
 }
 
 const filterPage: (option: FilterOptionOption<IdName>, inputValue: string) => boolean = (option, inputValue) => {
   if ((option.data as any).__isNew__) {
-    return false;
+    return false
   }
 
-  const normalizedName = option.data.name.toLowerCase();
-  const normalizedQuery = inputValue.toLowerCase();
+  const normalizedName = option.data.name.toLowerCase()
+  const normalizedQuery = inputValue.toLowerCase()
 
-  return normalizedName.indexOf(normalizedQuery) >= 0;
-};
+  return normalizedName.indexOf(normalizedQuery) >= 0
+}
 
 export const EditPagesForBookmark = ({ pages, onChange }: Props) => {
   const availablePages = async (_inputValue: string): Promise<IdName[]> => {
-    const supabase = createClient();
+    const supabase = createClient()
     // TODO: the input value should be passed to the backend for filtering on the backend
-    const { data: tags } = await supabase.from('tags').select();
+    const { data: tags } = await supabase.from('tags').select()
 
-    return tags || [];
-  };
+    return tags || []
+  }
 
   return (
     <AsyncCreatableSelect
@@ -49,7 +49,7 @@ export const EditPagesForBookmark = ({ pages, onChange }: Props) => {
             // this is needed to clear all border style so that the classNames prop works
             borderColor: state.isFocused ? undefined : baseStyles.borderColor,
             '&:hover': undefined,
-          };
+          }
         },
         menuPortal: base => ({ ...base, zIndex: 9999 }),
       }}
@@ -67,5 +67,5 @@ export const EditPagesForBookmark = ({ pages, onChange }: Props) => {
       getNewOptionData={(value, label) => ({ name: value, label })} // attach the label created by formatCreateLabel
       onChange={ps => onChange(ps as Mutable<MultiValue<IdName>>)}
     />
-  );
-};
+  )
+}

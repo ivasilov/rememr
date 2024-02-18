@@ -1,12 +1,12 @@
-'use client';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { z } from 'zod';
+'use client'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import { z } from 'zod'
 
-import { EditPagesForBookmark } from '../../../../components/edit-pages-for-bookmark';
-import { Button } from '../../../../components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../../../../components/ui/card';
+import { EditPagesForBookmark } from '../../../../components/edit-pages-for-bookmark'
+import { Button } from '../../../../components/ui/button'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../../../../components/ui/card'
 import {
   Form,
   FormControl,
@@ -15,12 +15,12 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '../../../../components/ui/form';
-import { Input } from '../../../../components/ui/input';
-import { Switch } from '../../../../components/ui/switch';
-import { createClient } from '../../../../utils/supabase/client';
+} from '../../../../components/ui/form'
+import { Input } from '../../../../components/ui/input'
+import { Switch } from '../../../../components/ui/switch'
+import { createClient } from '../../../../utils/supabase/client'
 
-const formId = 'create-new-bookmark';
+const formId = 'create-new-bookmark'
 
 const NewBookmarkSchema = z.object({
   name: z.string(),
@@ -32,13 +32,13 @@ const NewBookmarkSchema = z.object({
       name: z.string(),
     }),
   ),
-});
+})
 
 export const NewBookmarkComponent = () => {
-  const supabase = createClient();
+  const supabase = createClient()
 
-  const router = useRouter();
-  const searchParams = useSearchParams();
+  const router = useRouter()
+  const searchParams = useSearchParams()
 
   const form = useForm<z.infer<typeof NewBookmarkSchema>>({
     resolver: zodResolver(NewBookmarkSchema),
@@ -46,11 +46,11 @@ export const NewBookmarkComponent = () => {
       name: searchParams.get('title') || '',
       url: searchParams.get('url') || '',
     },
-  });
+  })
 
   const onSubmit: SubmitHandler<z.infer<typeof NewBookmarkSchema>> = async values => {
-    const tagNames = values.tagIds.filter(t => !t.id).map(t => ({ name: t.name }));
-    const { data: newTags } = await supabase.from('tags').insert(tagNames).select();
+    const tagNames = values.tagIds.filter(t => !t.id).map(t => ({ name: t.name }))
+    const { data: newTags } = await supabase.from('tags').insert(tagNames).select()
 
     const { data, error } = await supabase
       .from('bookmarks')
@@ -59,22 +59,22 @@ export const NewBookmarkComponent = () => {
         url: values.url,
         read: values.read,
       })
-      .select();
+      .select()
 
     if (error || data.length !== 1) {
       // TODO: handle this case
-      return;
+      return
     }
-    const bookmark = data[0];
+    const bookmark = data[0]
 
-    const existingTags = values.tagIds.filter(t => t.id);
-    const relations = [...(newTags || []), ...existingTags].map(r => ({ tag_id: r.id!, bookmark_id: bookmark.id }));
+    const existingTags = values.tagIds.filter(t => t.id)
+    const relations = [...(newTags || []), ...existingTags].map(r => ({ tag_id: r.id!, bookmark_id: bookmark.id }))
 
-    await supabase.from('bookmarks_tags').delete().eq('bookmark_id', bookmark.id);
+    await supabase.from('bookmarks_tags').delete().eq('bookmark_id', bookmark.id)
     if (relations.length > 0) {
-      await supabase.from('bookmarks_tags').insert(relations);
+      await supabase.from('bookmarks_tags').insert(relations)
     }
-  };
+  }
 
   return (
     <Card className="w-full max-w-xl">
@@ -150,5 +150,5 @@ export const NewBookmarkComponent = () => {
         </Button>
       </CardFooter>
     </Card>
-  );
-};
+  )
+}

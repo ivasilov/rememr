@@ -1,4 +1,4 @@
-import { Spinner } from './spinner';
+import { Spinner } from './spinner'
 
 export const Loading = () => {
   return (
@@ -7,5 +7,5 @@ export const Loading = () => {
         <Spinner size="3x" />
       </div>
     </div>
-  );
-};
+  )
+}

@@ -1,10 +1,10 @@
-import { Bookmarks } from '@/src/components/bookmarks';
-import { Icon } from '@/src/components/icon';
-import { BookmarkType } from '@/src/lib/supabase';
-import { faTag } from '@fortawesome/free-solid-svg-icons';
+import { Bookmarks } from '@/src/components/bookmarks'
+import { Icon } from '@/src/components/icon'
+import { BookmarkType } from '@/src/lib/supabase'
+import { faTag } from '@fortawesome/free-solid-svg-icons'
 
 export const ReadOnlyPage = (props: { page: { id: string; name: string; bookmarks: BookmarkType[] } }) => {
-  const page = props.page;
+  const page = props.page
 
   return (
     <>
@@ -16,5 +16,5 @@ export const ReadOnlyPage = (props: { page: { id: string; name: string; bookmark
       </div>
       <Bookmarks bookmarks={page.bookmarks} count={page.bookmarks.length} />
     </>
-  );
-};
+  )
+}

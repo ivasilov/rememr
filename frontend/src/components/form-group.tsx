@@ -1,11 +1,11 @@
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren } from 'react'
 
 interface FormGroupProps
   extends PropsWithChildren<{
-    label: string;
-    htmlFor: string;
-    errorText?: string;
-    helperText?: string;
+    label: string
+    htmlFor: string
+    errorText?: string
+    helperText?: string
   }> {}
 
 export const FormGroup = ({ label, children, htmlFor, errorText, helperText }: FormGroupProps) => {
@@ -26,5 +26,5 @@ export const FormGroup = ({ label, children, htmlFor, errorText, helperText }: F
         </p>
       ) : null}
     </div>
-  );
-};
+  )
+}

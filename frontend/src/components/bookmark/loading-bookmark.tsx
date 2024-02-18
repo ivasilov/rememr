@@ -1,11 +1,11 @@
 export const LoadingBookmark = () => {
   return (
-    <div className="overflow-hidden rounded-md bg-white px-6 py-4 shadow flex flex-row">
-      <div className="w-5 mr-5 animate-pulse bg-gray-300 my-[18px]" />
-      <div className="flex flex-col w-full">
-        <div className="h-5 my-2 font-bold animate-pulse max-w-md w-full bg-gray-300" />
-        <span className="inline-block h-4 font-normal animate-pulse max-w-[110px] w-full bg-gray-300 my-1" />
+    <div className="flex flex-row overflow-hidden rounded-md bg-white px-6 py-4 shadow">
+      <div className="my-[18px] mr-5 w-5 animate-pulse bg-gray-300" />
+      <div className="flex w-full flex-col">
+        <div className="my-2 h-5 w-full max-w-md animate-pulse bg-gray-300 font-bold" />
+        <span className="my-1 inline-block h-4 w-full max-w-[110px] animate-pulse bg-gray-300 font-normal" />
       </div>
     </div>
-  );
-};
+  )
+}

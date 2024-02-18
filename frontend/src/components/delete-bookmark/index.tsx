@@ -1,11 +1,11 @@
-import { Button } from '@/src/components/ui/button';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/src/components/ui/dialog';
-import { deleteBookmark } from './action';
+import { Button } from '@/src/components/ui/button'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/src/components/ui/dialog'
+import { deleteBookmark } from './action'
 
 interface Props {
-  isOpen: boolean;
-  bookmark: { id: string; name: string };
-  onClose: () => void;
+  isOpen: boolean
+  bookmark: { id: string; name: string }
+  onClose: () => void
 }
 
 export const DeleteBookmarkDialog = ({ bookmark, isOpen, onClose }: Props) => {
@@ -28,5 +28,5 @@ export const DeleteBookmarkDialog = ({ bookmark, isOpen, onClose }: Props) => {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}

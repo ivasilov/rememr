@@ -1,23 +1,23 @@
-import { Button } from '@/src/components/ui/button';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/src/components/ui/dialog';
-import { createClient } from '@/src/utils/supabase/client';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { uniqBy } from 'lodash';
-import { useEffect } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { Button } from '@/src/components/ui/button'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/src/components/ui/dialog'
+import { createClient } from '@/src/utils/supabase/client'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { uniqBy } from 'lodash'
+import { useEffect } from 'react'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import { z } from 'zod'
 
-import { EditPagesForBookmark } from '../edit-pages-for-bookmark';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
-import { Input } from '../ui/input';
-import { Switch } from '../ui/switch';
+import { EditPagesForBookmark } from '../edit-pages-for-bookmark'
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
+import { Input } from '../ui/input'
+import { Switch } from '../ui/switch'
 
-const formId = 'edit-bookmark';
+const formId = 'edit-bookmark'
 
 interface Props {
-  isOpen: boolean;
-  bookmark: { id: string };
-  onClose: () => void;
+  isOpen: boolean
+  bookmark: { id: string }
+  onClose: () => void
 }
 
 const EditBookmarkSchema = z.object({
@@ -30,14 +30,14 @@ const EditBookmarkSchema = z.object({
       name: z.string(),
     }),
   ),
-});
+})
 
 export const EditBookmarkDialog = ({ bookmark, isOpen, onClose }: Props) => {
-  const supabase = createClient();
+  const supabase = createClient()
 
   const form = useForm<z.infer<typeof EditBookmarkSchema>>({
     resolver: zodResolver(EditBookmarkSchema),
-  });
+  })
 
   // TODO: loading the bookmark in useEffect is an anti-pattern. Get rid of it.
   useEffect(() => {
@@ -46,23 +46,23 @@ export const EditBookmarkDialog = ({ bookmark, isOpen, onClose }: Props) => {
       .select('*, tags (*)')
       .eq('id', bookmark.id)
       .then(({ data }) => {
-        const bookmark = data![0];
+        const bookmark = data![0]
 
-        let pages = bookmark.tags.map(p => ({ id: p.id, name: p.name }));
-        const tagIds = uniqBy(pages, p => p.name);
+        let pages = bookmark.tags.map(p => ({ id: p.id, name: p.name }))
+        const tagIds = uniqBy(pages, p => p.name)
 
         form.reset({
           name: bookmark.name,
           url: bookmark.url,
           read: bookmark.read,
           tagIds: tagIds,
-        });
-      });
-  }, [bookmark.id, supabase]);
+        })
+      })
+  }, [bookmark.id, supabase])
 
   const onSubmit: SubmitHandler<z.infer<typeof EditBookmarkSchema>> = async values => {
-    const tagNames = values.tagIds.filter(t => !t.id).map(t => ({ name: t.name }));
-    const { data: newTags } = await supabase.from('tags').insert(tagNames).select();
+    const tagNames = values.tagIds.filter(t => !t.id).map(t => ({ name: t.name }))
+    const { data: newTags } = await supabase.from('tags').insert(tagNames).select()
 
     await supabase
       .from('bookmarks')
@@ -71,18 +71,18 @@ export const EditBookmarkDialog = ({ bookmark, isOpen, onClose }: Props) => {
         url: values.url,
         read: values.read,
       })
-      .eq('id', bookmark.id);
+      .eq('id', bookmark.id)
 
-    const existingTags = values.tagIds.filter(t => t.id);
-    const relations = [...(newTags || []), ...existingTags].map(r => ({ tag_id: r.id!, bookmark_id: bookmark.id }));
+    const existingTags = values.tagIds.filter(t => t.id)
+    const relations = [...(newTags || []), ...existingTags].map(r => ({ tag_id: r.id!, bookmark_id: bookmark.id }))
 
-    await supabase.from('bookmarks_tags').delete().eq('bookmark_id', bookmark.id);
+    await supabase.from('bookmarks_tags').delete().eq('bookmark_id', bookmark.id)
     if (relations.length > 0) {
-      await supabase.from('bookmarks_tags').insert(relations);
+      await supabase.from('bookmarks_tags').insert(relations)
     }
 
-    onClose();
-  };
+    onClose()
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -158,5 +158,5 @@ export const EditBookmarkDialog = ({ bookmark, isOpen, onClose }: Props) => {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}

@@ -1,23 +1,23 @@
-'use client';
+'use client'
 
-import { Input } from '@/src/components/ui/input';
-import { createClient } from '@/src/utils/supabase/client';
-import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useState } from 'react';
+import { Input } from '@/src/components/ui/input'
+import { createClient } from '@/src/utils/supabase/client'
+import Link from 'next/link'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useState } from 'react'
 
 export default function SignUp() {
-  const searchParams = useSearchParams();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [sndPassword, setSndPassword] = useState('');
-  const router = useRouter();
-  const supabase = createClient();
+  const searchParams = useSearchParams()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [sndPassword, setSndPassword] = useState('')
+  const router = useRouter()
+  const supabase = createClient()
 
   const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    e.preventDefault()
     if (password !== sndPassword) {
-      return;
+      return
     }
 
     await supabase.auth.signUp({
@@ -26,10 +26,10 @@ export default function SignUp() {
       options: {
         emailRedirectTo: `${location.origin}/auth/callback`,
       },
-    });
-    router.push('/sign-up?success');
-  };
-  const signUpSuccess = searchParams.has('success');
+    })
+    router.push('/sign-up?success')
+  }
+  const signUpSuccess = searchParams.has('success')
 
   return (
     <div className="flex h-screen flex-row justify-center py-12">
@@ -79,5 +79,5 @@ export default function SignUp() {
         )}
       </div>
     </div>
-  );
+  )
 }

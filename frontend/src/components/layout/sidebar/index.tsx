@@ -1,14 +1,14 @@
-import { faBook, faHome, faXmark, IconLookup } from '@fortawesome/free-solid-svg-icons';
-import { Dialog, Transition } from '@headlessui/react';
+import { faBook, faHome, faXmark, IconLookup } from '@fortawesome/free-solid-svg-icons'
+import { Dialog, Transition } from '@headlessui/react'
 
-import { classNames } from '@/src/lib/classnames';
-import { Route } from 'next';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { Dispatch, Fragment, SetStateAction } from 'react';
-import { Icon } from '../../icon';
-import { Logo } from '../../logo';
-import { PageCategories } from './page-categories';
+import { classNames } from '@/src/lib/classnames'
+import { Route } from 'next'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { Dispatch, Fragment, SetStateAction } from 'react'
+import { Icon } from '../../icon'
+import { Logo } from '../../logo'
+import { PageCategories } from './page-categories'
 
 export const PageLink = ({
   name,
@@ -16,19 +16,19 @@ export const PageLink = ({
   icon,
   className,
 }: {
-  name: string;
-  href: string;
-  icon: IconLookup;
-  className?: string;
+  name: string
+  href: string
+  icon: IconLookup
+  className?: string
 }) => {
-  const pathname = usePathname();
-  const current = pathname === href;
+  const pathname = usePathname()
+  const current = pathname === href
 
   const classes = classNames(
     className,
     current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
     'group flex items-center px-2 py-2 text-sm font-medium rounded-md',
-  );
+  )
 
   return (
     <Link href={href as Route} className={classes}>
@@ -42,8 +42,8 @@ export const PageLink = ({
       />
       {name}
     </Link>
-  );
-};
+  )
+}
 
 const PageLinks = ({ className }: { className?: string }) => {
   return (
@@ -54,8 +54,8 @@ const PageLinks = ({ className }: { className?: string }) => {
       </div>
       <PageCategories className={className} />
     </nav>
-  );
-};
+  )
+}
 
 export const Sidebar = ({ open, setOpen }: { open: boolean; setOpen: Dispatch<SetStateAction<boolean>> }) => {
   return (
@@ -139,5 +139,5 @@ export const Sidebar = ({ open, setOpen }: { open: boolean; setOpen: Dispatch<Se
         </div>
       </div>
     </>
-  );
-};
+  )
+}

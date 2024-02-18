@@ -1,24 +1,24 @@
 /* eslint-disable @next/next/no-img-element */
-import { Button } from '@/src/components/ui/button';
-import { BookmarkType } from '@/src/lib/supabase';
-import { faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { useState } from 'react';
-import { DeleteBookmarkDialog } from '../delete-bookmark';
-import { EditBookmarkDialog } from '../edit-bookmark';
-import { Icon } from '../icon';
-import { Card } from '../ui/card';
+import { Button } from '@/src/components/ui/button'
+import { BookmarkType } from '@/src/lib/supabase'
+import { faPencil, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { useState } from 'react'
+import { DeleteBookmarkDialog } from '../delete-bookmark'
+import { EditBookmarkDialog } from '../edit-bookmark'
+import { Icon } from '../icon'
+import { Card } from '../ui/card'
 
 export const Bookmark = (props: { bookmark: BookmarkType }) => {
   const [{ editBookmarkDialogShown, deleteBookmarkDialogShown }, setState] = useState({
     editBookmarkDialogShown: false,
     deleteBookmarkDialogShown: false,
-  });
+  })
 
-  const bookmark = props.bookmark;
-  let hostname = '';
+  const bookmark = props.bookmark
+  let hostname = ''
   // new URL can throw and make the whole page unresponsive
   try {
-    hostname = new URL(bookmark.url).hostname;
+    hostname = new URL(bookmark.url).hostname
   } catch {}
 
   return (
@@ -86,5 +86,5 @@ export const Bookmark = (props: { bookmark: BookmarkType }) => {
         }
       />
     </Card>
-  );
-};
+  )
+}

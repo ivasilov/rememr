@@ -1,12 +1,12 @@
-'use client';
-import { Tab as HeadlessTab } from '@headlessui/react';
+'use client'
+import { Tab as HeadlessTab } from '@headlessui/react'
 
-import { PropsWithChildren } from 'react';
-import { classNames } from '../lib/classnames';
+import { PropsWithChildren } from 'react'
+import { classNames } from '../lib/classnames'
 
 export const TabGroup = ({ children, ...rest }: PropsWithChildren<{ defaultIndex?: number }>) => {
-  return <HeadlessTab.Group {...rest}>{children}</HeadlessTab.Group>;
-};
+  return <HeadlessTab.Group {...rest}>{children}</HeadlessTab.Group>
+}
 export const TabList = ({ children }: PropsWithChildren<{}>) => {
   return (
     <HeadlessTab.List as="div" className="border-b border-gray-200">
@@ -14,8 +14,8 @@ export const TabList = ({ children }: PropsWithChildren<{}>) => {
         {children}
       </nav>
     </HeadlessTab.List>
-  );
-};
+  )
+}
 export const Tab = ({ children }: PropsWithChildren<{}>) => {
   return (
     <HeadlessTab
@@ -30,11 +30,11 @@ export const Tab = ({ children }: PropsWithChildren<{}>) => {
     >
       {children}
     </HeadlessTab>
-  );
-};
+  )
+}
 export const TabPanels = ({ children }: PropsWithChildren<{}>) => {
-  return <HeadlessTab.Panels className="mt-2">{children}</HeadlessTab.Panels>;
-};
+  return <HeadlessTab.Panels className="mt-2">{children}</HeadlessTab.Panels>
+}
 export const TabPanel = ({ children }: PropsWithChildren<{}>) => {
-  return <HeadlessTab.Panel>{children}</HeadlessTab.Panel>;
-};
+  return <HeadlessTab.Panel>{children}</HeadlessTab.Panel>
+}
