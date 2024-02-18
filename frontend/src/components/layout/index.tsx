@@ -106,7 +106,7 @@ export const Layout = ({ children }: PropsWithChildren<{}>) => {
         </div>
 
         <main className="flex grow flex-col items-center bg-slate-100 px-4 sm:px-6 md:px-8">
-          <div className="max-w-7xl">{children}</div>
+          <div className="w-full max-w-7xl">{children}</div>
         </main>
       </div>
     </>
