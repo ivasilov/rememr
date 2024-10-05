@@ -1,5 +1,5 @@
 import { Button } from '@/src/components/ui/button'
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/src/components/ui/dialog'
+import { DialogFooter, DialogHeader, DialogTitle } from '@/src/components/ui/dialog'
 import { createClient } from '@/src/utils/supabase/client'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { uniqBy } from 'lodash'
@@ -15,7 +15,6 @@ import { Switch } from '../ui/switch'
 const formId = 'edit-bookmark'
 
 interface Props {
-  isOpen: boolean
   bookmark: { id: string }
   onClose: () => void
 }
@@ -26,13 +25,13 @@ const EditBookmarkSchema = z.object({
   read: z.boolean(),
   tagIds: z.array(
     z.object({
-      id: z.string(),
+      id: z.string().optional(),
       name: z.string(),
     }),
   ),
 })
 
-export const EditBookmarkDialog = ({ bookmark, isOpen, onClose }: Props) => {
+export const EditBookmarkDialog = ({ bookmark, onClose }: Props) => {
   const supabase = createClient()
 
   const form = useForm<z.infer<typeof EditBookmarkSchema>>({
@@ -85,78 +84,85 @@ export const EditBookmarkDialog = ({ bookmark, isOpen, onClose }: Props) => {
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Editing bookmark</DialogTitle>
-        </DialogHeader>
-        <Form {...form}>
-          <form id={formId} onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col space-y-4">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Name of the bookmark</FormLabel>
-                  <FormControl>
-                    <Input placeholder="shadcn" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="url"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Url of the bookmark</FormLabel>
-                  <FormControl>
-                    <Input placeholder="shadcn" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="read"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
-                  <div className="space-y-0.5">
-                    <FormLabel>Read</FormLabel>
-                    <FormDescription>If marked as unread, it will show up in the unread list.</FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch checked={field.value} onCheckedChange={field.onChange} />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
+    <>
+      <DialogHeader>
+        <DialogTitle>Editing bookmark</DialogTitle>
+      </DialogHeader>
+      <Form {...form}>
+        <form id={formId} onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col space-y-4">
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Name of the bookmark</FormLabel>
+                <FormControl>
+                  <Input placeholder="shadcn" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="url"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Url of the bookmark</FormLabel>
+                <FormControl>
+                  <Input placeholder="shadcn" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="read"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                <div className="space-y-0.5">
+                  <FormLabel>Read</FormLabel>
+                  <FormDescription>If marked as unread, it will show up in the unread list.</FormDescription>
+                </div>
+                <FormControl>
+                  <Switch checked={field.value} onCheckedChange={field.onChange} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-            <FormField
-              control={form.control}
-              name="tagIds"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Tags which have this bookmark</FormLabel>
-                  <FormControl>
-                    <EditPagesForBookmark pages={field.value} onChange={ids => field.onChange(ids)} />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-          </form>
-        </Form>
-        <DialogFooter>
-          <Button variant="secondary" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button variant="default" type="submit" form={formId}>
-            Save
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+          <FormField
+            control={form.control}
+            name="tagIds"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Tags which have this bookmark</FormLabel>
+                <FormControl>
+                  <EditPagesForBookmark
+                    pages={field.value}
+                    onChange={ids => {
+                      const transformedIds = ids.map(id => ({ id }))
+                      console.log(ids)
+                      field.onChange(ids)
+                    }}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </form>
+      </Form>
+      <DialogFooter>
+        <Button variant="secondary" onClick={onClose}>
+          Cancel
+        </Button>
+        <Button variant="default" type="submit" form={formId}>
+          Save
+        </Button>
+      </DialogFooter>
+    </>
   )
 }

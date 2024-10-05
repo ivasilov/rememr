@@ -7,6 +7,7 @@ import { DeleteBookmarkDialog } from '../delete-bookmark'
 import { EditBookmarkDialog } from '../edit-bookmark'
 import { Icon } from '../icon'
 import { Card } from '../ui/card'
+import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog'
 
 export const Bookmark = (props: { bookmark: BookmarkType }) => {
   const [{ editBookmarkDialogShown, deleteBookmarkDialogShown }, setState] = useState({
@@ -37,19 +38,32 @@ export const Bookmark = (props: { bookmark: BookmarkType }) => {
         </div>
 
         <div className="min-w-[84px] space-x-2">
-          <Button
-            size="sm"
-            variant="outline"
-            className="hidden group-hover:inline-flex"
-            onClick={() =>
+          <Dialog
+            open={editBookmarkDialogShown}
+            onOpenChange={open =>
               setState({
-                editBookmarkDialogShown: true,
                 deleteBookmarkDialogShown,
+                editBookmarkDialogShown: open,
               })
             }
           >
-            <Icon name={faPencil} size="1x" />
-          </Button>
+            <DialogTrigger>
+              <Button size="sm" variant="outline" className="hidden group-hover:inline-flex">
+                <Icon name={faPencil} size="1x" />
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <EditBookmarkDialog
+                bookmark={bookmark}
+                onClose={() =>
+                  setState({
+                    deleteBookmarkDialogShown,
+                    editBookmarkDialogShown: false,
+                  })
+                }
+              />
+            </DialogContent>
+          </Dialog>
           <Button
             size="sm"
             className="hidden group-hover:inline-flex"
@@ -72,16 +86,6 @@ export const Bookmark = (props: { bookmark: BookmarkType }) => {
           setState({
             editBookmarkDialogShown,
             deleteBookmarkDialogShown: false,
-          })
-        }
-      />
-      <EditBookmarkDialog
-        isOpen={editBookmarkDialogShown}
-        bookmark={bookmark}
-        onClose={() =>
-          setState({
-            deleteBookmarkDialogShown,
-            editBookmarkDialogShown: false,
           })
         }
       />

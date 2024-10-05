@@ -1,5 +1,5 @@
 'use client'
-import { isNumber, last } from 'lodash'
+import { isNumber, last, uniqBy } from 'lodash'
 import { useCallback, useState } from 'react'
 
 import { classNames } from '@/src/lib/classnames'
@@ -35,8 +35,11 @@ export const Bookmarks = ({ className, bookmarks: firstBookmarks, count: initial
       .order('created_at')
       .filter('created_at', 'gte', lastBookmark?.created_at)
       .limit(10)
+
     if (data) {
-      setBookmarks([...bookmarks, ...data])
+      const updatedBookmarks = uniqBy([...bookmarks, ...data], b => b.id)
+
+      setBookmarks(updatedBookmarks)
     }
     if (isNumber(count)) {
       setCount(count)
