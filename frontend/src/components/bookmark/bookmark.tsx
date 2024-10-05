@@ -28,12 +28,12 @@ export const Bookmark = (props: { bookmark: BookmarkType }) => {
         alt="bookmark favicon"
         src={`https://s2.googleusercontent.com/s2/favicons?domain=${bookmark.url}&sz=16`}
       />
-      <div className="flex w-full  justify-between">
+      <div className="flex w-full justify-between">
         <div className="flex grow flex-col">
-          <a className="font-bold text-black" href={bookmark.url}>
+          <a className="text-foreground font-bold" href={bookmark.url}>
             {bookmark.name}
           </a>
-          <span className="font-normal">{hostname}</span>
+          <span className="text-muted-foreground font-normal">{hostname}</span>
         </div>
 
         <div className="min-w-[84px] space-x-2">

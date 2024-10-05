@@ -5,6 +5,7 @@ config.autoAddCss = false
 
 import { Toaster } from '../components/ui/sonner'
 import './globals.css'
+import { Providers } from './providers'
 
 export const metadata = {
   title: 'rememr',
@@ -13,10 +14,12 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html className="h-full bg-gray-100">
+    <html suppressHydrationWarning>
       <body className="font-sans">
-        {children}
-        <Toaster position="top-right" />
+        <Providers>
+          {children}
+          <Toaster position="top-right" />
+        </Providers>
       </body>
     </html>
   )
