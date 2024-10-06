@@ -1,16 +1,16 @@
 {
-  "name": "extension",
-  "displayName": "Rememr",
+  "name": "rememr-extension",
+  "displayName": "Rememr extension",
   "version": "0.0.1",
-  "description": "Companion extension to rememr.com",
-  "author": "Plasmo Corp. <foss@plasmo.com>",
+  "description": "Companion extension for rememr.com",
+  "author": "Ivan Vasilov",
   "scripts": {
     "dev": "plasmo dev",
     "build": "plasmo build",
     "package": "plasmo package"
   },
   "dependencies": {
-    "plasmo": "0.84.2",
+    "plasmo": "0.89.2",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
