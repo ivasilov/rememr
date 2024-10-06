@@ -16,7 +16,7 @@ importers:
         version: 3.2.2(prettier@3.0.0)(typescript@5.3.3)
       prettier-plugin-tailwindcss:
         specifier: ^0.5.4
-        version: 0.5.4(prettier-plugin-organize-imports@3.2.2(prettier@3.0.0)(typescript@5.3.3))(prettier@3.0.0)
+        version: 0.5.4(@ianvs/prettier-plugin-sort-imports@4.1.1(@vue/compiler-sfc@3.3.4)(prettier@3.0.0))(prettier-plugin-organize-imports@3.2.2(prettier@3.0.0)(typescript@5.3.3))(prettier@3.0.0)
     devDependencies:
       supabase:
         specifier: ^1.77.6
@@ -24,15 +24,27 @@ importers:
 
   extension:
     dependencies:
+      '@plasmohq/messaging':
+        specifier: 0.6.2
+        version: 0.6.2(react@18.2.0)
+      '@plasmohq/storage':
+        specifier: 1.12.0
+        version: 1.12.0(react@18.2.0)
+      '@supabase/supabase-js':
+        specifier: 2.39.3
+        version: 2.39.3(bufferutil@4.0.7)(utf-8-validate@5.0.10)
       plasmo:
         specifier: 0.89.2
-        version: 0.89.2(@swc/core@1.7.26(@swc/helpers@0.5.2))(@swc/helpers@0.5.2)(lodash@4.17.21)(postcss@8.4.24)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 0.89.2(@swc/core@1.7.26(@swc/helpers@0.5.2))(@swc/helpers@0.5.2)(lodash@4.17.21)(postcss@8.4.33)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react:
         specifier: 18.2.0
         version: 18.2.0
       react-dom:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
+      tailwindcss:
+        specifier: 3.4.1
+        version: 3.4.1
     devDependencies:
       '@types/chrome':
         specifier: 0.0.258
@@ -46,6 +58,9 @@ importers:
       '@types/react-dom':
         specifier: 18.2.18
         version: 18.2.18
+      postcss:
+        specifier: 8.4.33
+        version: 8.4.33
       typescript:
         specifier: 5.3.3
         version: 5.3.3
@@ -123,7 +138,7 @@ importers:
         version: 0.424.0(react@18.2.0)
       next:
         specifier: ^13.5.0
-        version: 13.5.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.71.0)
+        version: 13.5.3(@babel/core@7.25.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.71.0)
       next-themes:
         specifier: ^0.3.0
         version: 0.3.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -549,9 +564,14 @@ packages:
     resolution: {integrity: sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==}
     deprecated: Use @eslint/object-schema instead
 
-  '@jridgewell/gen-mapping@0.3.3':
-    resolution: {integrity: sha512-HLhSWOLRi875zjjMG/r+Nv0oCW8umGb0BgEhyX3dDX3egwZtB8PqLnjz3yedt8R5StBrzcg4aBpnh8UA9D1BoQ==}
-    engines: {node: '>=6.0.0'}
+  '@ianvs/prettier-plugin-sort-imports@4.1.1':
+    resolution: {integrity: sha512-kJhXq63ngpTQ2dxgf5GasbPJWsJA3LgoOdd7WGhpUSzLgLgI4IsIzYkbJf9kmpOHe7Vdm/o3PcRA3jmizXUuAQ==}
+    peerDependencies:
+      '@vue/compiler-sfc': '>=3.0.0'
+      prettier: 2 || 3
+    peerDependenciesMeta:
+      '@vue/compiler-sfc':
+        optional: true
 
   '@jridgewell/gen-mapping@0.3.5':
     resolution: {integrity: sha512-IzL8ZoEDIBRWEzlCcRhOaCupYyN5gdIK+Q6fbFdPDg6HqX6jpkItn7DFIpW9LQzXG6Df9sA7+OKnq0qlz/GaQg==}
@@ -559,10 +579,6 @@ packages:
 
   '@jridgewell/resolve-uri@3.1.1':
     resolution: {integrity: sha512-dSYZh7HhCDtCKm4QakX0xFpsRDqjjtZf/kjI/v3T3Nwt5r8/qz/M19F9ySyOqU94SXBmeG9ttTul+YnR4LOxFA==}
-    engines: {node: '>=6.0.0'}
-
-  '@jridgewell/set-array@1.1.2':
-    resolution: {integrity: sha512-xnkseuNADM0gt2bs+BvhO0p78Mk762YnZdsuzFV018NoG1Sj1SCQvpSqa7XUaTam5vAGasABV9qXASMKnFMwMw==}
     engines: {node: '>=6.0.0'}
 
   '@jridgewell/set-array@1.2.1':
@@ -1291,6 +1307,14 @@ packages:
   '@plasmohq/init@0.7.0':
     resolution: {integrity: sha512-P75g48dqOGneJ+n0AcqnLE/TYflcaPc3B7h6EopnCBBYUDnCNBMwYmKAkaf5pnhsEB0ybPS6TU1C2DTGfqaW7A==}
 
+  '@plasmohq/messaging@0.6.2':
+    resolution: {integrity: sha512-CGfcvfVE0wsN/Y/i/jV0nwjkwh2gBCEujZFhLoxJ12N0ScoP3JVEIvUxJSFsAD4ylBQ8IjD2FyjQozwiSxWc4Q==}
+    peerDependencies:
+      react: ^16.8.6 || ^17 || ^18
+    peerDependenciesMeta:
+      react:
+        optional: true
+
   '@plasmohq/parcel-bundler@0.5.6':
     resolution: {integrity: sha512-kjwj5tQUhdAK00AxXOzgqJ2jryZg4X6aleYAcjbREPzVMqKEu1NrNSNy5VGAfNRG6NCT6ZYg39ZCyuUOR2lEsQ==}
     engines: {node: '>= 16.0.0', parcel: '>= 2.7.0'}
@@ -1353,6 +1377,14 @@ packages:
   '@plasmohq/parcel-transformer-vue@0.5.0':
     resolution: {integrity: sha512-/3oVbajt+DRqtbM0RkKFtfyZR8DVjcsYpj1jHqPParGVBiXwgP0D/8Bj5p5/5Iqihs08gzasTcjKcwQKKdj0og==}
     engines: {parcel: '>= 2.7.0'}
+
+  '@plasmohq/storage@1.12.0':
+    resolution: {integrity: sha512-LoCyO0PXl609ee8QKVEwVpkTyD/8WjYQhd0sxFomLxbdxsZC0LD4n8nv4nSegP5X8lYQBQnR/LMq4ZXoQh87wA==}
+    peerDependencies:
+      react: ^16.8.6 || ^17 || ^18
+    peerDependenciesMeta:
+      react:
+        optional: true
 
   '@pnpm/config.env-replace@1.1.0':
     resolution: {integrity: sha512-htyl8TWnKL7K/ESFa1oW2UB5lVDxuF5DpM7tBi6Hu2LNL3mWkIzNLG6N4zoCUP1lCKNxWy/3iu8mS8MvToGd6w==}
@@ -1870,11 +1902,27 @@ packages:
   '@supabase/functions-js@2.1.2':
     resolution: {integrity: sha512-QCR6pwJs9exCl37bmpMisUd6mf+0SUBJ6mUpiAjEkSJ/+xW8TCuO14bvkWHADd5hElJK9MxNlMQXxSA4DRz9nQ==}
 
+  '@supabase/functions-js@2.4.3':
+    resolution: {integrity: sha512-sOLXy+mWRyu4LLv1onYydq+10mNRQ4rzqQxNhbrKLTLTcdcmS9hbWif0bGz/NavmiQfPs4ZcmQJp4WqOXlR4AQ==}
+
   '@supabase/gotrue-js@2.46.1':
     resolution: {integrity: sha512-tebFX3XvPqEJKHOVgkXTN20g9iUhLx6tebIYQvTggYTrqOT2af8oTpSBdgYzbwJ291G6P6CSpR6KY0cT9ade5A==}
 
+  '@supabase/gotrue-js@2.65.0':
+    resolution: {integrity: sha512-PQoHFP7+gOn6HFxFr+PSrnPwH7n2ZB//8oK4tvypGoQZApQgVt7fMP18oWoC2HQY8T8oZcSEdSn2VPIUpBuV9w==}
+
+  '@supabase/node-fetch@2.6.15':
+    resolution: {integrity: sha512-1ibVeYUacxWYi9i0cf5efil6adJ9WRyZBLivgjs+AUpewx1F3xPi7gLgaASI2SmIQxPoCEjAsLAzKPgMJVgOUQ==}
+    engines: {node: 4.x || >=6.0.0}
+
+  '@supabase/postgrest-js@1.16.2':
+    resolution: {integrity: sha512-dA/CIrSO2YDQ6ABNpbvEg9DwBMMbuKfWaFuZAU9c66PenoLSoIoyXk1Yq/wC2XISgEIqaMHmTrDAAsO80kjHqg==}
+
   '@supabase/postgrest-js@1.8.0':
     resolution: {integrity: sha512-R6leDIC92NgjyG2/tCRJ42rWN7+fZY6ulTEE+c00tcnghn6cX4IYUlnTNMtrdfYC2JYNOTyM+rWj63Wdhr7Zig==}
+
+  '@supabase/realtime-js@2.10.6':
+    resolution: {integrity: sha512-Rg6WJyXvmxf+wrmnev9XY2rZp/mzFsaMzKthmsRsklcijsG79Ot2D7bpq9CSiv5qpjpGqK1m++c2/Hzhq4juGQ==}
 
   '@supabase/realtime-js@2.7.3':
     resolution: {integrity: sha512-c7TzL81sx2kqyxsxcDduJcHL9KJdCOoKimGP6lQSqiZKX42ATlBZpWbyy9KFGFBjAP4nyopMf5JhPi2ZH9jyNw==}
@@ -1887,8 +1935,14 @@ packages:
   '@supabase/storage-js@2.5.1':
     resolution: {integrity: sha512-nkR0fQA9ScAtIKA3vNoPEqbZv1k5B5HVRYEvRWdlP6mUpFphM9TwPL2jZ/ztNGMTG5xT6SrHr+H7Ykz8qzbhjw==}
 
+  '@supabase/storage-js@2.7.1':
+    resolution: {integrity: sha512-asYHcyDR1fKqrMpytAS1zjyEfvxuOIp1CIXX7ji4lHHcJKqyk+sLl/Vxgm4sN6u8zvuUtae9e4kDxQP2qrwWBA==}
+
   '@supabase/supabase-js@2.26.0':
     resolution: {integrity: sha512-RXmTPTobaYAwkSobadHZmEVLmzX3SGrtRZIGfLWnLv92VzBRrjuXn0a+bJqKl50GUzsyqPA+j5pod7EwMkcH5A==}
+
+  '@supabase/supabase-js@2.39.3':
+    resolution: {integrity: sha512-NoltJSaJNKDJNutO5sJPAAi5RIWrn1z2XH+ig1+cHDojT6BTN7TvZPNa3Kq3gFQWfO5H1N9El/bCTZJ3iFW2kQ==}
 
   '@svgr/babel-plugin-add-jsx-attribute@6.5.1':
     resolution: {integrity: sha512-9PYGcXrAxitycIjRmZB+Q0JaN07GZIWaTBIGQzfaZv+qr1n8X1XUEJ5rZ/vx6OVD9RRYlrNnXWExQXcmZeD/BQ==}
@@ -2183,6 +2237,9 @@ packages:
 
   '@types/websocket@1.0.5':
     resolution: {integrity: sha512-NbsqiNX9CnEfC1Z0Vf4mE1SgAJ07JnRYcNex7AJ9zAVzmiGHmjKFEk7O4TJIsgv2B1sLEb6owKFZrACwdYngsQ==}
+
+  '@types/ws@8.5.12':
+    resolution: {integrity: sha512-3tPRkv1EtkDpzlgyKyI8pGsGZAGPEaXeu0DOj5DI25Ja91bdAYddYHbADRYVrZMRbfW+1l5YwXVDKohDJNQxkQ==}
 
   '@typescript-eslint/parser@5.62.0':
     resolution: {integrity: sha512-VlJEV0fOQ7BExOsHYAGrgbEiZoi8D+Bl2+f6V2RrXerRSylnp+ZBHmPvaIa8cz0Ajx7WO7Z5RqfgYg7ED1nRhA==}
@@ -3817,6 +3874,16 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
+  nanoid@3.3.7:
+    resolution: {integrity: sha512-eSRppjcPIatRIMC1U6UngP8XFcz8MQWGQdt1MTBQ7NaAmvXDfvNxbvWV3x2y6CdEUciCSsDHDQZbhYaB8QEo2g==}
+    engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
+    hasBin: true
+
+  nanoid@5.0.3:
+    resolution: {integrity: sha512-I7X2b22cxA4LIHXPSqbBCEQSL+1wv8TuoefejsX4HFWyC6jc5JG7CEaxOltiKjc1M+YCS2YkrZZcj4+dytw9GA==}
+    engines: {node: ^18 || >=20}
+    hasBin: true
+
   napi-build-utils@1.0.2:
     resolution: {integrity: sha512-ONmRUqK7zj7DWX0D9ADe03wbwOBZxNAfF20PlGfCWQcD3+/MakShIHrMqx9YwPTfxDdF1zLeL+RGZiR9kGMLdg==}
 
@@ -4061,6 +4128,10 @@ packages:
     resolution: {integrity: sha512-uB80kBFb/tfd68bVleG9T5GGsGPjJrLAUpR5PZIrhBnIaRTQRjqdJSsIKkOP6OAIFbj7GOrcudc5pNjZ+geV2g==}
     engines: {node: '>=6'}
 
+  pify@6.1.0:
+    resolution: {integrity: sha512-KocF8ve28eFjjuBKKGvzOBGzG8ew2OqOOSxTTZhirkzH7h3BI1vyzqlR0qbfcDBve1Yzo3FVlWUAtCRrbVN8Fw==}
+    engines: {node: '>=14.16'}
+
   pirates@4.0.6:
     resolution: {integrity: sha512-saLsH7WeYYPiD25LDuLRRY/i+6HaPYr6G1OUlN39otzkSTxKnubR9RTxS3/Kk50s1g2JTgFwWQDQyplC5/SHZg==}
     engines: {node: '>= 6'}
@@ -4112,6 +4183,10 @@ packages:
 
   postcss@8.4.24:
     resolution: {integrity: sha512-M0RzbcI0sO/XJNucsGjvWU9ERWxb/ytp1w6dKtxTKgixdtQDq4rmx/g8W1hnaheq9jgwL/oyEdH5Bc4WwJKMqg==}
+    engines: {node: ^10 || ^12 || >=14}
+
+  postcss@8.4.33:
+    resolution: {integrity: sha512-Kkpbhhdjw2qQs2O2DGX+8m5OVqEcbB9HRBvuYM9pgrjEFUg30A9LmXNlTAUj4S9kgtGyrMbTzVjH7E+s5Re2yg==}
     engines: {node: ^10 || ^12 || >=14}
 
   posthtml-parser@0.10.2:
@@ -4630,6 +4705,11 @@ packages:
     engines: {node: '>=14.0.0'}
     hasBin: true
 
+  tailwindcss@3.4.1:
+    resolution: {integrity: sha512-qAYmXRfk3ENzuPBakNK0SRrUDipP8NQnEY6772uDhflcQz5EhRdD7JNZxyrFHVQNCwULPBn6FNPp9brpO7ctcA==}
+    engines: {node: '>=14.0.0'}
+    hasBin: true
+
   tapable@2.2.1:
     resolution: {integrity: sha512-GNzQvQTOIP6RyTfE2Qxb8ZVlNmw0n88vp1szwWRimP02mnTsx3Wtn5qRdqY9w2XduFNUgvOwhNnQsjwCp+kqaQ==}
     engines: {node: '>=6'}
@@ -4921,6 +5001,18 @@ packages:
     resolution: {integrity: sha512-+QU2zd6OTD8XWIJCbffaiQeH9U73qIqafo1x6V1snCWYGJf6cVE0cDR4D8xRzcEnfI21IFrUPzPGtcPf8AC+Rw==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
 
+  ws@8.18.0:
+    resolution: {integrity: sha512-8VbfWfHLbbwu3+N6OKsOMpBdT4kXPDDB9cJk2bJ6mh9ucxdlnNvH1e+roYkKmN9Nxw2yjz7VzeO9oOz2zJ04Pw==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: '>=5.0.2'
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
+
   xxhash-wasm@0.4.2:
     resolution: {integrity: sha512-/eyHVRJQCirEkSZ1agRSCwriMhwlyUcFkXD5TPVSLP+IPzjsqMVzZwdoczLp1SoQU0R3dxz1RpIK+4YNQbCVOA==}
 
@@ -4971,7 +5063,7 @@ snapshots:
   '@babel/code-frame@7.25.7':
     dependencies:
       '@babel/highlight': 7.25.7
-      picocolors: 1.0.0
+      picocolors: 1.1.0
 
   '@babel/compat-data@7.25.7': {}
 
@@ -5064,7 +5156,7 @@ snapshots:
       '@babel/helper-validator-identifier': 7.25.7
       chalk: 2.4.2
       js-tokens: 4.0.0
-      picocolors: 1.0.0
+      picocolors: 1.1.0
 
   '@babel/parser@7.25.7':
     dependencies:
@@ -5312,21 +5404,28 @@ snapshots:
 
   '@humanwhocodes/object-schema@1.2.1': {}
 
-  '@jridgewell/gen-mapping@0.3.3':
+  '@ianvs/prettier-plugin-sort-imports@4.1.1(@vue/compiler-sfc@3.3.4)(prettier@3.0.0)':
     dependencies:
-      '@jridgewell/set-array': 1.1.2
-      '@jridgewell/sourcemap-codec': 1.4.15
-      '@jridgewell/trace-mapping': 0.3.19
+      '@babel/core': 7.25.7
+      '@babel/generator': 7.25.7
+      '@babel/parser': 7.25.7
+      '@babel/traverse': 7.25.7
+      '@babel/types': 7.25.7
+      prettier: 3.0.0
+      semver: 7.5.4
+    optionalDependencies:
+      '@vue/compiler-sfc': 3.3.4
+    transitivePeerDependencies:
+      - supports-color
+    optional: true
 
   '@jridgewell/gen-mapping@0.3.5':
     dependencies:
       '@jridgewell/set-array': 1.2.1
-      '@jridgewell/sourcemap-codec': 1.4.15
+      '@jridgewell/sourcemap-codec': 1.5.0
       '@jridgewell/trace-mapping': 0.3.25
 
   '@jridgewell/resolve-uri@3.1.1': {}
-
-  '@jridgewell/set-array@1.1.2': {}
 
   '@jridgewell/set-array@1.2.1': {}
 
@@ -5337,12 +5436,12 @@ snapshots:
   '@jridgewell/trace-mapping@0.3.19':
     dependencies:
       '@jridgewell/resolve-uri': 3.1.1
-      '@jridgewell/sourcemap-codec': 1.4.15
+      '@jridgewell/sourcemap-codec': 1.5.0
 
   '@jridgewell/trace-mapping@0.3.25':
     dependencies:
       '@jridgewell/resolve-uri': 3.1.1
-      '@jridgewell/sourcemap-codec': 1.4.15
+      '@jridgewell/sourcemap-codec': 1.5.0
 
   '@lezer/common@0.15.12': {}
 
@@ -5512,14 +5611,14 @@ snapshots:
     transitivePeerDependencies:
       - '@parcel/core'
 
-  '@parcel/config-default@2.9.3(@parcel/core@2.9.3)(@swc/helpers@0.5.2)(postcss@8.4.24)(typescript@5.2.2)':
+  '@parcel/config-default@2.9.3(@parcel/core@2.9.3)(@swc/helpers@0.5.2)(postcss@8.4.33)(typescript@5.2.2)':
     dependencies:
       '@parcel/bundler-default': 2.9.3(@parcel/core@2.9.3)
       '@parcel/compressor-raw': 2.9.3(@parcel/core@2.9.3)
       '@parcel/core': 2.9.3
       '@parcel/namer-default': 2.9.3(@parcel/core@2.9.3)
       '@parcel/optimizer-css': 2.9.3(@parcel/core@2.9.3)
-      '@parcel/optimizer-htmlnano': 2.9.3(@parcel/core@2.9.3)(postcss@8.4.24)(typescript@5.2.2)
+      '@parcel/optimizer-htmlnano': 2.9.3(@parcel/core@2.9.3)(postcss@8.4.33)(typescript@5.2.2)
       '@parcel/optimizer-image': 2.9.3(@parcel/core@2.9.3)
       '@parcel/optimizer-svgo': 2.9.3(@parcel/core@2.9.3)
       '@parcel/optimizer-swc': 2.9.3(@parcel/core@2.9.3)(@swc/helpers@0.5.2)
@@ -5693,10 +5792,10 @@ snapshots:
     transitivePeerDependencies:
       - '@parcel/core'
 
-  '@parcel/optimizer-htmlnano@2.9.3(@parcel/core@2.9.3)(postcss@8.4.24)(typescript@5.2.2)':
+  '@parcel/optimizer-htmlnano@2.9.3(@parcel/core@2.9.3)(postcss@8.4.33)(typescript@5.2.2)':
     dependencies:
       '@parcel/plugin': 2.9.3(@parcel/core@2.9.3)
-      htmlnano: 2.1.1(postcss@8.4.24)(svgo@2.8.0)(typescript@5.2.2)
+      htmlnano: 2.1.1(postcss@8.4.33)(svgo@2.8.0)(typescript@5.2.2)
       nullthrows: 1.1.1
       posthtml: 0.16.6
       svgo: 2.8.0
@@ -6182,6 +6281,12 @@ snapshots:
 
   '@plasmohq/init@0.7.0': {}
 
+  '@plasmohq/messaging@0.6.2(react@18.2.0)':
+    dependencies:
+      nanoid: 5.0.3
+    optionalDependencies:
+      react: 18.2.0
+
   '@plasmohq/parcel-bundler@0.5.6':
     dependencies:
       '@parcel/core': 2.9.3
@@ -6198,10 +6303,10 @@ snapshots:
     transitivePeerDependencies:
       - '@parcel/core'
 
-  '@plasmohq/parcel-config@0.41.1(@swc/core@1.7.26(@swc/helpers@0.5.2))(@swc/helpers@0.5.2)(lodash@4.17.21)(postcss@8.4.24)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.2.2)':
+  '@plasmohq/parcel-config@0.41.1(@swc/core@1.7.26(@swc/helpers@0.5.2))(@swc/helpers@0.5.2)(lodash@4.17.21)(postcss@8.4.33)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.2.2)':
     dependencies:
       '@parcel/compressor-raw': 2.9.3(@parcel/core@2.9.3)
-      '@parcel/config-default': 2.9.3(@parcel/core@2.9.3)(@swc/helpers@0.5.2)(postcss@8.4.24)(typescript@5.2.2)
+      '@parcel/config-default': 2.9.3(@parcel/core@2.9.3)(@swc/helpers@0.5.2)(postcss@8.4.33)(typescript@5.2.2)
       '@parcel/core': 2.9.3
       '@parcel/optimizer-data-url': 2.9.3(@parcel/core@2.9.3)
       '@parcel/reporter-bundle-buddy': 2.9.3(@parcel/core@2.9.3)
@@ -6228,7 +6333,7 @@ snapshots:
       '@plasmohq/parcel-optimizer-es': 0.4.1(@swc/helpers@0.5.2)
       '@plasmohq/parcel-packager': 0.6.15
       '@plasmohq/parcel-resolver': 0.14.1
-      '@plasmohq/parcel-resolver-post': 0.4.5(@swc/core@1.7.26(@swc/helpers@0.5.2))(postcss@8.4.24)
+      '@plasmohq/parcel-resolver-post': 0.4.5(@swc/core@1.7.26(@swc/helpers@0.5.2))(postcss@8.4.33)
       '@plasmohq/parcel-runtime': 0.25.1
       '@plasmohq/parcel-transformer-inject-env': 0.2.12
       '@plasmohq/parcel-transformer-inline-css': 0.3.11
@@ -6348,14 +6453,14 @@ snapshots:
       '@parcel/utils': 2.9.3
       nullthrows: 1.1.1
 
-  '@plasmohq/parcel-resolver-post@0.4.5(@swc/core@1.7.26(@swc/helpers@0.5.2))(postcss@8.4.24)':
+  '@plasmohq/parcel-resolver-post@0.4.5(@swc/core@1.7.26(@swc/helpers@0.5.2))(postcss@8.4.33)':
     dependencies:
       '@parcel/core': 2.9.3
       '@parcel/hash': 2.9.3
       '@parcel/plugin': 2.9.3(@parcel/core@2.9.3)
       '@parcel/types': 2.9.3(@parcel/core@2.9.3)
       '@parcel/utils': 2.9.3
-      tsup: 7.2.0(@swc/core@1.7.26(@swc/helpers@0.5.2))(postcss@8.4.24)(typescript@5.2.2)
+      tsup: 7.2.0(@swc/core@1.7.26(@swc/helpers@0.5.2))(postcss@8.4.33)(typescript@5.2.2)
       typescript: 5.2.2
     transitivePeerDependencies:
       - '@swc/core'
@@ -6476,6 +6581,12 @@ snapshots:
       - velocityjs
       - walrus
       - whiskers
+
+  '@plasmohq/storage@1.12.0(react@18.2.0)':
+    dependencies:
+      pify: 6.1.0
+    optionalDependencies:
+      react: 18.2.0
 
   '@pnpm/config.env-replace@1.1.0': {}
 
@@ -6951,17 +7062,43 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
+  '@supabase/functions-js@2.4.3':
+    dependencies:
+      '@supabase/node-fetch': 2.6.15
+
   '@supabase/gotrue-js@2.46.1(encoding@0.1.13)':
     dependencies:
       cross-fetch: 3.1.8(encoding@0.1.13)
     transitivePeerDependencies:
       - encoding
 
+  '@supabase/gotrue-js@2.65.0':
+    dependencies:
+      '@supabase/node-fetch': 2.6.15
+
+  '@supabase/node-fetch@2.6.15':
+    dependencies:
+      whatwg-url: 5.0.0
+
+  '@supabase/postgrest-js@1.16.2':
+    dependencies:
+      '@supabase/node-fetch': 2.6.15
+
   '@supabase/postgrest-js@1.8.0(encoding@0.1.13)':
     dependencies:
       cross-fetch: 3.1.8(encoding@0.1.13)
     transitivePeerDependencies:
       - encoding
+
+  '@supabase/realtime-js@2.10.6(bufferutil@4.0.7)(utf-8-validate@5.0.10)':
+    dependencies:
+      '@supabase/node-fetch': 2.6.15
+      '@types/phoenix': 1.6.0
+      '@types/ws': 8.5.12
+      ws: 8.18.0(bufferutil@4.0.7)(utf-8-validate@5.0.10)
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
 
   '@supabase/realtime-js@2.7.3':
     dependencies:
@@ -6983,6 +7120,10 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
+  '@supabase/storage-js@2.7.1':
+    dependencies:
+      '@supabase/node-fetch': 2.6.15
+
   '@supabase/supabase-js@2.26.0(encoding@0.1.13)':
     dependencies:
       '@supabase/functions-js': 2.1.2(encoding@0.1.13)
@@ -6994,6 +7135,18 @@ snapshots:
     transitivePeerDependencies:
       - encoding
       - supports-color
+
+  '@supabase/supabase-js@2.39.3(bufferutil@4.0.7)(utf-8-validate@5.0.10)':
+    dependencies:
+      '@supabase/functions-js': 2.4.3
+      '@supabase/gotrue-js': 2.65.0
+      '@supabase/node-fetch': 2.6.15
+      '@supabase/postgrest-js': 1.16.2
+      '@supabase/realtime-js': 2.10.6(bufferutil@4.0.7)(utf-8-validate@5.0.10)
+      '@supabase/storage-js': 2.7.1
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
 
   '@svgr/babel-plugin-add-jsx-attribute@6.5.1(@babel/core@7.25.7)':
     dependencies:
@@ -7243,6 +7396,10 @@ snapshots:
     dependencies:
       '@types/node': 20.11.5
 
+  '@types/ws@8.5.12':
+    dependencies:
+      '@types/node': 20.11.5
+
   '@typescript-eslint/parser@5.62.0(eslint@8.44.0)(typescript@5.1.3)':
     dependencies:
       '@typescript-eslint/scope-manager': 5.62.0
@@ -7303,7 +7460,7 @@ snapshots:
       '@vue/shared': 3.3.4
       estree-walker: 2.0.2
       magic-string: 0.30.11
-      postcss: 8.4.24
+      postcss: 8.4.33
       source-map-js: 1.0.2
 
   '@vue/compiler-ssr@3.3.4':
@@ -7669,7 +7826,7 @@ snapshots:
 
   code-red@1.0.4:
     dependencies:
-      '@jridgewell/sourcemap-codec': 1.4.15
+      '@jridgewell/sourcemap-codec': 1.5.0
       '@types/estree': 1.0.6
       acorn: 8.10.0
       estree-walker: 3.0.3
@@ -8046,7 +8203,7 @@ snapshots:
       eslint: 8.44.0
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 3.6.0(@typescript-eslint/parser@5.62.0(eslint@8.44.0)(typescript@5.1.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.28.0(eslint@8.44.0))(eslint@8.44.0)
-      eslint-plugin-import: 2.28.0(@typescript-eslint/parser@5.62.0(eslint@8.44.0)(typescript@5.1.3))(eslint-import-resolver-typescript@3.6.0(@typescript-eslint/parser@5.62.0(eslint@8.44.0)(typescript@5.1.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.28.0(eslint@8.44.0))(eslint@8.44.0))(eslint@8.44.0)
+      eslint-plugin-import: 2.28.0(@typescript-eslint/parser@5.62.0(eslint@8.44.0)(typescript@5.1.3))(eslint-import-resolver-typescript@3.6.0)(eslint@8.44.0)
       eslint-plugin-jsx-a11y: 6.7.1(eslint@8.44.0)
       eslint-plugin-react: 7.33.1(eslint@8.44.0)
       eslint-plugin-react-hooks: 5.0.0-canary-7118f5dd7-20230705(eslint@8.44.0)
@@ -8070,7 +8227,7 @@ snapshots:
       enhanced-resolve: 5.15.0
       eslint: 8.44.0
       eslint-module-utils: 2.8.0(@typescript-eslint/parser@5.62.0(eslint@8.44.0)(typescript@5.1.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.0(@typescript-eslint/parser@5.62.0(eslint@8.44.0)(typescript@5.1.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.28.0(eslint@8.44.0))(eslint@8.44.0))(eslint@8.44.0)
-      eslint-plugin-import: 2.28.0(@typescript-eslint/parser@5.62.0(eslint@8.44.0)(typescript@5.1.3))(eslint-import-resolver-typescript@3.6.0(@typescript-eslint/parser@5.62.0(eslint@8.44.0)(typescript@5.1.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.28.0(eslint@8.44.0))(eslint@8.44.0))(eslint@8.44.0)
+      eslint-plugin-import: 2.28.0(@typescript-eslint/parser@5.62.0(eslint@8.44.0)(typescript@5.1.3))(eslint-import-resolver-typescript@3.6.0)(eslint@8.44.0)
       fast-glob: 3.3.2
       get-tsconfig: 4.6.2
       is-core-module: 2.13.0
@@ -8092,7 +8249,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import@2.28.0(@typescript-eslint/parser@5.62.0(eslint@8.44.0)(typescript@5.1.3))(eslint-import-resolver-typescript@3.6.0(@typescript-eslint/parser@5.62.0(eslint@8.44.0)(typescript@5.1.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.28.0(eslint@8.44.0))(eslint@8.44.0))(eslint@8.44.0):
+  eslint-plugin-import@2.28.0(@typescript-eslint/parser@5.62.0(eslint@8.44.0)(typescript@5.1.3))(eslint-import-resolver-typescript@3.6.0)(eslint@8.44.0):
     dependencies:
       array-includes: 3.1.6
       array.prototype.findlastindex: 1.2.2
@@ -8515,13 +8672,13 @@ snapshots:
     dependencies:
       react-is: 16.13.1
 
-  htmlnano@2.1.1(postcss@8.4.24)(svgo@2.8.0)(typescript@5.2.2):
+  htmlnano@2.1.1(postcss@8.4.33)(svgo@2.8.0)(typescript@5.2.2):
     dependencies:
       cosmiconfig: 9.0.0(typescript@5.2.2)
       posthtml: 0.16.6
       timsort: 0.3.0
     optionalDependencies:
-      postcss: 8.4.24
+      postcss: 8.4.33
       svgo: 2.8.0
     transitivePeerDependencies:
       - typescript
@@ -9033,6 +9190,10 @@ snapshots:
 
   nanoid@3.3.6: {}
 
+  nanoid@3.3.7: {}
+
+  nanoid@5.0.3: {}
+
   napi-build-utils@1.0.2: {}
 
   natural-compare@1.4.0: {}
@@ -9050,7 +9211,7 @@ snapshots:
 
   next-tick@1.1.0: {}
 
-  next@13.5.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.71.0):
+  next@13.5.3(@babel/core@7.25.7)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(sass@1.71.0):
     dependencies:
       '@next/env': 13.5.3
       '@swc/helpers': 0.5.2
@@ -9059,7 +9220,7 @@ snapshots:
       postcss: 8.4.14
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-      styled-jsx: 5.1.1(react@18.2.0)
+      styled-jsx: 5.1.1(@babel/core@7.25.7)(react@18.2.0)
       watchpack: 2.4.0
       zod: 3.21.4
     optionalDependencies:
@@ -9271,9 +9432,11 @@ snapshots:
   pify@4.0.1:
     optional: true
 
+  pify@6.1.0: {}
+
   pirates@4.0.6: {}
 
-  plasmo@0.89.2(@swc/core@1.7.26(@swc/helpers@0.5.2))(@swc/helpers@0.5.2)(lodash@4.17.21)(postcss@8.4.24)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+  plasmo@0.89.2(@swc/core@1.7.26(@swc/helpers@0.5.2))(@swc/helpers@0.5.2)(lodash@4.17.21)(postcss@8.4.33)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
     dependencies:
       '@expo/spawn-async': 1.7.2
       '@parcel/core': 2.9.3
@@ -9281,7 +9444,7 @@ snapshots:
       '@parcel/package-manager': 2.9.3(@parcel/core@2.9.3)
       '@parcel/watcher': 2.2.0
       '@plasmohq/init': 0.7.0
-      '@plasmohq/parcel-config': 0.41.1(@swc/core@1.7.26(@swc/helpers@0.5.2))(@swc/helpers@0.5.2)(lodash@4.17.21)(postcss@8.4.24)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.2.2)
+      '@plasmohq/parcel-config': 0.41.1(@swc/core@1.7.26(@swc/helpers@0.5.2))(@swc/helpers@0.5.2)(lodash@4.17.21)(postcss@8.4.33)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.2.2)
       '@plasmohq/parcel-core': 0.1.9
       buffer: 6.0.3
       chalk: 5.3.0
@@ -9364,28 +9527,28 @@ snapshots:
       - walrus
       - whiskers
 
-  postcss-import@15.1.0(postcss@8.4.24):
+  postcss-import@15.1.0(postcss@8.4.33):
     dependencies:
-      postcss: 8.4.24
+      postcss: 8.4.33
       postcss-value-parser: 4.2.0
       read-cache: 1.0.0
       resolve: 1.22.4
 
-  postcss-js@4.0.1(postcss@8.4.24):
+  postcss-js@4.0.1(postcss@8.4.33):
     dependencies:
       camelcase-css: 2.0.1
-      postcss: 8.4.24
+      postcss: 8.4.33
 
-  postcss-load-config@4.0.1(postcss@8.4.24):
+  postcss-load-config@4.0.1(postcss@8.4.33):
     dependencies:
       lilconfig: 2.1.0
       yaml: 2.3.1
     optionalDependencies:
-      postcss: 8.4.24
+      postcss: 8.4.33
 
-  postcss-nested@6.0.1(postcss@8.4.24):
+  postcss-nested@6.0.1(postcss@8.4.33):
     dependencies:
-      postcss: 8.4.24
+      postcss: 8.4.33
       postcss-selector-parser: 6.0.13
 
   postcss-selector-parser@6.0.13:
@@ -9397,14 +9560,20 @@ snapshots:
 
   postcss@8.4.14:
     dependencies:
-      nanoid: 3.3.6
-      picocolors: 1.0.0
+      nanoid: 3.3.7
+      picocolors: 1.1.0
       source-map-js: 1.0.2
 
   postcss@8.4.24:
     dependencies:
       nanoid: 3.3.6
       picocolors: 1.0.0
+      source-map-js: 1.0.2
+
+  postcss@8.4.33:
+    dependencies:
+      nanoid: 3.3.7
+      picocolors: 1.1.0
       source-map-js: 1.0.2
 
   posthtml-parser@0.10.2:
@@ -9446,10 +9615,11 @@ snapshots:
       prettier: 3.0.0
       typescript: 5.3.3
 
-  prettier-plugin-tailwindcss@0.5.4(prettier-plugin-organize-imports@3.2.2(prettier@3.0.0)(typescript@5.3.3))(prettier@3.0.0):
+  prettier-plugin-tailwindcss@0.5.4(@ianvs/prettier-plugin-sort-imports@4.1.1(@vue/compiler-sfc@3.3.4)(prettier@3.0.0))(prettier-plugin-organize-imports@3.2.2(prettier@3.0.0)(typescript@5.3.3))(prettier@3.0.0):
     dependencies:
       prettier: 3.0.0
     optionalDependencies:
+      '@ianvs/prettier-plugin-sort-imports': 4.1.1(@vue/compiler-sfc@3.3.4)(prettier@3.0.0)
       prettier-plugin-organize-imports: 3.2.2(prettier@3.0.0)(typescript@5.3.3)
 
   prettier@3.0.0: {}
@@ -9826,16 +9996,18 @@ snapshots:
 
   strip-json-comments@3.1.1: {}
 
-  styled-jsx@5.1.1(react@18.2.0):
+  styled-jsx@5.1.1(@babel/core@7.25.7)(react@18.2.0):
     dependencies:
       client-only: 0.0.1
       react: 18.2.0
+    optionalDependencies:
+      '@babel/core': 7.25.7
 
   stylis@4.2.0: {}
 
   sucrase@3.34.0:
     dependencies:
-      '@jridgewell/gen-mapping': 0.3.3
+      '@jridgewell/gen-mapping': 0.3.5
       commander: 4.1.1
       glob: 7.1.6
       lines-and-columns: 1.2.4
@@ -9884,7 +10056,7 @@ snapshots:
       css-select: 4.3.0
       css-tree: 1.1.3
       csso: 4.2.0
-      picocolors: 1.0.0
+      picocolors: 1.1.0
       stable: 0.1.8
 
   tailwind-merge@1.13.2: {}
@@ -9908,14 +10080,41 @@ snapshots:
       micromatch: 4.0.5
       normalize-path: 3.0.0
       object-hash: 3.0.0
-      picocolors: 1.0.0
-      postcss: 8.4.24
-      postcss-import: 15.1.0(postcss@8.4.24)
-      postcss-js: 4.0.1(postcss@8.4.24)
-      postcss-load-config: 4.0.1(postcss@8.4.24)
-      postcss-nested: 6.0.1(postcss@8.4.24)
+      picocolors: 1.1.0
+      postcss: 8.4.33
+      postcss-import: 15.1.0(postcss@8.4.33)
+      postcss-js: 4.0.1(postcss@8.4.33)
+      postcss-load-config: 4.0.1(postcss@8.4.33)
+      postcss-nested: 6.0.1(postcss@8.4.33)
       postcss-selector-parser: 6.0.13
       postcss-value-parser: 4.2.0
+      resolve: 1.22.4
+      sucrase: 3.34.0
+    transitivePeerDependencies:
+      - ts-node
+
+  tailwindcss@3.4.1:
+    dependencies:
+      '@alloc/quick-lru': 5.2.0
+      arg: 5.0.2
+      chokidar: 3.5.3
+      didyoumean: 1.2.2
+      dlv: 1.1.3
+      fast-glob: 3.3.2
+      glob-parent: 6.0.2
+      is-glob: 4.0.3
+      jiti: 1.19.1
+      lilconfig: 2.1.0
+      micromatch: 4.0.5
+      normalize-path: 3.0.0
+      object-hash: 3.0.0
+      picocolors: 1.1.0
+      postcss: 8.4.33
+      postcss-import: 15.1.0(postcss@8.4.33)
+      postcss-js: 4.0.1(postcss@8.4.33)
+      postcss-load-config: 4.0.1(postcss@8.4.33)
+      postcss-nested: 6.0.1(postcss@8.4.33)
+      postcss-selector-parser: 6.0.13
       resolve: 1.22.4
       sucrase: 3.34.0
     transitivePeerDependencies:
@@ -10019,7 +10218,7 @@ snapshots:
 
   tslib@2.6.1: {}
 
-  tsup@7.2.0(@swc/core@1.7.26(@swc/helpers@0.5.2))(postcss@8.4.24)(typescript@5.2.2):
+  tsup@7.2.0(@swc/core@1.7.26(@swc/helpers@0.5.2))(postcss@8.4.33)(typescript@5.2.2):
     dependencies:
       bundle-require: 4.2.1(esbuild@0.18.20)
       cac: 6.7.14
@@ -10029,7 +10228,7 @@ snapshots:
       execa: 5.1.1
       globby: 11.1.0
       joycon: 3.1.1
-      postcss-load-config: 4.0.1(postcss@8.4.24)
+      postcss-load-config: 4.0.1(postcss@8.4.33)
       resolve-from: 5.0.0
       rollup: 3.29.5
       source-map: 0.8.0-beta.0
@@ -10037,7 +10236,7 @@ snapshots:
       tree-kill: 1.2.2
     optionalDependencies:
       '@swc/core': 1.7.26(@swc/helpers@0.5.2)
-      postcss: 8.4.24
+      postcss: 8.4.33
       typescript: 5.2.2
     transitivePeerDependencies:
       - supports-color
@@ -10124,13 +10323,13 @@ snapshots:
     dependencies:
       browserslist: 4.22.1
       escalade: 3.1.1
-      picocolors: 1.0.0
+      picocolors: 1.1.0
 
   update-browserslist-db@1.0.13(browserslist@4.23.0):
     dependencies:
       browserslist: 4.23.0
       escalade: 3.1.1
-      picocolors: 1.0.0
+      picocolors: 1.1.0
 
   update-browserslist-db@1.1.1(browserslist@4.24.0):
     dependencies:
@@ -10250,6 +10449,11 @@ snapshots:
     dependencies:
       imurmurhash: 0.1.4
       signal-exit: 4.0.2
+
+  ws@8.18.0(bufferutil@4.0.7)(utf-8-validate@5.0.10):
+    optionalDependencies:
+      bufferutil: 4.0.7
+      utf-8-validate: 5.0.10
 
   xxhash-wasm@0.4.2: {}
 
