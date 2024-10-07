@@ -1,9 +1,11 @@
+'use server'
+
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { createClient } from '../utils/supabase/server'
 import { Database } from './database.types'
 
-export const checkAuthentication = async () => {
+export const checkAuthentication = async (pathname: string) => {
   const cookieStore = cookies()
   const supabase = createClient(cookieStore)
 
@@ -12,9 +14,10 @@ export const checkAuthentication = async () => {
   } = await supabase.auth.getUser()
 
   if (!user) {
-    // This route can only be accessed by authenticated users.
-    // Unauthenticated users will be redirected to the `/login` route.
-    redirect('/login')
+    // Encode the current path and redirect to login with the 'returnTo' query parameter
+    const encodedReturnTo = encodeURIComponent(pathname)
+    console.log('redirecting to login', encodedReturnTo)
+    redirect(`/login?returnTo=${encodedReturnTo}`)
   }
 }
 

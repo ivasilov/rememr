@@ -6,7 +6,7 @@ import { Input } from '@/src/components/ui/input'
 import { createClient } from '@/src/utils/supabase/client'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -19,6 +19,7 @@ const FormSchema = z.object({
 
 export default function LoginForm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -35,7 +36,8 @@ export default function LoginForm() {
       email: values.email,
       password: values.password,
     })
-    router.push('/')
+    const returnTo = searchParams.get('returnTo') || '/'
+    router.push(decodeURIComponent(returnTo) as any)
   }
 
   return (

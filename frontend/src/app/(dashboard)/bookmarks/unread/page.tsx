@@ -5,7 +5,7 @@ import { createClient } from '@/src/utils/supabase/server'
 import { cookies } from 'next/headers'
 
 const BookmarksPage = async () => {
-  await checkAuthentication()
+  await checkAuthentication('/bookmarks/unread')
 
   const cookieStore = cookies()
   const supabase = createClient(cookieStore)

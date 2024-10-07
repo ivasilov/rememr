@@ -8,7 +8,7 @@ import { AccountInformation } from './account-information'
 import { Imports } from './imports'
 
 const AccountPage = async () => {
-  await checkAuthentication()
+  await checkAuthentication('/settings')
   const cookieStore = cookies()
   const supabase = createClient(cookieStore)
 

@@ -5,7 +5,7 @@ import { Bookmarks } from '../../../components/bookmarks'
 import { checkAuthentication } from '../../../lib/supabase'
 
 const BookmarksPage = async () => {
-  await checkAuthentication()
+  await checkAuthentication('/bookmarks')
 
   const cookieStore = cookies()
   const supabase = createClient(cookieStore)

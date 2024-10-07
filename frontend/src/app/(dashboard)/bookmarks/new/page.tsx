@@ -3,7 +3,7 @@ import { checkAuthentication } from '@/src/lib/supabase'
 import { NewBookmarkComponent } from './component'
 
 const NewBookmarkPage = async () => {
-  await checkAuthentication()
+  await checkAuthentication('/bookmarks/new')
 
   return (
     <div className="flex justify-center pt-8">
