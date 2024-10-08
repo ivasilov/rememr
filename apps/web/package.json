@@ -1,5 +1,5 @@
 {
-  "name": "frontend",
+  "name": "@rememr/web",
   "private": true,
   "scripts": {
     "dev": "next dev",

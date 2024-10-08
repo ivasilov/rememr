@@ -1,5 +1,5 @@
 {
-  "name": "rememr-extension",
+  "name": "@rememr/extension",
   "displayName": "Rememr extension",
   "version": "0.0.1",
   "description": "Companion extension for rememr.com",
