@@ -1,4 +1,4 @@
-import type { Provider, User } from '@supabase/supabase-js'
+import type { User } from '@supabase/supabase-js'
 import { useEffect, useState } from 'react'
 
 import { sendToBackground } from '@plasmohq/messaging'
@@ -41,23 +41,18 @@ function IndexOptions() {
     init()
   }, [])
 
-  const handleEmailLogin = async (type: 'LOGIN' | 'SIGNUP', username: string, password: string) => {
+  const handleEmailLogin = async (username: string, password: string) => {
     try {
       const {
         error,
         data: { user },
-      } =
-        type === 'LOGIN'
-          ? await supabase.auth.signInWithPassword({
-              email: username,
-              password,
-            })
-          : await supabase.auth.signUp({ email: username, password })
+      } = await supabase.auth.signInWithPassword({
+        email: username,
+        password,
+      })
 
       if (error) {
         alert('Error with auth: ' + error.message)
-      } else if (!user) {
-        alert('Signup successful, confirmation mail should be sent soon!')
       } else {
         setUser(user)
       }
@@ -65,16 +60,6 @@ function IndexOptions() {
       console.log('error', error)
       alert(error.error_description || error)
     }
-  }
-
-  const handleOAuthLogin = async (provider: Provider, scopes = 'email') => {
-    await supabase.auth.signInWithOAuth({
-      provider,
-      options: {
-        scopes,
-        redirectTo: location.href,
-      },
-    })
   }
 
   return (
@@ -131,25 +116,10 @@ function IndexOptions() {
 
             <button
               onClick={e => {
-                handleEmailLogin('SIGNUP', username, password)
-              }}
-            >
-              Sign up
-            </button>
-            <button
-              onClick={e => {
-                handleEmailLogin('LOGIN', username, password)
+                handleEmailLogin(username, password)
               }}
             >
               Login
-            </button>
-
-            <button
-              onClick={e => {
-                handleOAuthLogin('github')
-              }}
-            >
-              Sign in with GitHub
             </button>
           </>
         )}

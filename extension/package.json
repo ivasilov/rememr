@@ -7,12 +7,14 @@
   "scripts": {
     "dev": "plasmo dev",
     "build": "plasmo build",
-    "package": "plasmo package"
+    "package": "plasmo package",
+    "generate:types": "supabase gen types typescript --local > src/lib/database.types.ts && prettier --write src/lib/database.types.ts"
   },
   "dependencies": {
     "@plasmohq/messaging": "0.6.2",
     "@plasmohq/storage": "1.12.0",
     "@supabase/supabase-js": "2.39.3",
+    "browser-namespace": "^1.4.0",
     "plasmo": "0.89.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -43,6 +45,9 @@
           "$CRX_ID"
         ]
       }
+    ],
+    "permissions": [
+      "tabs"
     ]
   }
 }
