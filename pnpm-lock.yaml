@@ -130,6 +130,9 @@ importers:
       react-select:
         specifier: ^5.7.3
         version: 5.7.3(@types/react@18.2.48)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      sonner:
+        specifier: ^1.5.0
+        version: 1.5.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       tailwind-merge:
         specifier: ^1.13.2
         version: 1.13.2
