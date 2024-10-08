@@ -1,5 +1,3 @@
-import { Button } from '@/src/components/ui/button'
-import { DialogFooter, DialogHeader, DialogTitle } from '@/src/components/ui/dialog'
 import { createClient } from '@/src/utils/supabase/client'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { uniqBy } from 'lodash'
@@ -7,10 +5,22 @@ import { useEffect } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { z } from 'zod'
 
+import {
+  Button,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  Input,
+  Switch,
+} from '@rememr/ui'
 import { EditPagesForBookmark } from '../edit-pages-for-bookmark'
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
-import { Input } from '../ui/input'
-import { Switch } from '../ui/switch'
 
 const formId = 'edit-bookmark'
 

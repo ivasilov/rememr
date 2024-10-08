@@ -1,7 +1,7 @@
 'use client'
 
-import { DropdownMenuCheckboxItem, DropdownMenuItem, DropdownMenuSeparator } from '@/src/components/ui/dropdown-menu'
 import { createClient } from '@/src/utils/supabase/client'
+import { DropdownMenuCheckboxItem, DropdownMenuItem, DropdownMenuSeparator } from '@rememr/ui'
 import { useTheme } from 'next-themes'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'

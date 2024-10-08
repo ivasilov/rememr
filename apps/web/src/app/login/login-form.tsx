@@ -1,10 +1,8 @@
 'use client'
 
-import { Button } from '@/src/components/ui/button'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/src/components/ui/form'
-import { Input } from '@/src/components/ui/input'
 import { createClient } from '@/src/utils/supabase/client'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Button, Form, FormControl, FormField, FormItem, FormLabel, FormMessage, Input } from '@rememr/ui'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useForm } from 'react-hook-form'

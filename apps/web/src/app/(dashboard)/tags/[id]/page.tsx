@@ -6,7 +6,7 @@ import { SinglePageError } from './components/error'
 import { ReadOnlyPage } from './components/read-only-page'
 
 const TagPage = async ({ params: { id } }: { params: { id: string } }) => {
-  await checkAuthentication()
+  await checkAuthentication(`/tags/${id}`)
 
   const cookieStore = cookies()
   const supabase = createClient(cookieStore)

@@ -5,9 +5,9 @@ import { useCallback, useState } from 'react'
 import { classNames } from '@/src/lib/classnames'
 import { BookmarkType } from '@/src/lib/supabase'
 import { createClient } from '@/src/utils/supabase/client'
+import { Button } from '@rememr/ui'
 import Link from 'next/link'
 import { Bookmark } from '../bookmark'
-import { Button } from '../ui/button'
 import { LoadMoreBookmarks } from './load-more-bookmarks'
 
 type BookmarksProps = {

@@ -1,10 +1,7 @@
 'use client'
 
-import { Button } from '@/src/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card'
-import { Input } from '@/src/components/ui/input'
 import { createClient } from '@/src/utils/supabase/client'
-import { Label } from '@radix-ui/react-label'
+import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Input, Label } from '@rememr/ui'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useState } from 'react'

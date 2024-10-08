@@ -4,11 +4,11 @@ import { Menu, Transition } from '@headlessui/react'
 
 import { classNames } from '@/src/lib/classnames'
 import { createClient } from '@/src/utils/supabase/client'
+import { Avatar, AvatarFallback } from '@rememr/ui'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Fragment, PropsWithChildren, useCallback, useState } from 'react'
 import { Icon } from '../icon'
-import { Avatar, AvatarFallback } from '../ui/avatar'
 import { Sidebar } from './sidebar'
 
 export const Layout = ({ children }: PropsWithChildren<{}>) => {

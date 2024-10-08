@@ -1,8 +1,14 @@
 import { SheetSideLink, SideLink } from '@/src/components/layout/PageLink'
-import { Button } from '@/src/components/ui/button'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/src/components/ui/dropdown-menu'
-import { Input } from '@/src/components/ui/input'
-import { Sheet, SheetContent, SheetTrigger } from '@/src/components/ui/sheet'
+import {
+  Button,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+  Input,
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+} from '@rememr/ui'
 import { Book, CircleUser, Home, Menu, Search } from 'lucide-react'
 import Link from 'next/link'
 import { PropsWithChildren } from 'react'

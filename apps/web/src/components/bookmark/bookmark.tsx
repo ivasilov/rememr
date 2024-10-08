@@ -1,13 +1,10 @@
-/* eslint-disable @next/next/no-img-element */
-import { Button } from '@/src/components/ui/button'
 import { BookmarkType } from '@/src/lib/supabase'
 import { faPencil, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { Button, Card, Dialog, DialogContent, DialogTrigger } from '@rememr/ui'
 import { useState } from 'react'
 import { DeleteBookmarkDialog } from '../delete-bookmark'
 import { EditBookmarkDialog } from '../edit-bookmark'
 import { Icon } from '../icon'
-import { Card } from '../ui/card'
-import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog'
 
 export const Bookmark = (props: { bookmark: BookmarkType }) => {
   const [{ editBookmarkDialogShown, deleteBookmarkDialogShown }, setState] = useState({

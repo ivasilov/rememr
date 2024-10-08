@@ -1,8 +1,8 @@
 'use server'
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card'
 import { checkAuthentication } from '@/src/lib/supabase'
 import { createClient } from '@/src/utils/supabase/server'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@rememr/ui'
 import { cookies } from 'next/headers'
 import { AccountInformation } from './account-information'
 import { Imports } from './imports'

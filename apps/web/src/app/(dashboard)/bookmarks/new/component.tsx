@@ -4,10 +4,13 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-import { EditPagesForBookmark } from '../../../../components/edit-pages-for-bookmark'
-import { Button } from '../../../../components/ui/button'
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../../../../components/ui/card'
 import {
+  Button,
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
   Form,
   FormControl,
   FormDescription,
@@ -15,9 +18,10 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '../../../../components/ui/form'
-import { Input } from '../../../../components/ui/input'
-import { Switch } from '../../../../components/ui/switch'
+  Input,
+  Switch,
+} from '@rememr/ui'
+import { EditPagesForBookmark } from '../../../../components/edit-pages-for-bookmark'
 import { createClient } from '../../../../utils/supabase/client'
 
 const formId = 'create-new-bookmark'

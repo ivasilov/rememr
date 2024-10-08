@@ -1,5 +1,4 @@
-import { Button } from '@/src/components/ui/button'
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/src/components/ui/dialog'
+import { Button, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@rememr/ui'
 import { deleteBookmark } from './action'
 
 interface Props {

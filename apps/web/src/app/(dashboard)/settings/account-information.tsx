@@ -4,11 +4,22 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-import { Button } from '@/src/components/ui/button'
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/src/components/ui/card'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/src/components/ui/form'
-import { Input } from '@/src/components/ui/input'
 import { createClient } from '@/src/utils/supabase/client'
+import {
+  Button,
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  Input,
+} from '@rememr/ui'
 import { User } from '@supabase/supabase-js'
 import { toast } from 'sonner'
 

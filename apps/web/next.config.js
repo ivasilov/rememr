@@ -13,6 +13,7 @@ const nextConfig = {
       },
     ]
   },
+  transpilePackages: ['@rememr/ui'],
 }
 
 module.exports = nextConfig

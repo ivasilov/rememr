@@ -3,9 +3,12 @@ import { config } from '@fortawesome/fontawesome-svg-core'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 config.autoAddCss = false
 
-import { Toaster } from '../components/ui/sonner'
-import './globals.css'
+import { Toaster } from '@rememr/ui'
+
 import { Providers } from './providers'
+
+import '@rememr/ui/globals.css'
+import './globals.css'
 
 export const metadata = {
   title: 'rememr',
