@@ -13,7 +13,11 @@ const BookmarksPage = async () => {
     data: bookmarks,
     error,
     count,
-  } = await supabase.from('bookmarks').select('*', { count: 'exact' }).order('created_at').limit(10)
+  } = await supabase
+    .from('bookmarks')
+    .select('*', { count: 'exact' })
+    .order('created_at', { ascending: false })
+    .limit(10)
   const classes = 'container pt-8 px-6'
 
   if (!error) {

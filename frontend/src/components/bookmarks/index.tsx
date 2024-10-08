@@ -32,8 +32,8 @@ export const Bookmarks = ({ className, bookmarks: firstBookmarks, count: initial
     const { data, error, count } = await supabase
       .from('bookmarks')
       .select('*', { count: 'exact' })
-      .order('created_at')
-      .filter('created_at', 'gte', lastBookmark?.created_at)
+      .order('created_at', { ascending: false })
+      .filter('created_at', 'lte', lastBookmark?.created_at)
       .limit(10)
 
     if (data) {
