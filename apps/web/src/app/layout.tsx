@@ -8,6 +8,7 @@ import { Toaster } from '@rememr/ui'
 import { Providers } from './providers'
 
 import '@rememr/ui/globals.css'
+import { ReactNode } from 'react'
 import './globals.css'
 
 export const metadata = {
@@ -15,7 +16,7 @@ export const metadata = {
   description: 'A stream of bookmarks',
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html suppressHydrationWarning>
       <body className="font-sans">
