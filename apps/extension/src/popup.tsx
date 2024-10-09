@@ -1,8 +1,10 @@
+import '@rememr/ui/globals.css'
+
+import { Command, CommandGroup, CommandItem, CommandList } from '@rememr/ui'
 import type { User } from '@supabase/supabase-js'
 import { browser } from 'browser-namespace'
 import { useEffect, useState } from 'react'
 import { supabase } from '~core/supabase'
-import '~style.css'
 
 function IndexPopup() {
   const [user, setUser] = useState<User | null>(null)
@@ -19,10 +21,10 @@ function IndexPopup() {
     })
   }, [])
 
-  const sendTabsToRememr = async (allTabs: boolean) => {
+  const sendTabsToRememr = async (tabCount: 'single' | 'all') => {
     setIsLoading(true)
     try {
-      const tabs = await browser.tabs.query({ currentWindow: true, ...(allTabs ? {} : { active: true }) })
+      const tabs = await browser.tabs.query({ currentWindow: true, ...(tabCount === 'all' ? {} : { active: true }) })
       const bookmarks = tabs
         .filter(tab => tab.url && tab.title)
         .map(tab => ({
@@ -43,25 +45,30 @@ function IndexPopup() {
     }
   }
 
+  {
+    /* <DropdownMenu open={true}>
+        <DropdownMenuContent>
+          <DropdownMenuItem>Send this tab to rememr.com</DropdownMenuItem>
+          <DropdownMenuItem>Send all tabs to rememr.com</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu> */
+  }
+
   return (
-    <div className="flex h-48 w-64 flex-col items-center justify-center space-y-4 p-4">
+    <div className="bg-background dark flex w-48">
       {user ? (
-        <>
-          <button
-            onClick={() => sendTabsToRememr(false)}
-            disabled={isLoading}
-            className="w-full rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 disabled:opacity-50"
-          >
-            Send this tab to rememr.com
-          </button>
-          <button
-            onClick={() => sendTabsToRememr(true)}
-            disabled={isLoading}
-            className="w-full rounded bg-green-500 px-4 py-2 text-white hover:bg-green-600 disabled:opacity-50"
-          >
-            Send all tabs to rememr.com
-          </button>
-        </>
+        <Command>
+          <CommandList>
+            <CommandGroup className="p-0 font-semibold">
+              <CommandItem onClick={() => sendTabsToRememr('single')}>
+                <span className="p-2">Save this tab</span>
+              </CommandItem>
+              <CommandItem onClick={() => sendTabsToRememr('all')}>
+                <span className="p-2">Save all tabs</span>
+              </CommandItem>
+            </CommandGroup>
+          </CommandList>
+        </Command>
       ) : (
         <button
           onClick={() => browser.runtime.openOptionsPage()}

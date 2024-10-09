@@ -1,4 +1,3 @@
-import cssText from 'data-text:~style.css'
 import type { PlasmoCSConfig } from 'plasmo'
 
 import { CountButton } from '~features/count-button'
