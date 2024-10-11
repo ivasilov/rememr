@@ -1,20 +1,19 @@
 import '@rememr/ui/globals.css'
 
 import { Button } from '@rememr/ui'
-import type { User } from '@supabase/supabase-js'
 import { browser } from 'browser-namespace'
 import { useEffect, useState } from 'react'
 import { supabase } from '~core/supabase'
 
 function IndexPopup() {
-  const [user, setUser] = useState<User | null>(null)
+  // the popup defaults to being logged in because is the more common usecase (than being logged out). This is to avoid
+  // rerendering on each opening when the user is logged in
+  const [isLoggedIn, setIsLoggedIn] = useState(true)
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data, error }) => {
-      if (data) {
-        setUser(data.user)
-      }
-      if (error) {
+      if (!data || error) {
+        setIsLoggedIn(false)
         console.error(error)
       }
     })
@@ -22,11 +21,19 @@ function IndexPopup() {
 
   const sendTabsToRememr = async (tabCount: 'single' | 'all', readLater: boolean) => {
     try {
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser()
+      if (!user || userError) {
+        throw userError
+      }
+
       const tabs = await browser.tabs.query({ currentWindow: true, ...(tabCount === 'all' ? {} : { active: true }) })
       const bookmarks = tabs
         .filter(tab => tab.url && tab.title)
         .map(tab => ({
-          user_id: user?.id,
+          user_id: user.id,
           url: tab.url!,
           name: tab.title!,
           read: !readLater,
@@ -44,7 +51,7 @@ function IndexPopup() {
 
   return (
     <div className="flex w-60">
-      {user ? (
+      {isLoggedIn ? (
         <div className="flex flex-1 flex-col">
           <Button
             variant="ghost"
@@ -69,12 +76,14 @@ function IndexPopup() {
           </Button> */}
         </div>
       ) : (
-        <button
-          onClick={() => browser.runtime.openOptionsPage()}
-          className="w-full rounded bg-gray-500 px-4 py-2 text-white hover:bg-gray-600"
-        >
-          Login on rememr.com
-        </button>
+        <div className="flex flex-1 flex-col justify-center gap-4 px-4 py-4">
+          <p className="text-sm font-semibold">
+            You need to login to your Rememr account to be able to save your tabs.
+          </p>
+          <Button variant="default" onClick={() => browser.runtime.openOptionsPage()}>
+            Login on rememr.com
+          </Button>
+        </div>
       )}
     </div>
   )

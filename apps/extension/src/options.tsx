@@ -1,3 +1,5 @@
+import '@rememr/ui/globals.css'
+
 import type { User } from '@supabase/supabase-js'
 import { useEffect, useState } from 'react'
 
@@ -5,6 +7,7 @@ import { sendToBackground } from '@plasmohq/messaging'
 import { Storage } from '@plasmohq/storage'
 import { useStorage } from '@plasmohq/storage/hook'
 
+import { Button, Input, Label } from '@rememr/ui'
 import { supabase } from '~core/supabase'
 
 function IndexOptions() {
@@ -63,64 +66,47 @@ function IndexOptions() {
   }
 
   return (
-    <main
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: '100%',
-        top: 240,
-        position: 'relative',
-      }}
-    >
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          width: 240,
-          justifyContent: 'space-between',
-          gap: 4.2,
-        }}
-      >
+    <main className="align-center flex h-screen items-center justify-center">
+      <div className="flex h-fit flex-col gap-4">
         {user && (
           <>
             <h3>
               {user.email} - {user.id}
             </h3>
-            <button
+            <Button
               onClick={() => {
                 supabase.auth.signOut()
                 setUser(null)
               }}
             >
               Logout
-            </button>
+            </Button>
           </>
         )}
         {!user && (
           <>
-            <label>Email</label>
-            <input
-              type="text"
-              placeholder="Your Username"
-              value={username}
-              onChange={e => setUsername(e.target.value)}
-            />
-            <label>Password</label>
-            <input
-              type="password"
-              placeholder="Your password"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-            />
+            <div>
+              <Label>Email</Label>
+              <Input
+                type="text"
+                placeholder="Your Username"
+                value={username}
+                onChange={e => setUsername(e.target.value)}
+              />
+            </div>
 
-            <button
-              onClick={e => {
-                handleEmailLogin(username, password)
-              }}
-            >
-              Login
-            </button>
+            <div>
+              <Label>Password</Label>
+
+              <Input
+                type="password"
+                placeholder="Your password"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+              />
+            </div>
+
+            <Button onClick={() => handleEmailLogin(username, password)}>Login</Button>
           </>
         )}
       </div>

@@ -1,5 +1,7 @@
+import { browser } from 'browser-namespace'
+
 export {}
 
-chrome.action.onClicked.addListener(() => {
-  chrome.runtime.openOptionsPage()
+browser.action.onClicked.addListener(() => {
+  browser.runtime.openOptionsPage()
 })
