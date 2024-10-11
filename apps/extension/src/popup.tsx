@@ -1,6 +1,6 @@
 import '@rememr/ui/globals.css'
 
-import { Command, CommandGroup, CommandItem, CommandList } from '@rememr/ui'
+import { Button } from '@rememr/ui'
 import type { User } from '@supabase/supabase-js'
 import { browser } from 'browser-namespace'
 import { useEffect, useState } from 'react'
@@ -8,7 +8,6 @@ import { supabase } from '~core/supabase'
 
 function IndexPopup() {
   const [user, setUser] = useState<User | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data, error }) => {
@@ -21,8 +20,7 @@ function IndexPopup() {
     })
   }, [])
 
-  const sendTabsToRememr = async (tabCount: 'single' | 'all') => {
-    setIsLoading(true)
+  const sendTabsToRememr = async (tabCount: 'single' | 'all', readLater: boolean) => {
     try {
       const tabs = await browser.tabs.query({ currentWindow: true, ...(tabCount === 'all' ? {} : { active: true }) })
       const bookmarks = tabs
@@ -31,6 +29,7 @@ function IndexPopup() {
           user_id: user?.id,
           url: tab.url!,
           name: tab.title!,
+          read: !readLater,
         }))
 
       const { error } = await supabase.from('bookmarks').insert(bookmarks)
@@ -40,35 +39,35 @@ function IndexPopup() {
     } catch (error) {
       console.error('Error sending tabs:', error)
       alert('Failed to send tabs to rememr.com')
-    } finally {
-      setIsLoading(false)
     }
   }
 
-  {
-    /* <DropdownMenu open={true}>
-        <DropdownMenuContent>
-          <DropdownMenuItem>Send this tab to rememr.com</DropdownMenuItem>
-          <DropdownMenuItem>Send all tabs to rememr.com</DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu> */
-  }
-
   return (
-    <div className="bg-background dark flex w-48">
+    <div className="flex w-60">
       {user ? (
-        <Command>
-          <CommandList>
-            <CommandGroup className="p-0 font-semibold">
-              <CommandItem onClick={() => sendTabsToRememr('single')}>
-                <span className="p-2">Save this tab</span>
-              </CommandItem>
-              <CommandItem onClick={() => sendTabsToRememr('all')}>
-                <span className="p-2">Save all tabs</span>
-              </CommandItem>
-            </CommandGroup>
-          </CommandList>
-        </Command>
+        <div className="flex flex-1 flex-col">
+          <Button
+            variant="ghost"
+            onClick={() => sendTabsToRememr('single', true)}
+            className="justify-start rounded-none"
+          >
+            Save this tab for reading later
+          </Button>
+          <Button variant="ghost" onClick={() => sendTabsToRememr('all', true)} className="justify-start rounded-none">
+            Save all tabs for reading later
+          </Button>
+          {/* <DropdownMenuSeparator className="bg-foreground mx-0 my-0" />
+          <Button
+            variant="ghost"
+            onClick={() => sendTabsToRememr('single', false)}
+            className="justify-start rounded-none"
+          >
+            Save this tab with tags...
+          </Button>
+          <Button variant="ghost" onClick={() => sendTabsToRememr('all', false)} className="justify-start rounded-none">
+            Save all tabs with tags...
+          </Button> */}
+        </div>
       ) : (
         <button
           onClick={() => browser.runtime.openOptionsPage()}

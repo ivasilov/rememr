@@ -44,7 +44,7 @@ export const Bookmark = (props: { bookmark: BookmarkType }) => {
               })
             }
           >
-            <DialogTrigger>
+            <DialogTrigger asChild>
               <Button size="sm" variant="outline" className="hidden group-hover:inline-flex">
                 <Icon name={faPencil} size="1x" />
               </Button>
