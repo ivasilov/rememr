@@ -1,4 +1,4 @@
-name: CI
+name: Check Supabase types
 
 on:
   pull_request:
@@ -20,8 +20,8 @@ jobs:
 
       - name: Verify generated types are checked in
         run: |
-          supabase gen types typescript --local > frontend/src/lib/database.types.ts
-          if ! git diff --ignore-space-at-eol --exit-code --quiet frontend/src/lib/database.types.ts; then
+          supabase gen types typescript --local > apps/web/src/lib/database.types.ts
+          if ! git diff --ignore-space-at-eol --exit-code --quiet apps/web/src/lib/database.types.ts; then
             echo "Detected uncommitted changes after build. See status below:"
             git diff
             exit 1
