@@ -1,26 +1,31 @@
 'use server'
 import { Bookmarks } from '@/src/components/bookmarks'
+import { getQueryClient } from '@/src/lib/react-query-client'
 import { checkAuthentication } from '@/src/lib/supabase'
 import { createClient } from '@/src/utils/supabase/server'
+import { HydrationBoundary, dehydrate } from '@tanstack/react-query'
 import { cookies } from 'next/headers'
+import { listBookmarksOptions } from '../query-options'
+import { searchParamsCache } from '../searchParams'
 
-const BookmarksPage = async () => {
+const BookmarksPage = async ({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) => {
   await checkAuthentication('/bookmarks/unread')
 
   const cookieStore = cookies()
   const supabase = createClient(cookieStore)
-  const {
-    data: bookmarks,
-    error,
-    count,
-  } = await supabase.from('bookmarks').select('*', { count: 'exact' }).eq('read', false).order('created_at').limit(10)
-  const classes = 'container pt-8 px-6'
 
-  if (!error) {
-    return <Bookmarks bookmarks={bookmarks} className={classes} count={count || bookmarks.length} />
-  }
+  const values = searchParamsCache.parse(searchParams)
+  const { q: searchQuery } = values
 
-  return <div>Something bad happened.</div>
+  const queryClient = getQueryClient()
+
+  queryClient.prefetchQuery(listBookmarksOptions(supabase, true, searchQuery))
+
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <Bookmarks className="container px-6 pt-8" unread={true} />
+    </HydrationBoundary>
+  )
 }
 
 export default BookmarksPage
