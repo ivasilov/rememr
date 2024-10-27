@@ -4,15 +4,15 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
-  Input,
   Sheet,
   SheetContent,
   SheetTrigger,
 } from '@rememr/ui'
-import { Book, CircleUser, Home, Menu, Search } from 'lucide-react'
+import { Book, CircleUser, Home, Menu } from 'lucide-react'
 import Link from 'next/link'
-import { PropsWithChildren } from 'react'
+import { PropsWithChildren, Suspense } from 'react'
 import { LayoutDropdownMenuContent } from './LayoutDropdownMenuContent'
+import SearchInput from './search-input'
 
 export default function RootLayout({ children }: PropsWithChildren<{}>) {
   return (
@@ -65,18 +65,9 @@ export default function RootLayout({ children }: PropsWithChildren<{}>) {
               </nav>
             </SheetContent>
           </Sheet>
-          <div className="w-full flex-1">
-            <form>
-              <div className="relative">
-                <Search className="text-muted-foreground absolute left-2.5 top-2.5 h-4 w-4" />
-                <Input
-                  type="search"
-                  placeholder="Search bookmarks..."
-                  className="bg-background w-full appearance-none pl-8 shadow-none md:w-2/3 lg:w-1/3"
-                />
-              </div>
-            </form>
-          </div>
+          <Suspense>
+            <SearchInput />
+          </Suspense>
           <Button asChild>
             <Link href="/bookmarks/new">Add new bookmark</Link>
           </Button>
