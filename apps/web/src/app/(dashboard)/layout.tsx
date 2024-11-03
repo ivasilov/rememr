@@ -1,20 +1,28 @@
 import { SheetSideLink, SideLink } from '@/src/components/layout/PageLink'
+import { createClient } from '@/src/utils/supabase/server'
 import {
   Button,
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
   Sheet,
   SheetContent,
   SheetTrigger,
 } from '@rememr/ui'
-import { Book, CircleUser, Home, Menu } from 'lucide-react'
+import { Book, CircleUser, Home, Menu, Tag } from 'lucide-react'
+import { cookies } from 'next/headers'
 import Link from 'next/link'
 import { PropsWithChildren, Suspense } from 'react'
 import { LayoutDropdownMenuContent } from './LayoutDropdownMenuContent'
 import SearchInput from './search-input'
 
-export default function RootLayout({ children }: PropsWithChildren<{}>) {
+export default async function RootLayout({ children }: PropsWithChildren<{}>) {
+  const cookieStore = cookies()
+  const supabase = createClient(cookieStore)
+
+  const { data: tags } = await supabase.from('tags').select('*').order('name', { ascending: false })
+
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
       <div className="bg-muted/40 hidden border-r md:block">
@@ -35,6 +43,15 @@ export default function RootLayout({ children }: PropsWithChildren<{}>) {
                 <Book className="h-4 w-4" />
                 Reading list
               </SideLink>
+              <DropdownMenuSeparator />
+              {tags?.map(t => {
+                return (
+                  <SideLink href={`/tags/${t.id}` as any} key={t.id}>
+                    <Tag size={16} />
+                    {t.name}
+                  </SideLink>
+                )
+              })}
             </nav>
           </div>
         </div>
