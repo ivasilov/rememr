@@ -1,17 +1,48 @@
 import { listBookmarksQueryFn } from '@/src/app/(dashboard)/bookmarks/query-options'
 import { BookmarkType } from '@/src/lib/supabase'
 import { createClient } from '@/src/utils/supabase/client'
-import { InfiniteData, useInfiniteQuery } from '@tanstack/react-query'
+import { GetNextPageParamFunction, InfiniteData, useInfiniteQuery } from '@tanstack/react-query'
 
 const queryKey = (searchQuery: string | null, unread: boolean) => ['bookmarks', { searchQuery, unread }]
 
-const queryFn = async ({ pageParam, queryKey }) => {
-  const [, { searchQuery, unread }] = queryKey as [string, { searchQuery: string | undefined; unread: boolean }]
+const queryFn = async ({
+  pageParam,
+  queryKey,
+}: {
+  pageParam: string | undefined
+  queryKey: (string | { searchQuery: string | null; unread: boolean })[]
+}) => {
+  let unread = false
+  let searchQuery: string | undefined = undefined
+  if (queryKey.length === 2) {
+    if (typeof queryKey[1] !== 'string') {
+      searchQuery = queryKey[1].searchQuery ? queryKey[1].searchQuery : undefined
+      unread = queryKey[1].unread
+    }
+  }
 
   return listBookmarksQueryFn(supabase, unread, searchQuery, pageParam)
 }
 
-const getNextPageParam = (_: any, pages: any) => {
+const getNextPageParam: GetNextPageParamFunction<
+  string | undefined,
+  {
+    data: NonNullable<
+      | {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          read: boolean
+          updated_at: string
+          url: string
+          user_id: string
+        }[]
+      | null
+    >
+    count: number
+  }
+> = (_, pages) => {
   const bookmarks = pages.flatMap(p => p.data)
   // find the latest timestamp
   const last = bookmarks.reduce(

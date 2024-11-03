@@ -4,7 +4,7 @@ import { queryOptions } from '@tanstack/react-query'
 
 export const listBookmarksQueryFn = async (
   supabaseClient: SupabaseClient<Database>,
-  unread: boolean,
+  unread?: boolean,
   searchQuery?: string,
   cursorCreatedAt?: string,
 ) => {
