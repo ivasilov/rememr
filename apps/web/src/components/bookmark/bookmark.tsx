@@ -1,3 +1,5 @@
+'use client'
+
 import { BookmarkType } from '@/src/lib/supabase'
 import { faPencil, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { Button, Card, Dialog, DialogContent, DialogTrigger } from '@rememr/ui'

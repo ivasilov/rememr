@@ -19,11 +19,11 @@ const BookmarksPage = async ({ searchParams }: { searchParams: { [key: string]: 
 
   const queryClient = getQueryClient()
 
-  queryClient.prefetchQuery(listBookmarksOptions(supabase, false, searchQuery))
+  await queryClient.prefetchQuery(listBookmarksOptions(supabase, false, searchQuery))
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <Bookmarks className="container px-6 pt-8" />
+      <Bookmarks />
     </HydrationBoundary>
   )
 }
