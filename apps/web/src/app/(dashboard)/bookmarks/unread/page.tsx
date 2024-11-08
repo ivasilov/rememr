@@ -23,7 +23,9 @@ const BookmarksPage = async ({ searchParams }: { searchParams: { [key: string]: 
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <Bookmarks unread={true} />
+      <div className="container h-full py-6">
+        <Bookmarks unread={true} />
+      </div>
     </HydrationBoundary>
   )
 }

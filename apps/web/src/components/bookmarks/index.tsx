@@ -9,11 +9,10 @@ import { useListBookmarksQuery } from './listBookmarksQuery'
 import { LoadMoreBookmarks } from './load-more-bookmarks'
 
 type BookmarksProps = {
-  className?: string
   unread?: boolean
 }
 
-export const Bookmarks = ({ className, unread = false }: BookmarksProps) => {
+export const Bookmarks = ({ unread = false }: BookmarksProps) => {
   const [searchQuery] = useQueryState('q')
 
   const { isSuccess, isLoading, data, fetchNextPage, isFetchingNextPage } = useListBookmarksQuery(searchQuery, unread)
@@ -32,9 +31,9 @@ export const Bookmarks = ({ className, unread = false }: BookmarksProps) => {
 
   const { bookmarks, count } = data
 
-  if (bookmarks.length === 0) {
+  if (true) {
     return (
-      <div className="flex h-full p-4 lg:p-6">
+      <div className="flex h-full">
         <div className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm">
           <div className="flex flex-col items-center gap-4">
             <div className="flex flex-col gap-1 text-center">
@@ -54,7 +53,7 @@ export const Bookmarks = ({ className, unread = false }: BookmarksProps) => {
   }
 
   return (
-    <div className="container flex grow flex-col space-y-3 px-6 pt-8">
+    <div className="flex grow flex-col space-y-3">
       {bookmarks.map(b => (
         <Bookmark key={b.id} bookmark={b} />
       ))}

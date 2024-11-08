@@ -7,7 +7,7 @@ export const ReadOnlyPage = (props: { page: { id: string; name: string; bookmark
   const page = props.page
 
   return (
-    <>
+    <div className="container flex h-full flex-col pb-4">
       <div className="flex items-center py-4 pl-7">
         <Icon name={faTag} size="1x" className="pr-2" />
         <div className="flex-grow">
@@ -15,6 +15,6 @@ export const ReadOnlyPage = (props: { page: { id: string; name: string; bookmark
         </div>
       </div>
       <Bookmarks />
-    </>
+    </div>
   )
 }
