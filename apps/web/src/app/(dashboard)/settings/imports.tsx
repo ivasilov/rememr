@@ -1,8 +1,10 @@
 'use client'
 import { FormGroup } from '@/src/components/form-group'
-import { Button, Dialog, DialogContent, DialogFooter, DialogHeader, Input, Progress } from '@rememr/ui'
+import { Button, Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, Input, Progress } from '@rememr/ui'
 import { upperFirst } from 'lodash'
+import { Loader2 } from 'lucide-react'
 import { ChangeEventHandler, useState } from 'react'
+import { ZodError } from 'zod'
 import { importOnetabBookmarks } from './importers/onetab'
 import { importPinboardBookmarks } from './importers/pinboard'
 
@@ -36,9 +38,9 @@ export const Imports = () => {
 
 const UploadDialog = (props: { type: 'pinboard' | 'onetab'; onClose: () => void }) => {
   const [loading, setLoading] = useState(false)
-  const [progressValue, setProgressValue] = useState(0)
+  const [error, setError] = useState<string | null>()
+  const [progress, setProgress] = useState({ current: 0, max: 0 })
 
-  console.log(progressValue)
   const [file, setFile] = useState<File | undefined>(undefined)
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = e => {
@@ -58,34 +60,67 @@ const UploadDialog = (props: { type: 'pinboard' | 'onetab'; onClose: () => void 
         }
         if (props.type === 'pinboard') {
           await importPinboardBookmarks(text, (current, max) => {
-            console.log(current, max)
-            setProgressValue((current / max) * 100)
+            setProgress({ current, max })
           })
         }
       }
     } catch (error) {
+      if (error instanceof ZodError) {
+        setError('The uploaded file is not in the correct format.')
+      }
       console.log(error)
     } finally {
       setLoading(false)
     }
   }
 
+  const progressPercentage = progress.current && progress.max > 0 ? (progress.current / progress.max) * 100 : 0
+
+  const stage = loading ? 'loading' : progress.current > 0 ? 'finished' : 'start'
+
   return (
     <Dialog open onOpenChange={props.onClose}>
       <DialogContent>
-        <DialogHeader>{`Import ${upperFirst(props.type)} data`}</DialogHeader>
-        {loading ? (
-          <div className="flex h-[60px] items-center">
-            <Progress value={progressValue} />
-          </div>
-        ) : (
-          <FormGroup htmlFor="file-upload" label="File to be imported">
-            <Input id="file-upload" type="file" onChange={handleChange} />
-          </FormGroup>
-        )}
+        <DialogHeader>
+          <DialogTitle>{`Import ${upperFirst(props.type)} data`}</DialogTitle>
+        </DialogHeader>
+        <div className="py-4">
+          {stage === 'start' && (
+            <>
+              <FormGroup htmlFor="file-upload" label="File to be imported">
+                <Input id="file-upload" type="file" onChange={handleChange} />
+              </FormGroup>
+              {error && <span className="text-destructive text-sm">{error}</span>}
+            </>
+          )}
+          {stage === 'loading' && (
+            <>
+              <span>
+                Imported {progress.current} out of {progress.max} bookmarks so far.
+              </span>
+              <div>
+                <Progress value={progressPercentage} />
+              </div>
+            </>
+          )}
+          {stage === 'finished' && (
+            <>
+              <span>
+                Successfully imported {progress.current} out of {progress.max} bookmarks.
+              </span>
+            </>
+          )}
+        </div>
         <DialogFooter>
-          <Button onClick={props.onClose}>Cancel</Button>
-          <Button onClick={onSubmit}>Save</Button>
+          {(stage === 'start' || stage === 'loading') && <Button onClick={props.onClose}>Cancel</Button>}
+          {stage === 'start' && <Button onClick={onSubmit}>Save</Button>}
+          {stage === 'loading' && (
+            <Button disabled onClick={onSubmit}>
+              <Loader2 className="animate-spin" />
+              Save
+            </Button>
+          )}
+          {stage === 'finished' && <Button onClick={props.onClose}>Close</Button>}
         </DialogFooter>
       </DialogContent>
     </Dialog>

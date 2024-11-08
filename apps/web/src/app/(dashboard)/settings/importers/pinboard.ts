@@ -8,7 +8,7 @@ const bookmarkSchema = z.object({
   extended: z.string(),
   meta: z.string(),
   hash: z.string(),
-  time: z.coerce.date(),
+  time: z.string(),
   shared: z.enum(['yes', 'no']),
   toread: z.enum(['yes', 'no']),
   tags: z.string().transform(t => t.split(' ')),
@@ -50,6 +50,7 @@ export const importPinboardBookmarks = async (
       name: b.description.trim(),
       description: b.extended.trim(),
       read: b.toread !== 'yes',
+      created_at: b.time,
     }
 
     const { data, error } = await supabaseClient.from('bookmarks').insert(bookmark).select('id').single()

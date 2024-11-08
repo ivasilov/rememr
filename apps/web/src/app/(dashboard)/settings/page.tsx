@@ -21,20 +21,22 @@ const AccountPage = async () => {
   }
 
   return (
-    <div className="bg-muted/40 flex h-full flex-1 flex-col gap-4 p-4 md:gap-8 md:p-10">
-      <h1 className="text-3xl font-semibold">Settings</h1>
-      <div className="mx-auto grid w-full max-w-6xl items-start gap-6">
-        <AccountInformation user={user} />
-        <Card>
-          <CardHeader>
-            <CardTitle>Import bookmarks from other sources</CardTitle>
-            <CardDescription>You can use the built-in importers to import bookmarks from other apps.</CardDescription>
-            {/* TODO: Add a link for requesting importers from other apps */}
-          </CardHeader>
-          <CardContent className="flex flex-row gap-3">
-            <Imports />
-          </CardContent>
-        </Card>
+    <div className="bg-muted/40 h-full w-full p-4 md:p-10">
+      <div className="flex  max-w-6xl flex-1 flex-col gap-4 md:gap-8">
+        <h1 className="text-3xl font-semibold">Settings</h1>
+        <div className="mx-auto grid w-full items-start gap-6">
+          <AccountInformation user={user} />
+          <Card>
+            <CardHeader>
+              <CardTitle>Import bookmarks from other sources</CardTitle>
+              <CardDescription>You can use the built-in importers to import bookmarks from other apps.</CardDescription>
+              {/* TODO: Add a link for requesting importers from other apps */}
+            </CardHeader>
+            <CardContent className="flex flex-row gap-3">
+              <Imports />
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   )
