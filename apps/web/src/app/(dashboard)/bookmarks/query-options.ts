@@ -6,13 +6,16 @@ export const listBookmarksQueryFn = async (
   supabaseClient: SupabaseClient<Database>,
   unread?: boolean,
   searchQuery?: string,
+  tags?: string[],
   cursorCreatedAt?: string,
 ) => {
-  let query = supabaseClient
-    .from('bookmarks')
-    .select('*', { count: 'exact' })
-    .order('created_at', { ascending: false })
-    .limit(20)
+  let query =
+    tags && tags.length > 0
+      ? supabaseClient
+          .from('bookmarks')
+          .select(`*, bookmarks_tags!inner()`, { count: 'exact' })
+          .in('bookmarks_tags.tag_id', tags)
+      : supabaseClient.from('bookmarks').select('*', { count: 'exact' })
 
   if (searchQuery && searchQuery.length > 0) {
     query = query.ilike('name', `%${searchQuery}%`)
@@ -26,7 +29,7 @@ export const listBookmarksQueryFn = async (
     query = query.filter('created_at', 'lt', cursorCreatedAt)
   }
 
-  const { data, count } = await query.throwOnError()
+  const { data, count } = await query.order('created_at', { ascending: false }).limit(20).throwOnError()
 
   return { data, count } as { data: NonNullable<typeof data>; count: number }
 }

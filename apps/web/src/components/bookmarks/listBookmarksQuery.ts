@@ -3,25 +3,30 @@ import { BookmarkType } from '@/src/lib/supabase'
 import { createClient } from '@/src/utils/supabase/client'
 import { GetNextPageParamFunction, InfiniteData, useInfiniteQuery } from '@tanstack/react-query'
 
-const queryKey = (searchQuery: string | null, unread: boolean) => ['bookmarks', { searchQuery, unread }]
+const queryKey = (searchQuery: string | null, unread: boolean, tags: string[]) => [
+  'bookmarks',
+  { searchQuery, unread, tags },
+]
 
 const queryFn = async ({
   pageParam,
   queryKey,
 }: {
   pageParam: string | undefined
-  queryKey: (string | { searchQuery: string | null; unread: boolean })[]
+  queryKey: (string | { searchQuery: string | null; unread: boolean; tags: string[] })[]
 }) => {
   let unread = false
   let searchQuery: string | undefined = undefined
+  let tags = undefined
   if (queryKey.length === 2) {
     if (typeof queryKey[1] !== 'string') {
       searchQuery = queryKey[1].searchQuery ? queryKey[1].searchQuery : undefined
       unread = queryKey[1].unread
+      tags = queryKey[1].tags
     }
   }
 
-  return listBookmarksQueryFn(supabase, unread, searchQuery, pageParam)
+  return listBookmarksQueryFn(supabase, unread, searchQuery, tags, pageParam)
 }
 
 const getNextPageParam: GetNextPageParamFunction<
@@ -65,9 +70,9 @@ const selectData = (
   return { bookmarks: data.pages.flatMap(p => p.data), count: data.pages[0].count }
 }
 
-export const useListBookmarksQuery = (searchQuery: string | null, unread: boolean) => {
+export const useListBookmarksQuery = (searchQuery: string | null, unread: boolean, tags: string[]) => {
   return useInfiniteQuery({
-    queryKey: queryKey(searchQuery, unread),
+    queryKey: queryKey(searchQuery, unread, tags),
     queryFn: queryFn,
     staleTime: 5000,
     getNextPageParam: getNextPageParam,

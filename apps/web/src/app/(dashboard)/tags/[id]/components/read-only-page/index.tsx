@@ -14,7 +14,7 @@ export const ReadOnlyPage = (props: { page: { id: string; name: string; bookmark
           <h1 className="text-3xl font-semibold text-gray-900">{page.name}</h1>
         </div>
       </div>
-      <Bookmarks />
+      <Bookmarks tags={[page.id]} />
     </div>
   )
 }

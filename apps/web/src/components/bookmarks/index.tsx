@@ -9,13 +9,18 @@ import { useListBookmarksQuery } from './listBookmarksQuery'
 import { LoadMoreBookmarks } from './load-more-bookmarks'
 
 type BookmarksProps = {
+  tags?: string[]
   unread?: boolean
 }
 
-export const Bookmarks = ({ unread = false }: BookmarksProps) => {
+export const Bookmarks = ({ unread = false, tags = [] }: BookmarksProps) => {
   const [searchQuery] = useQueryState('q')
 
-  const { isSuccess, isLoading, data, fetchNextPage, isFetchingNextPage } = useListBookmarksQuery(searchQuery, unread)
+  const { isSuccess, isLoading, data, fetchNextPage, isFetchingNextPage } = useListBookmarksQuery(
+    searchQuery,
+    unread,
+    tags,
+  )
 
   if (isLoading) {
     return (
@@ -31,7 +36,7 @@ export const Bookmarks = ({ unread = false }: BookmarksProps) => {
 
   const { bookmarks, count } = data
 
-  if (true) {
+  if (count === 0) {
     return (
       <div className="flex h-full">
         <div className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm">
