@@ -1,10 +1,15 @@
+import { IdName } from '@/src/components/edit-pages-for-bookmark'
 import { Database } from '@/src/lib/database.types'
 import { createClient } from '@/src/utils/supabase/client'
 import { compact } from 'lodash'
 
 type InsertableBookmark = Database['public']['Tables']['bookmarks']['Insert']
 
-export const importOnetabBookmarks = async (data: string, progress?: (current: number, max: number) => void) => {
+export const importOnetabBookmarks = async (
+  data: string,
+  tags: IdName[],
+  progress?: (current: number, max: number) => void,
+) => {
   const supabaseClient = createClient()
 
   const validated = data.split('\n')

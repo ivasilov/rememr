@@ -22,7 +22,7 @@ const AccountPage = async () => {
 
   return (
     <div className="bg-muted/40 h-full w-full p-4 md:p-10">
-      <div className="flex  max-w-6xl flex-1 flex-col gap-4 md:gap-8">
+      <div className="container flex max-w-6xl flex-1 flex-col gap-4 md:gap-8">
         <h1 className="text-3xl font-semibold">Settings</h1>
         <div className="mx-auto grid w-full items-start gap-6">
           <AccountInformation user={user} />
