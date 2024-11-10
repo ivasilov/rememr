@@ -98,7 +98,7 @@ export const importPinboardBookmarks = async (
       const foundTags = compact(b.tags.map(tag => savedTags.find(st => st.name === tag))).concat(additionalTags)
 
       const bookmarksTags = foundTags.map(tag => {
-        return { bookmark_id: savedBookmarkId, tag_id: tag.id }
+        return { bookmark_id: savedBookmarkId as string, tag_id: tag.id }
       })
       if (bookmarksTags.length > 0) {
         const { error } = await supabaseClient.from('bookmarks_tags').upsert(bookmarksTags)
