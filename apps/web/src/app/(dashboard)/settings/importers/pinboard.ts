@@ -21,7 +21,7 @@ type PinboardBookmark = z.infer<typeof bookmarkSchema>
 export const importPinboardBookmarks = async (
   data: string,
   // names of the tags to be added on each imported bookmark
-  tags: string[],
+  { tags }: { tags: string[] },
   progress: (current: number, max: number) => void = noop,
 ) => {
   const supabaseClient = createClient()

@@ -10,12 +10,14 @@ import {
   DialogTitle,
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
   Input,
   Progress,
+  Switch,
 } from '@rememr/ui'
 import { capitalize } from 'lodash'
 import { Loader2 } from 'lucide-react'
@@ -28,6 +30,7 @@ import { importPinboardBookmarks } from './importers/pinboard'
 const FormSchema = z.object({
   file: z.any(),
   tags: z.array(z.object({ id: z.string().optional(), name: z.string().trim().min(1) })),
+  unread: z.boolean().optional(),
 })
 
 const FormId = 'import-bookmarks-form'
@@ -65,10 +68,11 @@ const UploadDialog = (props: { type: 'pinboard' | 'onetab'; onClose: () => void 
     resolver: zodResolver(FormSchema),
     defaultValues: {
       tags: [],
+      unread: props.type === 'onetab' ? false : undefined,
     },
   })
 
-  const onSubmit: SubmitHandler<z.infer<typeof FormSchema>> = async ({ file, tags }) => {
+  const onSubmit: SubmitHandler<z.infer<typeof FormSchema>> = async ({ file, unread, tags }) => {
     setLoading(true)
 
     try {
@@ -76,16 +80,12 @@ const UploadDialog = (props: { type: 'pinboard' | 'onetab'; onClose: () => void 
         const text = await file.text()
 
         if (props.type === 'onetab') {
-          await importOnetabBookmarks(text, tags)
+          await importOnetabBookmarks(text, { tags: tags.map(t => t.name), unread: !!unread })
         }
         if (props.type === 'pinboard') {
-          await importPinboardBookmarks(
-            text,
-            tags.map(t => t.name),
-            (current, max) => {
-              setProgress({ current, max })
-            },
-          )
+          await importPinboardBookmarks(text, { tags: tags.map(t => t.name) }, (current, max) => {
+            setProgress({ current, max })
+          })
         }
       } else {
         throw new Error("The file doesn't exist")
@@ -150,6 +150,23 @@ const UploadDialog = (props: { type: 'pinboard' | 'onetab'; onClose: () => void 
                   </FormItem>
                 )}
               />
+              {props.type === 'onetab' && (
+                <FormField
+                  control={form.control}
+                  name="unread"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-center justify-between space-y-0">
+                      <div className="h-full space-y-0.5">
+                        <FormLabel>Read</FormLabel>
+                        <FormDescription>If marked as unread, it will show up in the unread list.</FormDescription>
+                      </div>
+                      <FormControl>
+                        <Switch checked={field.value} onCheckedChange={field.onChange} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              )}
             </form>
           </Form>
         )}
