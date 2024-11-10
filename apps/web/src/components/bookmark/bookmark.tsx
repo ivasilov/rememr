@@ -1,18 +1,15 @@
 'use client'
 
 import { BookmarkType } from '@/src/lib/supabase'
-import { faPencil, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { Button, Card, Dialog, DialogContent, DialogTrigger } from '@rememr/ui'
+import { PenLine, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { DeleteBookmarkDialog } from '../delete-bookmark'
 import { EditBookmarkDialog } from '../edit-bookmark'
-import { Icon } from '../icon'
 
 export const Bookmark = (props: { bookmark: BookmarkType }) => {
-  const [{ editBookmarkDialogShown, deleteBookmarkDialogShown }, setState] = useState({
-    editBookmarkDialogShown: false,
-    deleteBookmarkDialogShown: false,
-  })
+  const [editBookmarkDialogShown, setEditBookmarkDialogShown] = useState(false)
+  const [deleteBookmarkDialogShown, setDeleteBookmarkDialogShown] = useState(false)
 
   const bookmark = props.bookmark
   let hostname = ''
@@ -36,58 +33,35 @@ export const Bookmark = (props: { bookmark: BookmarkType }) => {
           <span className="text-muted-foreground font-normal">{hostname}</span>
         </div>
 
-        <div className="min-w-[84px] space-x-2">
-          <Dialog
-            open={editBookmarkDialogShown}
-            onOpenChange={open =>
-              setState({
-                deleteBookmarkDialogShown,
-                editBookmarkDialogShown: open,
-              })
-            }
-          >
+        {/* the min-w-[80px] is added so that bookmarks with long url names dont shift when hovering over the action buttons */}
+        <div className="flex min-w-[80px] items-center space-x-2">
+          <Dialog open={editBookmarkDialogShown} onOpenChange={open => setEditBookmarkDialogShown(open)}>
             <DialogTrigger asChild>
-              <Button size="sm" variant="outline" className="hidden group-hover:inline-flex">
-                <Icon name={faPencil} size="1x" />
+              <Button size="icon" className="hidden group-hover:inline-flex">
+                <PenLine size={16} strokeWidth={2} />
               </Button>
             </DialogTrigger>
             <DialogContent>
-              <EditBookmarkDialog
-                bookmark={bookmark}
-                onClose={() =>
-                  setState({
-                    deleteBookmarkDialogShown,
-                    editBookmarkDialogShown: false,
-                  })
-                }
-              />
+              <EditBookmarkDialog bookmark={bookmark} onClose={() => setEditBookmarkDialogShown(false)} />
             </DialogContent>
           </Dialog>
-          <Button
-            size="sm"
-            className="hidden group-hover:inline-flex"
-            variant="destructive"
-            onClick={() =>
-              setState({
-                editBookmarkDialogShown,
-                deleteBookmarkDialogShown: true,
-              })
-            }
-          >
-            <Icon name={faTrash} size="1x" />
-          </Button>
+          <Dialog open={deleteBookmarkDialogShown} onOpenChange={open => setDeleteBookmarkDialogShown(open)}>
+            <DialogTrigger asChild>
+              <Button
+                size="icon"
+                className="hidden group-hover:inline-flex"
+                variant="destructive"
+                onClick={() => setDeleteBookmarkDialogShown(true)}
+              >
+                <Trash2 size={16} />
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DeleteBookmarkDialog bookmark={bookmark} onClose={() => setDeleteBookmarkDialogShown(false)} />
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
-      <DeleteBookmarkDialog
-        isOpen={deleteBookmarkDialogShown}
-        bookmark={bookmark}
-        onClose={() =>
-          setState({
-            editBookmarkDialogShown,
-            deleteBookmarkDialogShown: false,
-          })
-        }
-      />
     </Card>
   )
 }

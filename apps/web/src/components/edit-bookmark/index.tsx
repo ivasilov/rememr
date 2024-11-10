@@ -1,10 +1,5 @@
 import { createClient } from '@/src/utils/supabase/client'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { uniqBy } from 'lodash'
-import { useEffect } from 'react'
-import { SubmitHandler, useForm } from 'react-hook-form'
-import { z } from 'zod'
-
 import {
   Button,
   DialogFooter,
@@ -20,6 +15,10 @@ import {
   Input,
   Switch,
 } from '@rememr/ui'
+import { uniqBy } from 'lodash'
+import { useEffect } from 'react'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import { z } from 'zod'
 import { EditPagesForBookmark } from '../edit-pages-for-bookmark'
 
 const formId = 'edit-bookmark'
