@@ -95,7 +95,7 @@ export const NewBookmarkComponent = () => {
                 <FormItem>
                   <FormLabel>Name of the bookmark</FormLabel>
                   <FormControl>
-                    <Input placeholder="shadcn" {...field} />
+                    <Input placeholder="Rememr" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -108,7 +108,7 @@ export const NewBookmarkComponent = () => {
                 <FormItem>
                   <FormLabel>Url of the bookmark</FormLabel>
                   <FormControl>
-                    <Input placeholder="shadcn" {...field} />
+                    <Input placeholder="https://rememr.com" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
