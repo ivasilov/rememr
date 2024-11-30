@@ -38,8 +38,9 @@ export const importOnetabBookmarks = async (
   const { data: savedBookmarks, error: insertError } = await supabaseClient
     .from('bookmarks')
     .insert(translated)
-    .select()
+    .select('id')
   if (insertError) throw insertError
+  const savedBookmarkIds = savedBookmarks as { id: string }[]
 
   const { data: foundTags } = await supabaseClient
     .from('tags')
@@ -58,10 +59,9 @@ export const importOnetabBookmarks = async (
 
   const savedTagIds = uniqBy(nonNullableFoundTags.concat(nonNullableAddedTags), t => t.id).map(t => t.id)
 
-  const savedBookmarkIds = savedBookmarks?.map(b => b.id)
   const bookmarksTags = savedTagIds.reduce(
     (combinations, tagId) => {
-      return combinations.concat(savedBookmarkIds.map(bookmarkId => ({ bookmark_id: bookmarkId, tag_id: tagId })))
+      return combinations.concat(savedBookmarkIds.map(bookmark => ({ bookmark_id: bookmark.id, tag_id: tagId })))
     },
     [] as { bookmark_id: string; tag_id: string }[],
   )
@@ -69,4 +69,6 @@ export const importOnetabBookmarks = async (
   if (bookmarksTags.length > 0) {
     const { error } = await supabaseClient.from('bookmarks_tags').upsert(bookmarksTags)
   }
+
+  return savedBookmarkIds.length
 }

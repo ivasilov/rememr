@@ -61,7 +61,7 @@ export const importPinboardBookmarks = async (
   const savedTags = uniqBy(nonNullableFoundTags.concat(nonNullableAddedTags), t => t.id)
   const additionalTags = savedTags.filter(st => tags.includes(st.name))
 
-  let index = 0
+  let count = 0
   for (const b of bookmarks) {
     const bookmark = {
       url: b.href.trim(),
@@ -69,6 +69,7 @@ export const importPinboardBookmarks = async (
       description: b.extended.trim(),
       read: b.toread !== 'yes',
       created_at: b.time,
+      user_id: user.id,
     }
 
     let savedBookmarkId: string | null = null
@@ -108,7 +109,8 @@ export const importPinboardBookmarks = async (
       }
     }
 
-    index++
-    progress(index, bookmarks.length)
+    count++
+    progress(count, bookmarks.length)
   }
+  return count
 }

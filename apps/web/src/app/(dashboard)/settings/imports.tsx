@@ -23,6 +23,7 @@ import { capitalize } from 'lodash'
 import { Loader2 } from 'lucide-react'
 import { useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 import { ZodError, z } from 'zod'
 import { importOnetabBookmarks } from './importers/onetab'
 import { importPinboardBookmarks } from './importers/pinboard'
@@ -80,12 +81,16 @@ const UploadDialog = (props: { type: 'pinboard' | 'onetab'; onClose: () => void 
         const text = await file.text()
 
         if (props.type === 'onetab') {
-          await importOnetabBookmarks(text, { tags: tags.map(t => t.name), unread: !!unread })
+          const count = await importOnetabBookmarks(text, { tags: tags.map(t => t.name), unread: !!unread })
+          toast.success(`Successfully imported ${count} bookmarks`)
+          props.onClose()
         }
         if (props.type === 'pinboard') {
-          await importPinboardBookmarks(text, { tags: tags.map(t => t.name) }, (current, max) => {
+          const count = await importPinboardBookmarks(text, { tags: tags.map(t => t.name) }, (current, max) => {
             setProgress({ current, max })
           })
+          toast.success(`Successfully imported ${count} bookmarks`)
+          props.onClose()
         }
       } else {
         throw new Error("The file doesn't exist")
