@@ -100,7 +100,7 @@ export default async function RootLayout({ children }: PropsWithChildren<{}>) {
             </DropdownMenuContent>
           </DropdownMenu>
         </header>
-        <main className="flex-1 overflow-auto">{children}</main>
+        <main className="bg-muted/40 flex-1 overflow-auto">{children}</main>
       </div>
     </div>
   )
