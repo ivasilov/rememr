@@ -2,12 +2,15 @@ import { Database } from '@/src/lib/database.types'
 import { SupabaseClient } from '@supabase/supabase-js'
 import { queryOptions } from '@tanstack/react-query'
 
+// The range starts from 0 to 19, so we need to subtract 1 from the skip to get the correct range of 20 items
+const PAGE_SIZE = 19
+
 export const listBookmarksQueryFn = async (
   supabaseClient: SupabaseClient<Database>,
   unread?: boolean,
   searchQuery?: string,
   tags?: string[],
-  cursorCreatedAt?: string,
+  skip: number = 0,
 ) => {
   let query =
     tags && tags.length > 0
@@ -25,11 +28,12 @@ export const listBookmarksQueryFn = async (
     query = query.eq('read', false)
   }
 
-  if (cursorCreatedAt) {
-    query = query.filter('created_at', 'lt', cursorCreatedAt)
-  }
-
-  const { data, count } = await query.order('created_at', { ascending: false }).limit(20).throwOnError()
+  const { data, count } = await query
+    .order('created_at', { ascending: false })
+    // secondary sort by id to avoid pagination issues when imported bookmarks have the same created_at
+    .order('id', { ascending: false })
+    .range(skip, skip + PAGE_SIZE)
+    .throwOnError()
 
   return { data, count } as { data: NonNullable<typeof data>; count: number }
 }

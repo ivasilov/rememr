@@ -12,7 +12,7 @@ const queryFn = async ({
   pageParam,
   queryKey,
 }: {
-  pageParam: string | undefined
+  pageParam: number
   queryKey: (string | { searchQuery: string | null; unread: boolean; tags: string[] })[]
 }) => {
   let unread = false
@@ -30,7 +30,7 @@ const queryFn = async ({
 }
 
 const getNextPageParam: GetNextPageParamFunction<
-  string | undefined,
+  number,
   {
     data: NonNullable<
       | {
@@ -49,12 +49,7 @@ const getNextPageParam: GetNextPageParamFunction<
   }
 > = (_, pages) => {
   const bookmarks = pages.flatMap(p => p.data)
-  // find the latest timestamp
-  const last = bookmarks.reduce(
-    (oldest, bookmark) => (oldest > bookmark.created_at ? bookmark.created_at : oldest),
-    bookmarks[0]?.created_at,
-  )
-  return last
+  return bookmarks.length
 }
 
 const supabase = createClient()
@@ -64,7 +59,7 @@ const selectData = (
       data: NonNullable<BookmarkType[] | null>
       count: number
     },
-    string | undefined
+    number
   >,
 ) => {
   return { bookmarks: data.pages.flatMap(p => p.data), count: data.pages[0].count }
@@ -76,7 +71,7 @@ export const useListBookmarksQuery = (searchQuery: string | null, unread: boolea
     queryFn: queryFn,
     staleTime: 5000,
     getNextPageParam: getNextPageParam,
-    initialPageParam: undefined as string | undefined,
+    initialPageParam: 0,
     select: selectData,
   })
 }
