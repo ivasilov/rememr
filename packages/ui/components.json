@@ -6,7 +6,7 @@
   "iconLibrary": "lucide",
   "tailwind": {
     "config": "tailwind.config.js",
-    "css": "src/globals.css",
+    "css": "./globals.css",
     "baseColor": "slate",
     "cssVariables": true
   },
