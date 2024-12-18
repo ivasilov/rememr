@@ -199,8 +199,7 @@ const UploadDialog = (props: { type: 'pinboard' | 'onetab'; onClose: () => void 
         {stage === 'start' && <Button form={FormId}>Save</Button>}
         {stage === 'loading' && (
           <Button disabled>
-            <Loader2 className="animate-spin" />
-            Save
+            <Loader2 className="animate-spin" /> Saving
           </Button>
         )}
         {stage === 'finished' && <Button onClick={props.onClose}>Close</Button>}
