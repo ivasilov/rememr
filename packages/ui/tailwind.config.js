@@ -1,6 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ['class'],
+  // the content key is needed by shadcn CLI
+  content: [],
   theme: {
     container: {
       center: true,
