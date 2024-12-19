@@ -1,4 +1,5 @@
 // add fontawesome CSS so that the icons are don't cause layout shift
+import { AppSidebar } from '@/src/components/app-sidebar'
 import { config } from '@fortawesome/fontawesome-svg-core'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import { Toaster } from '@rememr/ui'
@@ -20,6 +21,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html suppressHydrationWarning>
       <body className="font-sans">
         <Providers>
+          <AppSidebar />
           {children}
           <Toaster position="top-right" />
         </Providers>

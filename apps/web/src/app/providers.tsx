@@ -1,4 +1,5 @@
 'use client'
+import { SidebarProvider } from '@rememr/ui'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { ThemeProvider } from 'next-themes'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
@@ -17,7 +18,9 @@ export const Providers = ({ children }: PropsWithChildren<{}>) => {
         defaultTheme="light"
         storageKey="rememr-theme-key"
       >
-        <NuqsAdapter>{children}</NuqsAdapter>
+        <NuqsAdapter>
+          <SidebarProvider>{children}</SidebarProvider>
+        </NuqsAdapter>
       </ThemeProvider>
     </QueryClientProvider>
   )
