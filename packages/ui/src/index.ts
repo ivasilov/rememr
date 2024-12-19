@@ -9,6 +9,7 @@ export * from './components/input'
 export * from './components/label'
 export * from './components/progress'
 export * from './components/sheet'
+export * from './components/sidebar'
 export * from './components/sonner'
 export * from './components/switch'
 
