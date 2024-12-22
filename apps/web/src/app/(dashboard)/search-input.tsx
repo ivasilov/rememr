@@ -12,13 +12,17 @@ export default function SearchInput() {
 
   const appendSearchParam = useCallback(
     (value: string | null) => {
+      if (value === searchQuery) {
+        return
+      }
+
       if (value && value.length > 0) {
         setSearchQuery(value, { shallow: false, scroll: false })
       } else {
         setSearchQuery(null, { shallow: false, scroll: false })
       }
     },
-    [setSearchQuery],
+    [searchQuery, setSearchQuery],
   )
 
   const onChangeSearch: ChangeEventHandler<HTMLInputElement> = e => {
