@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import { Spinner } from '../spinner'
+import { LoadingBookmarks } from './loading'
 
 export type LoadMoreBookmarksProps = { hasMore: boolean; loading: boolean; fetchMore: () => Promise<unknown> }
 
@@ -36,11 +36,7 @@ export const LoadMoreBookmarks = ({ hasMore, loading, fetchMore }: LoadMoreBookm
   }, [fetchMore])
 
   if (loading) {
-    return (
-      <div className="flex pb-6">
-        <Spinner size="1x" className="mx-auto" />
-      </div>
-    )
+    return <LoadingBookmarks />
   }
   if (hasMore) {
     return (
