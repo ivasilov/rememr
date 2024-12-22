@@ -1,5 +1,6 @@
 'use server'
 
+import { MainContentLayout } from '@/src/components/main-content-layout'
 import { checkAuthentication } from '@/src/lib/supabase'
 import { createClient } from '@/src/utils/supabase/server'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@rememr/ui'
@@ -21,9 +22,9 @@ const AccountPage = async () => {
   }
 
   return (
-    <div className="container flex h-full w-full max-w-6xl flex-1 flex-col gap-4 p-4 md:gap-8 md:p-10">
+    <MainContentLayout>
       <h1 className="text-3xl font-semibold">Settings</h1>
-      <div className="mx-auto grid w-full items-start gap-6">
+      <div className="mx-auto grid w-full items-start gap-4 md:gap-8">
         <AccountInformation user={user} />
         <Card>
           <CardHeader>
@@ -36,7 +37,7 @@ const AccountPage = async () => {
           </CardContent>
         </Card>
       </div>
-    </div>
+    </MainContentLayout>
   )
 }
 

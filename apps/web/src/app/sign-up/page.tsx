@@ -6,7 +6,7 @@ export default function SignUp({ searchParams }: { searchParams: Record<string, 
   const signUpSuccess = searchParams['success']
 
   return (
-    <div className="flex min-h-screen items-center justify-center">
+    <div className="flex min-h-screen w-full items-center justify-center">
       <Card className="mx-auto max-w-sm">
         <CardHeader>
           <CardTitle className="text-xl">Sign Up</CardTitle>

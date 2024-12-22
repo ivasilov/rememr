@@ -1,11 +1,10 @@
 'use server'
 import { Bookmarks } from '@/src/components/bookmarks'
-import { Icon } from '@/src/components/icon'
+import { MainContentLayout } from '@/src/components/main-content-layout'
 import { checkAuthentication } from '@/src/lib/supabase'
 import { createClient } from '@/src/utils/supabase/server'
-import { faTag } from '@fortawesome/free-solid-svg-icons'
+import { Tag } from 'lucide-react'
 import { cookies } from 'next/headers'
-import page from '../../bookmarks/page'
 import { SinglePageError } from './components/error'
 import { TagActions } from './tag-actions'
 
@@ -22,16 +21,17 @@ const TagPage = async ({ params: { id } }: { params: { id: string } }) => {
 
   if (tag) {
     return (
-      <div className="container flex h-full flex-col pb-4">
-        <div className="flex items-center py-4 pl-7">
-          <Icon name={faTag} size="1x" className="pr-2" />
-          <div className="flex-grow">
-            <h1 className="text-foreground text-3xl font-semibold">{page.name}</h1>
+      <MainContentLayout>
+        <div className="flex">
+          <div className="flex h-full flex-1 items-center gap-2">
+            <Tag size={20} className="pt-1" />
+            <h1 className="text-foreground flex-1 text-3xl font-semibold">{tag.name}</h1>
           </div>
+
           <TagActions tag={tag} />
         </div>
         <Bookmarks tags={[tag.id]} />
-      </div>
+      </MainContentLayout>
     )
   }
 
