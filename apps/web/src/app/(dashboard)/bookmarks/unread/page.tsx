@@ -1,5 +1,6 @@
 'use server'
 import { Bookmarks } from '@/src/components/bookmarks'
+import { MainContentLayout } from '@/src/components/main-content-layout'
 import { getQueryClient } from '@/src/lib/react-query-client'
 import { checkAuthentication } from '@/src/lib/supabase'
 import { createClient } from '@/src/utils/supabase/server'
@@ -23,9 +24,9 @@ const BookmarksPage = async ({ searchParams }: { searchParams: { [key: string]: 
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <div className="container h-full py-6">
+      <MainContentLayout>
         <Bookmarks unread={true} />
-      </div>
+      </MainContentLayout>
     </HydrationBoundary>
   )
 }

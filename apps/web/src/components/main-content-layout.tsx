@@ -6,5 +6,5 @@ import { PropsWithChildren } from 'react'
  * dashboard layout but that limits us when wanting to use full width pages.
  */
 export const MainContentLayout = ({ className, children }: PropsWithChildren<{ className?: string }>) => {
-  return <div className={cn('container flex max-w-6xl flex-col gap-4 pb-16 pt-4', className)}>{children}</div>
+  return <div className={cn('container flex h-full max-w-6xl flex-col gap-4 pb-16 pt-4', className)}>{children}</div>
 }

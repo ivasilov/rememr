@@ -1,4 +1,5 @@
 'use server'
+import { MainContentLayout } from '@/src/components/main-content-layout'
 import { getQueryClient } from '@/src/lib/react-query-client'
 import { createClient } from '@/src/utils/supabase/server'
 import { HydrationBoundary, dehydrate } from '@tanstack/react-query'
@@ -23,9 +24,9 @@ const BookmarksPage = async ({ searchParams }: { searchParams: { [key: string]: 
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <div className="container h-full py-6">
+      <MainContentLayout>
         <Bookmarks />
-      </div>
+      </MainContentLayout>
     </HydrationBoundary>
   )
 }
