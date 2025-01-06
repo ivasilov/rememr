@@ -19,7 +19,7 @@ export default async function RootLayout({ children }: PropsWithChildren<{}>) {
       <AppSidebar />
       <div className="grid min-h-screen w-full">
         <div className="flex max-h-screen flex-col">
-          <header className="bg-muted/40 flex h-14 items-center gap-4 border-b px-4 lg:h-[60px] lg:px-6">
+          <header className="bg-muted/40 flex h-14 items-center gap-4 border-b px-4 shadow-md lg:h-[60px] lg:px-6">
             <SidebarTrigger />
             <Suspense>
               <SearchInput />
