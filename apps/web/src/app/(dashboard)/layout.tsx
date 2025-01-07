@@ -11,7 +11,7 @@ import { CircleUser } from 'lucide-react'
 import Link from 'next/link'
 import { PropsWithChildren, Suspense } from 'react'
 import { LayoutDropdownMenuContent } from './LayoutDropdownMenuContent'
-import SearchInput from './search-input'
+import { SearchInput } from './search-input'
 
 export default async function RootLayout({ children }: PropsWithChildren<{}>) {
   return (
