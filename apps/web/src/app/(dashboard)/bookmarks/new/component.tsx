@@ -21,21 +21,24 @@ import {
   Input,
   Switch,
 } from '@rememr/ui'
+import { toast } from 'sonner'
 import { EditPagesForBookmark } from '../../../../components/edit-pages-for-bookmark'
 import { createClient } from '../../../../utils/supabase/client'
 
 const formId = 'create-new-bookmark'
 
 const NewBookmarkSchema = z.object({
-  name: z.string(),
-  url: z.string(),
-  read: z.boolean(),
-  tagIds: z.array(
-    z.object({
-      id: z.string(),
-      name: z.string(),
-    }),
-  ),
+  name: z.string().trim().min(1),
+  url: z.string().trim().min(1),
+  read: z.boolean().default(true),
+  tagIds: z
+    .array(
+      z.object({
+        id: z.string(),
+        name: z.string(),
+      }),
+    )
+    .default([]),
 })
 
 export const NewBookmarkComponent = () => {
@@ -78,6 +81,9 @@ export const NewBookmarkComponent = () => {
     if (relations.length > 0) {
       await supabase.from('bookmarks_tags').insert(relations)
     }
+
+    toast.success('Bookmark created')
+    router.push(`/bookmarks`)
   }
 
   return (
