@@ -152,7 +152,7 @@ export const NewBookmarkComponent = () => {
         </Form>
       </CardContent>
       <CardFooter className="flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2">
-        <Button variant="secondary" onClick={() => router.push('/')}>
+        <Button variant="secondary" onClick={() => router.push('/bookmarks')}>
           Cancel
         </Button>
         <Button variant="default" type="submit" form={formId}>
