@@ -16,7 +16,6 @@ export const checkAuthentication = async (pathname: string) => {
   if (!user) {
     // Encode the current path and redirect to login with the 'returnTo' query parameter
     const encodedReturnTo = encodeURIComponent(pathname)
-    console.log('redirecting to login', encodedReturnTo)
     redirect(`/login?returnTo=${encodedReturnTo}`)
   }
 }
