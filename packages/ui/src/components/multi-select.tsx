@@ -89,7 +89,7 @@ function useDebounce<T>(value: T, delay?: number, shouldDebounce: (t: T) => bool
   const [debouncedValue, setDebouncedValue] = React.useState<T>(value)
 
   React.useEffect(() => {
-    let timer: number
+    let timer: ReturnType<typeof setTimeout>
     if (shouldDebounce(value)) {
       timer = setTimeout(() => setDebouncedValue(value), delay || 500)
     } else {
