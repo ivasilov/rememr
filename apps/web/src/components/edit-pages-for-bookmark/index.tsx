@@ -1,71 +1,55 @@
 import { createClient } from '@/src/utils/supabase/client'
-import AsyncCreatableSelect from 'react-select/async-creatable'
-import { FilterOptionOption } from 'react-select/dist/declarations/src/filters'
-import { MultiValue } from 'react-select/dist/declarations/src/types'
-import styles from './react-select.module.css'
+import { MultipleSelector, Option } from '@rememr/ui'
+import { useEffect, useMemo } from 'react'
+import { Loading } from '../loading'
 
 export type IdName = { id?: string; name: string }
-
-type Mutable<Type> = {
-  -readonly [Key in keyof Type]: Type[Key]
-}
 
 interface Props {
   pages: IdName[]
   onChange: (p: IdName[]) => void
 }
 
-const filterPage: (option: FilterOptionOption<IdName>, inputValue: string) => boolean = (option, inputValue) => {
-  if ((option.data as any).__isNew__) {
-    return false
+const memoizedSearchSet = new Map<string, { value: string; label: string }[]>()
+
+const memoizedOnSearch = async (value: string) => {
+  if (!memoizedSearchSet.has(value)) {
+    const supabase = createClient()
+    const { data: tags } = await supabase.from('tags').select().ilike('name', `%${value}%`).limit(10)
+    const result = (tags || []).map(p => ({ value: p.id, label: p.name }))
+    memoizedSearchSet.set(value, result)
   }
 
-  const normalizedName = option.data.name.toLowerCase()
-  const normalizedQuery = inputValue.toLowerCase()
-
-  return normalizedName.indexOf(normalizedQuery) >= 0
+  return memoizedSearchSet.get(value)!
 }
 
 export const EditPagesForBookmark = ({ pages, onChange }: Props) => {
-  const availablePages = async (_inputValue: string): Promise<IdName[]> => {
-    const supabase = createClient()
-    // TODO: the input value should be passed to the backend for filtering on the backend
-    const { data: tags } = await supabase.from('tags').select()
+  // clear the memoizedSearchSet on first render
+  useEffect(() => memoizedSearchSet.clear(), [])
 
-    return tags || []
+  const value = useMemo(() => (pages || []).map(p => ({ value: p.id || p.name, label: p.name, id: p.id })), [pages])
+
+  const handleChange = (value: Option[]) => {
+    const newPages = value.map(v => ({ id: v.value, name: v.label }))
+
+    onChange(newPages)
   }
 
   return (
-    <AsyncCreatableSelect
-      classNames={{
-        // this is done to unstyle the default style from tailwind/forms on input
-        input: () => styles['input-container'],
-        control: state => (state.isFocused ? 'border-primary-600 border-primary-600:hover' : ''),
-      }}
-      styles={{
-        control: (baseStyles, state) => {
-          return {
-            ...baseStyles,
-            // this is needed to clear all border style so that the classNames prop works
-            borderColor: state.isFocused ? undefined : baseStyles.borderColor,
-            '&:hover': undefined,
-          }
-        },
-        menuPortal: base => ({ ...base, zIndex: 9999 }),
-      }}
-      value={pages}
-      isMulti
-      cacheOptions
-      defaultOptions // when set to true, it will auto load the options on render
-      loadOptions={availablePages}
-      createOptionPosition="first"
-      getOptionValue={p => p.id || p.name} // handle the create new case where it has only a name
-      getOptionLabel={p => (p as any).label || p.name} // handle the create new case where it can have a label
-      filterOption={filterPage}
-      closeMenuOnSelect={false}
-      formatCreateLabel={userInput => `Add "${userInput}"`}
-      getNewOptionData={(value, label) => ({ name: value, label })} // attach the label created by formatCreateLabel
-      onChange={ps => onChange(ps as Mutable<MultiValue<IdName>>)}
+    <MultipleSelector
+      value={value}
+      onSearch={memoizedOnSearch}
+      triggerSearchOnFocus
+      creatable
+      onChange={handleChange}
+      placeholder=""
+      loadingIndicator={
+        <p className="py-3 text-gray-600 dark:text-gray-400">
+          <Loading size={24} />
+        </p>
+      }
+      emptyIndicator="No results found."
+      hideClearAllButton
     />
   )
 }
