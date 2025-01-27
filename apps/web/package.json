@@ -7,7 +7,8 @@
     "start": "next start",
     "lint": "next lint",
     "generate:types": "supabase gen types typescript --local > src/lib/database.types.ts && prettier --write src/lib/database.types.ts",
-    "test:types": "tsc --noEmit"
+    "test:types": "tsc --noEmit",
+    "clean": "rimraf node_modules .next"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
@@ -37,6 +38,7 @@
     "@types/react-dom": "~18.3.0",
     "eslint": "^8.44.0",
     "eslint-config-next": "^13.4.9",
+    "rimraf": "^6.0.0",
     "typescript": "~5.1.0"
   }
 }

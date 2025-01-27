@@ -4,7 +4,8 @@
   "main": "src/index.ts",
   "types": "src/index.ts",
   "scripts": {
-    "test:types": "tsc --noEmit"
+    "test:types": "tsc --noEmit",
+    "clean": "rimraf node_modules"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
@@ -34,6 +35,7 @@
     "@types/react": "^18.3.0",
     "autoprefixer": "10.4.14",
     "postcss": "^8.1.0",
+    "rimraf": "^6.0.0",
     "tailwindcss": "3.4.17"
   }
 }
