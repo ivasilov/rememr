@@ -1,6 +1,6 @@
 {
   "name": "@rememr/extension",
-  "displayName": "Rememr extension",
+  "displayName": "Rememr",
   "version": "0.0.1",
   "description": "Companion extension for rememr.com",
   "author": "Ivan Vasilov",
