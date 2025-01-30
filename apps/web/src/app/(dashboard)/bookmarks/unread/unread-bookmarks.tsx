@@ -11,15 +11,7 @@ type BookmarksProps = {
 export const UnreadBookmarks = ({}: BookmarksProps) => {
   const [searchQuery] = useQueryState('q')
 
-  const { isSuccess, isLoading, data, fetchNextPage, isFetchingNextPage } = useListUnreadBookmarksQuery(searchQuery)
+  const result = useListUnreadBookmarksQuery(searchQuery)
 
-  return (
-    <Bookmarks
-      data={data}
-      isSuccess={isSuccess}
-      isLoading={isLoading}
-      fetchNextPage={fetchNextPage}
-      isFetchingNextPage={isFetchingNextPage}
-    />
-  )
+  return <Bookmarks {...result} />
 }

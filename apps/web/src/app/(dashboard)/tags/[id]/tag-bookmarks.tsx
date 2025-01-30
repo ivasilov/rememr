@@ -11,15 +11,7 @@ type TagBookmarksProps = {
 export const TagBookmarks = ({ tags }: TagBookmarksProps) => {
   const [searchQuery] = useQueryState('q')
 
-  const { isSuccess, isLoading, data, fetchNextPage, isFetchingNextPage } = useListTagBookmarksQuery(searchQuery, tags)
+  const result = useListTagBookmarksQuery(searchQuery, tags)
 
-  return (
-    <Bookmarks
-      isSuccess={isSuccess}
-      isLoading={isLoading}
-      data={data}
-      fetchNextPage={fetchNextPage}
-      isFetchingNextPage={isFetchingNextPage}
-    />
-  )
+  return <Bookmarks {...result} />
 }

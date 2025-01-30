@@ -1,20 +1,18 @@
 import { BookmarkType } from '@/src/lib/supabase'
 import { Button } from '@rememr/ui'
+import { UseInfiniteQueryResult } from '@tanstack/react-query'
 import Link from 'next/link'
 import { Bookmark } from '../bookmark'
 import { Loading } from '../loading'
 import { LoadMoreBookmarks } from './load-more-bookmarks'
 
-type BookmarksProps = {
-  isSuccess: boolean
-  isLoading: boolean
-  data: {
+type BookmarksProps = UseInfiniteQueryResult<
+  {
     bookmarks: BookmarkType[]
     count: number
-  }
-  fetchNextPage: () => Promise<unknown>
-  isFetchingNextPage: boolean
-}
+  },
+  Error
+>
 
 export const Bookmarks = ({ isSuccess, isLoading, data, fetchNextPage, isFetchingNextPage }: BookmarksProps) => {
   if (isLoading) {
