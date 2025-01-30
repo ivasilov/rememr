@@ -20,11 +20,17 @@ export const Bookmark = (props: { bookmark: BookmarkType }) => {
 
   return (
     <Card className="group flex overflow-hidden px-6 py-4">
-      <img
-        className="mr-5 w-5 object-contain"
-        alt="bookmark favicon"
-        src={`https://s2.googleusercontent.com/s2/favicons?domain=${bookmark.url}&sz=16`}
-      />
+      <div className="min-w-5 mr-5 mt-1">
+        <img
+          className="w-5 object-contain"
+          alt=""
+          src={`https://s2.googleusercontent.com/s2/favicons?domain=${bookmark.url}&sz=16`}
+          onError={e => {
+            e.currentTarget.onerror = null
+            e.currentTarget.src = '/images/globe.png'
+          }}
+        />
+      </div>
       <div className="flex w-full justify-between">
         <div className="flex grow flex-col">
           <a className="text-foreground font-bold" href={bookmark.url}>
