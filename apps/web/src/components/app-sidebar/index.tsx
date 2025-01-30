@@ -11,6 +11,7 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
+  SidebarMenuBadge,
   SidebarMenuItem,
 } from '@rememr/ui'
 import { ChevronDown, FileStack, Home, Inbox, Tag } from 'lucide-react'
@@ -18,6 +19,14 @@ import { cookies } from 'next/headers'
 import Link from 'next/link'
 import { createClient } from '../../utils/supabase/server'
 import { SidebarMenuLink } from './sidebar-menu-link'
+
+function EmptyResults({ message }: { message: string }) {
+  return (
+    <div className="text-muted-foreground border-border bg-muted/50 mx-2 flex items-center justify-center rounded-md border border-dashed py-4 text-sm">
+      {message}
+    </div>
+  )
+}
 
 export async function AppSidebar() {
   const cookieStore = cookies()
@@ -32,13 +41,13 @@ export async function AppSidebar() {
 
   const { data: tags } = await supabase
     .from('tags')
-    .select('*')
+    .select(`id,name,count:bookmarks_tags(bookmark_id.count())`)
     .eq('user_id', user.id)
     .order('name', { ascending: false })
 
   const { data: sessions } = await supabase
     .from('sessions')
-    .select('*')
+    .select(`id,name,count:bookmarks_sessions(bookmark_id.count())`)
     .eq('user_id', user.id)
     .order('created_at', { ascending: false })
 
@@ -83,8 +92,9 @@ export async function AppSidebar() {
                     <SidebarMenuItem key={t.id}>
                       <SidebarMenuLink href={`/sessions/${t.id}`} className="align-center flex items-center">
                         <FileStack />
-                        <span>{t.name}</span>
+                        <span className="w-44 truncate">{t.name}</span>
                       </SidebarMenuLink>
+                      <SidebarMenuBadge>{t.count[0].count}</SidebarMenuBadge>
                     </SidebarMenuItem>
                   ))}
                 </SidebarMenu>
@@ -107,8 +117,9 @@ export async function AppSidebar() {
                     <SidebarMenuItem key={t.id}>
                       <SidebarMenuLink href={`/tags/${t.id}`} className="align-center flex items-center">
                         <Tag />
-                        <span>{t.name}</span>
+                        <span className="w-44 truncate">{t.name}</span>
                       </SidebarMenuLink>
+                      <SidebarMenuBadge>{t.count[0].count}</SidebarMenuBadge>
                     </SidebarMenuItem>
                   ))}
                 </SidebarMenu>

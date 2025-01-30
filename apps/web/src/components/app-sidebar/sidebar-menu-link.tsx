@@ -13,10 +13,8 @@ export function SidebarMenuLink({
   const pathname = usePathname()
 
   return (
-    <Link href={href as any} passHref>
-      <SidebarMenuButton isActive={pathname === href} {...props}>
-        {children}
-      </SidebarMenuButton>
-    </Link>
+    <SidebarMenuButton isActive={pathname === href} {...props} asChild>
+      <Link href={href as any}>{children}</Link>
+    </SidebarMenuButton>
   )
 }
