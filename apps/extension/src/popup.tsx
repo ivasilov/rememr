@@ -5,6 +5,93 @@ import { browser } from 'browser-namespace'
 import { useEffect, useState } from 'react'
 import { supabase } from '~core/supabase'
 
+const sendTabsToRememr = async (tabCount: 'single' | 'all', readLater: boolean) => {
+  try {
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser()
+    if (!user || userError) {
+      throw userError
+    }
+
+    const tabs = await browser.tabs.query({ currentWindow: true, ...(tabCount === 'all' ? {} : { active: true }) })
+    const bookmarks = tabs
+      .filter(tab => tab.url && tab.title)
+      .map(tab => ({
+        user_id: user.id,
+        url: tab.url!,
+        name: tab.title!,
+        read: !readLater,
+      }))
+
+    const { error } = await supabase.from('bookmarks').insert(bookmarks)
+
+    if (error) throw error
+    browser.tabs.remove(tabs.map(tab => tab.id))
+  } catch (error) {
+    console.error('Error sending tabs:', error)
+    alert('Failed to send tabs to rememr.com')
+  }
+}
+
+const saveTabsAsSession = async () => {
+  try {
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser()
+    if (!user || userError) {
+      throw userError
+    }
+
+    const tabs = await browser.tabs.query({ currentWindow: true })
+    const bookmarks = tabs
+      .filter(tab => tab.url && tab.title)
+      .map(tab => ({
+        user_id: user.id,
+        url: tab.url!,
+        name: tab.title!,
+        read: false,
+      }))
+
+    const { data: bookmarkIds, error: bookmarkIdsError } = await supabase
+      .from('bookmarks')
+      .insert(bookmarks)
+      .select('id')
+      .throwOnError()
+
+    const {
+      data: [session],
+    } = await supabase
+      .from('sessions')
+      .insert({
+        name: new Date().toLocaleString('en-US', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false,
+        }),
+        user_id: user.id,
+      })
+      .select('id')
+      .throwOnError()
+
+    const bookmarksSessions = bookmarkIds.map(bookmarkId => ({
+      bookmark_id: bookmarkId.id,
+      session_id: session.id,
+    }))
+    await supabase.from('bookmarks_sessions').insert(bookmarksSessions).throwOnError()
+
+    browser.tabs.remove(tabs.map(tab => tab.id))
+  } catch (error) {
+    console.error('Error saving a session:', error)
+    alert('Failed to save a session' + error)
+  }
+}
+
 function IndexPopup() {
   // the popup defaults to being logged in because is the more common usecase (than being logged out). This is to avoid
   // rerendering on each opening when the user is logged in
@@ -19,40 +106,13 @@ function IndexPopup() {
     })
   }, [])
 
-  const sendTabsToRememr = async (tabCount: 'single' | 'all', readLater: boolean) => {
-    try {
-      const {
-        data: { user },
-        error: userError,
-      } = await supabase.auth.getUser()
-      if (!user || userError) {
-        throw userError
-      }
-
-      const tabs = await browser.tabs.query({ currentWindow: true, ...(tabCount === 'all' ? {} : { active: true }) })
-      const bookmarks = tabs
-        .filter(tab => tab.url && tab.title)
-        .map(tab => ({
-          user_id: user.id,
-          url: tab.url!,
-          name: tab.title!,
-          read: !readLater,
-        }))
-
-      const { error } = await supabase.from('bookmarks').insert(bookmarks)
-
-      if (error) throw error
-      browser.tabs.remove(tabs.map(tab => tab.id))
-    } catch (error) {
-      console.error('Error sending tabs:', error)
-      alert('Failed to send tabs to rememr.com')
-    }
-  }
-
   return (
-    <div className="flex w-60">
+    <div className="flex w-80">
       {isLoggedIn ? (
         <div className="flex flex-1 flex-col">
+          <Button variant="ghost" onClick={() => saveTabsAsSession()} className="justify-start rounded-none">
+            Save all tabs as a session for reading later
+          </Button>
           <Button
             variant="ghost"
             onClick={() => sendTabsToRememr('single', true)}
