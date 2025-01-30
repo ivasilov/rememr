@@ -1,5 +1,4 @@
 'use server'
-import { Bookmarks } from '@/src/components/bookmarks'
 import { MainContentLayout } from '@/src/components/main-content-layout'
 import { checkAuthentication } from '@/src/lib/supabase'
 import { createClient } from '@/src/utils/supabase/server'
@@ -7,6 +6,7 @@ import { Tag } from 'lucide-react'
 import { cookies } from 'next/headers'
 import { SinglePageError } from './components/error'
 import { TagActions } from './tag-actions'
+import { TagBookmarks } from './tag-bookmarks'
 
 const TagPage = async ({ params: { id } }: { params: { id: string } }) => {
   await checkAuthentication(`/tags/${id}`)
@@ -30,7 +30,7 @@ const TagPage = async ({ params: { id } }: { params: { id: string } }) => {
 
           <TagActions tag={tag} />
         </div>
-        <Bookmarks tags={[tag.id]} />
+        <TagBookmarks tags={[tag.id]} />
       </MainContentLayout>
     )
   }

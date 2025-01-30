@@ -1,31 +1,26 @@
 'use server'
-import { Bookmarks } from '@/src/components/bookmarks'
 import { MainContentLayout } from '@/src/components/main-content-layout'
 import { getQueryClient } from '@/src/lib/react-query-client'
 import { checkAuthentication } from '@/src/lib/supabase'
-import { createClient } from '@/src/utils/supabase/server'
 import { HydrationBoundary, dehydrate } from '@tanstack/react-query'
-import { cookies } from 'next/headers'
-import { listBookmarksOptions } from '../query-options'
-import { searchParamsCache } from '../searchParams'
+import { Inbox } from 'lucide-react'
+import { UnreadBookmarks } from './unread-bookmarks'
 
-const BookmarksPage = async ({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) => {
+const BookmarksPage = async () => {
   await checkAuthentication('/bookmarks/unread')
 
-  const cookieStore = cookies()
-  const supabase = createClient(cookieStore)
-
-  const values = searchParamsCache.parse(searchParams)
-  const { q: searchQuery } = values
-
   const queryClient = getQueryClient()
-
-  queryClient.prefetchQuery(listBookmarksOptions(supabase, true, searchQuery))
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <MainContentLayout>
-        <Bookmarks unread={true} />
+        <div className="flex">
+          <div className="flex h-full flex-1 items-center gap-2">
+            <Inbox size={20} className="pt-1" />
+            <h1 className="text-foreground flex-1 text-3xl font-semibold">Unread bookmarks</h1>
+          </div>
+        </div>
+        <UnreadBookmarks />
       </MainContentLayout>
     </HydrationBoundary>
   )

@@ -1,27 +1,22 @@
-'use client'
-
+import { BookmarkType } from '@/src/lib/supabase'
 import { Button } from '@rememr/ui'
 import Link from 'next/link'
-import { useQueryState } from 'nuqs'
 import { Bookmark } from '../bookmark'
 import { Loading } from '../loading'
-import { useListBookmarksQuery } from './listBookmarksQuery'
 import { LoadMoreBookmarks } from './load-more-bookmarks'
 
 type BookmarksProps = {
-  tags?: string[]
-  unread?: boolean
+  isSuccess: boolean
+  isLoading: boolean
+  data: {
+    bookmarks: BookmarkType[]
+    count: number
+  }
+  fetchNextPage: () => Promise<unknown>
+  isFetchingNextPage: boolean
 }
 
-export const Bookmarks = ({ unread = false, tags = [] }: BookmarksProps) => {
-  const [searchQuery] = useQueryState('q')
-
-  const { isSuccess, isLoading, data, fetchNextPage, isFetchingNextPage } = useListBookmarksQuery(
-    searchQuery,
-    unread,
-    tags,
-  )
-
+export const Bookmarks = ({ isSuccess, isLoading, data, fetchNextPage, isFetchingNextPage }: BookmarksProps) => {
   if (isLoading) {
     return (
       <div className="h-screen">

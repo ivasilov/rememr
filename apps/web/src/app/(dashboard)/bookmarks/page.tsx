@@ -1,31 +1,24 @@
 'use server'
 import { MainContentLayout } from '@/src/components/main-content-layout'
 import { getQueryClient } from '@/src/lib/react-query-client'
-import { createClient } from '@/src/utils/supabase/server'
 import { HydrationBoundary, dehydrate } from '@tanstack/react-query'
-import { cookies } from 'next/headers'
-import { Bookmarks } from '../../../components/bookmarks'
+import { Home } from 'lucide-react'
 import { checkAuthentication } from '../../../lib/supabase'
-import { listBookmarksOptions } from './query-options'
-import { searchParamsCache } from './searchParams'
+import { AllBookmarks } from './all-bookmarks'
 
-const BookmarksPage = async ({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) => {
+const BookmarksPage = async () => {
   await checkAuthentication('/bookmarks')
 
-  const cookieStore = cookies()
-  const supabase = createClient(cookieStore)
-
-  const values = searchParamsCache.parse(searchParams)
-  const { q: searchQuery } = values
-
   const queryClient = getQueryClient()
-
-  await queryClient.prefetchQuery(listBookmarksOptions(supabase, false, searchQuery))
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <MainContentLayout>
-        <Bookmarks />
+        <div className="flex h-full flex-1 items-center gap-2">
+          <Home size={20} className="pt-1" />
+          <h1 className="text-foreground flex-1 text-3xl font-semibold">All bookmarks</h1>
+        </div>
+        <AllBookmarks />
       </MainContentLayout>
     </HydrationBoundary>
   )
