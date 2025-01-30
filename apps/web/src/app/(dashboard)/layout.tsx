@@ -39,7 +39,9 @@ export default async function RootLayout({ children }: PropsWithChildren<{}>) {
               </DropdownMenuContent>
             </DropdownMenu>
           </header>
-          <main className="bg-muted/40 flex-1 overflow-auto">{children}</main>
+          <main className="bg-muted/40 flex-1 overflow-auto" style={{ scrollbarGutter: 'stable' }}>
+            {children}
+          </main>
         </div>
       </div>
     </SidebarProvider>
