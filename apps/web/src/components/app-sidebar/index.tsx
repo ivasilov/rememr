@@ -13,7 +13,7 @@ import {
   SidebarMenu,
   SidebarMenuItem,
 } from '@rememr/ui'
-import { ChevronDown, Home, Inbox, Tag } from 'lucide-react'
+import { ChevronDown, FileStack, Home, Inbox, Tag } from 'lucide-react'
 import { cookies } from 'next/headers'
 import Link from 'next/link'
 import { createClient } from '../../utils/supabase/server'
@@ -35,6 +35,12 @@ export async function AppSidebar() {
     .select('*')
     .eq('user_id', user.id)
     .order('name', { ascending: false })
+
+  const { data: sessions } = await supabase
+    .from('sessions')
+    .select('*')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: false })
 
   return (
     <Sidebar>
@@ -62,6 +68,30 @@ export async function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+        <Collapsible defaultOpen className="group/collapsible">
+          <SidebarGroup>
+            <SidebarGroupLabel asChild>
+              <CollapsibleTrigger>
+                Sessions
+                <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
+              </CollapsibleTrigger>
+            </SidebarGroupLabel>
+            <CollapsibleContent>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {sessions?.map(t => (
+                    <SidebarMenuItem key={t.id}>
+                      <SidebarMenuLink href={`/sessions/${t.id}`} className="align-center flex items-center">
+                        <FileStack />
+                        <span>{t.name}</span>
+                      </SidebarMenuLink>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </CollapsibleContent>
+          </SidebarGroup>
+        </Collapsible>
         <Collapsible defaultOpen className="group/collapsible">
           <SidebarGroup>
             <SidebarGroupLabel asChild>
