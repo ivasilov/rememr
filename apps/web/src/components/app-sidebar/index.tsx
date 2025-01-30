@@ -1,6 +1,9 @@
 'use server'
 
 import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
   Sidebar,
   SidebarContent,
   SidebarGroup,
@@ -10,7 +13,7 @@ import {
   SidebarMenu,
   SidebarMenuItem,
 } from '@rememr/ui'
-import { Home, Inbox, Tag } from 'lucide-react'
+import { ChevronDown, Home, Inbox, Tag } from 'lucide-react'
 import { cookies } from 'next/headers'
 import Link from 'next/link'
 import { createClient } from '../../utils/supabase/server'
@@ -19,8 +22,19 @@ import { SidebarMenuLink } from './sidebar-menu-link'
 export async function AppSidebar() {
   const cookieStore = cookies()
   const supabase = createClient(cookieStore)
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
 
-  const { data: tags } = await supabase.from('tags').select('*').order('name', { ascending: false })
+  if (!user) {
+    return null
+  }
+
+  const { data: tags } = await supabase
+    .from('tags')
+    .select('*')
+    .eq('user_id', user.id)
+    .order('name', { ascending: false })
 
   return (
     <Sidebar>
@@ -48,21 +62,30 @@ export async function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-        <SidebarGroup>
-          <SidebarGroupLabel>Tags</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {tags?.map(t => (
-                <SidebarMenuItem key={t.id}>
-                  <SidebarMenuLink href={`/tags/${t.id}`} className="align-center flex items-center">
-                    <Tag />
-                    <span>{t.name}</span>
-                  </SidebarMenuLink>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        <Collapsible defaultOpen className="group/collapsible">
+          <SidebarGroup>
+            <SidebarGroupLabel asChild>
+              <CollapsibleTrigger>
+                Tags
+                <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
+              </CollapsibleTrigger>
+            </SidebarGroupLabel>
+            <CollapsibleContent>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {tags?.map(t => (
+                    <SidebarMenuItem key={t.id}>
+                      <SidebarMenuLink href={`/tags/${t.id}`} className="align-center flex items-center">
+                        <Tag />
+                        <span>{t.name}</span>
+                      </SidebarMenuLink>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </CollapsibleContent>
+          </SidebarGroup>
+        </Collapsible>
       </SidebarContent>
     </Sidebar>
   )
