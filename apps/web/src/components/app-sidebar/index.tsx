@@ -39,17 +39,17 @@ export async function AppSidebar() {
     return null
   }
 
-  const { data: tags } = await supabase
-    .from('tags')
-    .select(`id,name,count:bookmarks_tags(bookmark_id.count())`)
-    .eq('user_id', user.id)
-    .order('name', { ascending: false })
+  const { data: tags, error } = await supabase
+    .from('bookmarks_tags')
+    .select('...tags(id,name), bookmark_id.count()')
+    .eq('tags.user_id', user.id)
+    .order('name', { ascending: false, referencedTable: 'tags' })
 
   const { data: sessions } = await supabase
-    .from('sessions')
-    .select(`id,name,count:bookmarks_sessions(bookmark_id.count())`)
-    .eq('user_id', user.id)
-    .order('created_at', { ascending: false })
+    .from('bookmarks_sessions')
+    .select('...sessions(id,name), bookmark_id.count()')
+    .eq('sessions.user_id', user.id)
+    .order('created_at', { ascending: false, referencedTable: 'sessions' })
 
   return (
     <Sidebar>
@@ -94,7 +94,7 @@ export async function AppSidebar() {
                         <FileStack />
                         <span className="w-44 truncate">{t.name}</span>
                       </SidebarMenuLink>
-                      <SidebarMenuBadge>{t.count[0].count}</SidebarMenuBadge>
+                      <SidebarMenuBadge>{t.count}</SidebarMenuBadge>
                     </SidebarMenuItem>
                   ))}
                 </SidebarMenu>
@@ -119,7 +119,7 @@ export async function AppSidebar() {
                         <Tag />
                         <span className="w-44 truncate">{t.name}</span>
                       </SidebarMenuLink>
-                      <SidebarMenuBadge>{t.count[0].count}</SidebarMenuBadge>
+                      <SidebarMenuBadge>{t.count}</SidebarMenuBadge>
                     </SidebarMenuItem>
                   ))}
                 </SidebarMenu>
