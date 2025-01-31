@@ -1,8 +1,17 @@
 'use client'
 
 import { BookmarkType } from '@/src/lib/supabase'
-import { Button, Card, Dialog, DialogContent, DialogTrigger } from '@rememr/ui'
-import { PenLine, Trash2 } from 'lucide-react'
+import {
+  Button,
+  Card,
+  Dialog,
+  DialogContent,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@rememr/ui'
+import { EllipsisVertical, Pen, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { DeleteBookmarkDialog } from '../delete-bookmark'
 import { EditBookmarkDialog } from '../edit-bookmark'
@@ -40,34 +49,37 @@ export const Bookmark = (props: { bookmark: BookmarkType }) => {
         </div>
 
         {/* the min-w-[80px] is added so that bookmarks with long url names dont shift when hovering over the action buttons */}
-        <div className="flex min-w-[80px] items-center space-x-2">
-          <Dialog open={editBookmarkDialogShown} onOpenChange={open => setEditBookmarkDialogShown(open)}>
-            <DialogTrigger asChild>
-              <Button size="icon" className="hidden group-hover:inline-flex">
-                <PenLine size={16} strokeWidth={2} />
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <EditBookmarkDialog bookmark={bookmark} onClose={() => setEditBookmarkDialogShown(false)} />
-            </DialogContent>
-          </Dialog>
-          <Dialog open={deleteBookmarkDialogShown} onOpenChange={open => setDeleteBookmarkDialogShown(open)}>
-            <DialogTrigger asChild>
-              <Button
-                size="icon"
-                className="hidden group-hover:inline-flex"
-                variant="destructive"
-                onClick={() => setDeleteBookmarkDialogShown(true)}
-              >
-                <Trash2 size={16} />
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DeleteBookmarkDialog bookmark={bookmark} onClose={() => setDeleteBookmarkDialogShown(false)} />
-            </DialogContent>
-          </Dialog>
-        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button size="icon" variant="ghost" className="min-w-9">
+              <EllipsisVertical size={16} strokeWidth={2.5} />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" forceMount>
+            <DropdownMenuItem className="flex items-center gap-2" onClick={() => setEditBookmarkDialogShown(true)}>
+              <Pen strokeWidth={2.5} />
+              <span>Edit</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="text-destructive flex items-center gap-2"
+              onClick={() => setDeleteBookmarkDialogShown(true)}
+            >
+              <Trash2 strokeWidth={2.5} />
+              <span>Delete</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
+      <Dialog open={editBookmarkDialogShown} onOpenChange={open => setEditBookmarkDialogShown(open)}>
+        <DialogContent>
+          <EditBookmarkDialog bookmark={bookmark} onClose={() => setEditBookmarkDialogShown(false)} />
+        </DialogContent>
+      </Dialog>
+      <Dialog open={deleteBookmarkDialogShown} onOpenChange={open => setDeleteBookmarkDialogShown(open)}>
+        <DialogContent>
+          <DeleteBookmarkDialog bookmark={bookmark} onClose={() => setDeleteBookmarkDialogShown(false)} />
+        </DialogContent>
+      </Dialog>
     </Card>
   )
 }
