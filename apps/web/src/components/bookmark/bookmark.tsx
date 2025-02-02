@@ -15,6 +15,7 @@ import { EllipsisVertical, Pen, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { DeleteBookmarkDialog } from '../delete-bookmark'
 import { EditBookmarkDialog } from '../edit-bookmark'
+import { ChatSheet } from './chat-sheet'
 
 export const Bookmark = (props: { bookmark: BookmarkType }) => {
   const [editBookmarkDialogShown, setEditBookmarkDialogShown] = useState(false)
@@ -48,27 +49,30 @@ export const Bookmark = (props: { bookmark: BookmarkType }) => {
           <span className="text-muted-foreground font-normal">{hostname}</span>
         </div>
 
-        {/* the min-w-[80px] is added so that bookmarks with long url names dont shift when hovering over the action buttons */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button size="icon" variant="ghost" className="min-w-9">
-              <EllipsisVertical size={16} strokeWidth={2.5} />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" forceMount>
-            <DropdownMenuItem className="flex items-center gap-2" onClick={() => setEditBookmarkDialogShown(true)}>
-              <Pen strokeWidth={2.5} />
-              <span>Edit</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              className="text-destructive flex items-center gap-2"
-              onClick={() => setDeleteBookmarkDialogShown(true)}
-            >
-              <Trash2 strokeWidth={2.5} />
-              <span>Delete</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="flex gap-2">
+          <ChatSheet bookmarkTitle={bookmark.name} bookmarkUrl={bookmark.url} />
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button size="icon" variant="outline" className="min-w-9">
+                <EllipsisVertical strokeWidth={2.5} />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" forceMount>
+              <DropdownMenuItem className="flex items-center gap-2" onClick={() => setEditBookmarkDialogShown(true)}>
+                <Pen strokeWidth={2.5} />
+                <span>Edit</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="text-destructive flex items-center gap-2"
+                onClick={() => setDeleteBookmarkDialogShown(true)}
+              >
+                <Trash2 strokeWidth={2.5} />
+                <span>Delete</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
       <Dialog open={editBookmarkDialogShown} onOpenChange={open => setEditBookmarkDialogShown(open)}>
         <DialogContent>
