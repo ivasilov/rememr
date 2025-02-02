@@ -55,7 +55,7 @@ export async function AppSidebar() {
     <Sidebar>
       <SidebarContent>
         <SidebarHeader>
-          <Link href="/" className="flex items-center gap-2 font-semibold">
+          <Link href="/bookmarks" className="flex items-center gap-2 font-semibold">
             <span className="">rememr</span>
           </Link>
         </SidebarHeader>
