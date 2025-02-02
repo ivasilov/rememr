@@ -16,4 +16,7 @@ export * from './components/sidebar'
 export * from './components/sonner'
 export * from './components/switch'
 
+// Icons
+export * from './components/settings-gear'
+
 export { cn } from './utils'
