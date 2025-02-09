@@ -7,7 +7,7 @@ import { Markdown } from '../markdown'
 
 export function Chat({ bookmarkTitle, bookmarkUrl }: { bookmarkTitle: string; bookmarkUrl: string }) {
   const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
-    api: '/api/ai/tags',
+    api: '/api/ai/bookmark',
     initialMessages: [
       {
         id: '1',
