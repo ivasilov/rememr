@@ -1,6 +1,6 @@
 import { Button, DialogFooter, DialogHeader, DialogTitle } from '@rememr/ui'
 import { toast } from 'sonner'
-import { deleteBookmark } from './action'
+import { useDeleteBookmarkMutation } from './delete-bookmark-mutation'
 
 interface Props {
   bookmark: { id: string; name: string }
@@ -8,9 +8,11 @@ interface Props {
 }
 
 export const DeleteBookmarkDialog = ({ bookmark, onClose }: Props) => {
+  const { mutateAsync, isPending } = useDeleteBookmarkMutation()
+
   const onDelete = async () => {
     try {
-      await deleteBookmark(bookmark.id)
+      await mutateAsync({ id: bookmark.id })
       toast.success(
         <span>
           Succesfully deleted <span className="text-destructive">{bookmark.name}</span>.
@@ -36,11 +38,11 @@ export const DeleteBookmarkDialog = ({ bookmark, onClose }: Props) => {
         Are you sure you want to delete <span className="text-destructive">{bookmark.name}</span>?
       </div>
       <DialogFooter>
-        <Button variant="secondary" onClick={onClose}>
+        <Button variant="secondary" onClick={onClose} disabled={isPending}>
           Cancel
         </Button>
-        <Button variant="destructive" onClick={onDelete}>
-          Delete
+        <Button variant="destructive" onClick={onDelete} disabled={isPending}>
+          {isPending ? 'Deleting...' : 'Delete'}
         </Button>
       </DialogFooter>
     </>

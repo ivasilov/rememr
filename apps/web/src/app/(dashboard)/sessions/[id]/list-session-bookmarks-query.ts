@@ -1,6 +1,6 @@
 import { BookmarkType } from '@/src/lib/supabase'
 import { createClient } from '@/src/utils/supabase/client'
-import { GetNextPageParamFunction, InfiniteData, useInfiniteQuery } from '@tanstack/react-query'
+import { GetNextPageParamFunction, InfiniteData, infiniteQueryOptions, useInfiniteQuery } from '@tanstack/react-query'
 
 const queryKey = (searchQuery: string | null, sessionId: string) => ['bookmarks', { searchQuery, sessionId }]
 
@@ -78,8 +78,8 @@ const selectData = (
   return { bookmarks: data.pages.flatMap(p => p.data), count: data.pages[0].count }
 }
 
-export const useListSessionBookmarksQuery = (searchQuery: string | null, sessionId: string) => {
-  return useInfiniteQuery({
+export const queryOptions = (searchQuery: string | null, sessionId: string) => {
+  return infiniteQueryOptions({
     queryKey: queryKey(searchQuery, sessionId),
     queryFn: queryFn,
     staleTime: 5000,
@@ -87,4 +87,8 @@ export const useListSessionBookmarksQuery = (searchQuery: string | null, session
     initialPageParam: 0,
     select: selectData,
   })
+}
+
+export const useListSessionBookmarksQuery = (searchQuery: string | null, sessionId: string) => {
+  return useInfiniteQuery(queryOptions(searchQuery, sessionId))
 }

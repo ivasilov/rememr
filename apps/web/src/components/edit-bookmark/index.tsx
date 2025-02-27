@@ -18,8 +18,10 @@ import {
 import { uniqBy } from 'lodash'
 import { useEffect } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 import { z } from 'zod'
 import { EditPagesForBookmark } from '../edit-pages-for-bookmark'
+import { useEditBookmarkMutation } from './edit-bookmark-mutation'
 
 const formId = 'edit-bookmark'
 
@@ -43,8 +45,16 @@ const EditBookmarkSchema = z.object({
 export const EditBookmarkDialog = ({ bookmark, onClose }: Props) => {
   const supabase = createClient()
 
+  const { mutateAsync, isPending } = useEditBookmarkMutation()
+
   const form = useForm<z.infer<typeof EditBookmarkSchema>>({
     resolver: zodResolver(EditBookmarkSchema),
+    defaultValues: {
+      name: '',
+      url: '',
+      read: false,
+      tagIds: [],
+    },
   })
 
   // TODO: loading the bookmark in useEffect is an anti-pattern. Get rid of it.
@@ -69,27 +79,28 @@ export const EditBookmarkDialog = ({ bookmark, onClose }: Props) => {
   }, [bookmark.id, supabase])
 
   const onSubmit: SubmitHandler<z.infer<typeof EditBookmarkSchema>> = async values => {
-    const tagNames = values.tagIds.filter(t => !t.id).map(t => ({ name: t.name }))
-    const { data: newTags } = await supabase.from('tags').insert(tagNames).select()
-
-    await supabase
-      .from('bookmarks')
-      .update({
+    try {
+      await mutateAsync({
+        id: bookmark.id,
+        tagIds: values.tagIds.map(t => ({ id: t.id!, name: t.name })),
         name: values.name,
         url: values.url,
         read: values.read,
       })
-      .eq('id', bookmark.id)
-
-    const existingTags = values.tagIds.filter(t => t.id)
-    const relations = [...(newTags || []), ...existingTags].map(r => ({ tag_id: r.id!, bookmark_id: bookmark.id }))
-
-    await supabase.from('bookmarks_tags').delete().eq('bookmark_id', bookmark.id)
-    if (relations.length > 0) {
-      await supabase.from('bookmarks_tags').insert(relations)
+      toast.success(
+        <span>
+          Succesfully updated <span className="text-primary">{values.name}</span>.
+        </span>,
+      )
+      onClose()
+    } catch (e: any) {
+      console.log(e)
+      toast.error(
+        <span>
+          Error happened while trying to edit a bookmark: <span className="text-destructive">{e?.message}</span>.
+        </span>,
+      )
     }
-
-    onClose()
   }
 
   return (
@@ -149,14 +160,7 @@ export const EditBookmarkDialog = ({ bookmark, onClose }: Props) => {
               <FormItem>
                 <FormLabel>Tags which have this bookmark</FormLabel>
                 <FormControl>
-                  <EditPagesForBookmark
-                    pages={field.value}
-                    onChange={ids => {
-                      const transformedIds = ids.map(id => ({ id }))
-                      console.log(ids)
-                      field.onChange(ids)
-                    }}
-                  />
+                  <EditPagesForBookmark pages={field.value} onChange={ids => field.onChange(ids)} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -165,11 +169,11 @@ export const EditBookmarkDialog = ({ bookmark, onClose }: Props) => {
         </form>
       </Form>
       <DialogFooter>
-        <Button variant="secondary" onClick={onClose}>
+        <Button variant="secondary" onClick={onClose} disabled={isPending}>
           Cancel
         </Button>
-        <Button variant="default" type="submit" form={formId}>
-          Save
+        <Button variant="default" type="submit" form={formId} disabled={isPending}>
+          {isPending ? 'Saving...' : 'Save'}
         </Button>
       </DialogFooter>
     </>
