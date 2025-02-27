@@ -34,7 +34,7 @@ export const Bookmark = (props: { bookmark: BookmarkType }) => {
         <img
           className="w-5 object-contain"
           alt=""
-          src={`https://s2.googleusercontent.com/s2/favicons?domain=${bookmark.url}&sz=16`}
+          src={`https://s2.googleusercontent.com/s2/favicons?domain=${hostname}&sz=16`}
           onError={e => {
             e.currentTarget.onerror = null
             e.currentTarget.src = '/images/globe.png'

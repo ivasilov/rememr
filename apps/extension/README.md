@@ -7,8 +7,6 @@ First, run the development server:
 
 ```bash
 pnpm dev
-# or
-npm run dev
 ```
 
 Open your browser and load the appropriate development build. For example, if you are developing for the chrome browser,
@@ -27,11 +25,18 @@ Run the following:
 
 ```bash
 pnpm build
-# or
-npm run build
 ```
 
 This should create a production bundle for your extension, ready to be zipped and published to the stores.
+
+To build this extension for Firefox:
+
+```bash
+pnpm build --target=firefox-mv3
+pnpm package --target=firefox-mv3
+```
+
+This will output a firefox-mv3-prod.zip file in apps/extension/build folder.
 
 ## Submit to the webstores
 
