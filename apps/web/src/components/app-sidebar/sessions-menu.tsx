@@ -9,8 +9,6 @@ export const SessionsMenu = async ({ user }: { user: User }) => {
   const cookieStore = cookies()
   const supabase = createClient(cookieStore)
 
-  await new Promise(resolve => setTimeout(resolve, 5000))
-
   const { data: sessions } = await supabase
     .from('bookmarks_sessions')
     .select('...sessions(id,name), bookmark_id.count()')

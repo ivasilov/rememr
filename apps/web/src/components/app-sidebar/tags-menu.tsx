@@ -9,13 +9,11 @@ export const TagsMenu = async ({ user }: { user: User }) => {
   const cookieStore = cookies()
   const supabase = createClient(cookieStore)
 
-  await new Promise(resolve => setTimeout(resolve, 5000))
-
   const { data: tags } = await supabase
     .from('bookmarks_tags')
     .select('...tags(id,name), bookmark_id.count()')
     .eq('tags.user_id', user.id)
-    .order('name', { ascending: false, referencedTable: 'tags' })
+    .throwOnError()
 
   if (tags?.length === 0) {
     return (
@@ -25,7 +23,9 @@ export const TagsMenu = async ({ user }: { user: User }) => {
     )
   }
 
-  return tags?.map(t => (
+  const sorted = (tags || []).sort((a, b) => a.name.localeCompare(b.name))
+
+  return sorted?.map(t => (
     <SidebarMenuItem key={t.id}>
       <SidebarMenuLink href={`/tags/${t.id}`} className="align-center flex items-center">
         <Tag />
