@@ -4,14 +4,12 @@ import { MainContentLayout } from '@/src/components/main-content-layout'
 import { checkAuthentication } from '@/src/lib/supabase'
 import { createClient } from '@/src/utils/supabase/server'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@rememr/ui'
-import { cookies } from 'next/headers'
 import { AccountInformation } from './account-information'
 import { Imports } from './imports'
 
 const AccountPage = async () => {
   await checkAuthentication('/settings')
-  const cookieStore = cookies()
-  const supabase = createClient(cookieStore)
+  const supabase = await createClient()
 
   const {
     data: { user },

@@ -2,12 +2,10 @@ import { createClient } from '@/src/utils/supabase/server'
 import { SidebarMenuBadge, SidebarMenuItem } from '@rememr/ui'
 import { User } from '@supabase/supabase-js'
 import { FileStack } from 'lucide-react'
-import { cookies } from 'next/headers'
 import { SidebarMenuLink } from './sidebar-menu-link'
 
 export const SessionsMenu = async ({ user }: { user: User }) => {
-  const cookieStore = cookies()
-  const supabase = createClient(cookieStore)
+  const supabase = await createClient()
 
   const { data: sessions } = await supabase
     .from('bookmarks_sessions')

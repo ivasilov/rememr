@@ -30,10 +30,16 @@ export default function LoginForm() {
   async function onSubmit(values: z.infer<typeof FormSchema>) {
     const supabase = createClient()
     // TODO: Wrap this in react-query
-    await supabase.auth.signInWithPassword({
+    const { error } = await supabase.auth.signInWithPassword({
       email: values.email,
       password: values.password,
     })
+
+    if (error) {
+      console.error(error)
+      return
+    }
+
     const returnTo = searchParams.get('returnTo') || '/'
     router.push(decodeURIComponent(returnTo) as any)
   }

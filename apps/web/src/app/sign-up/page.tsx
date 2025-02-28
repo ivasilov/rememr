@@ -2,8 +2,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@reme
 import { Suspense } from 'react'
 import { SignUpForm } from './sign-up-form'
 
-export default function SignUp({ searchParams }: { searchParams: Record<string, string> }) {
-  const signUpSuccess = searchParams['success']
+export default async function SignUp({ searchParams }: { searchParams: Promise<Record<string, string>> }) {
+  const params = await searchParams
+  const signUpSuccess = params['success']
 
   return (
     <div className="flex min-h-screen w-full items-center justify-center">

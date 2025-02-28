@@ -25,8 +25,6 @@ export const LayoutDropdownMenuContent = () => {
     router.refresh()
   }, [router, supabase.auth])
 
-  console.log(theme)
-
   return (
     <>
       <DropdownMenuCheckboxItem checked={theme === 'light'} onCheckedChange={() => setTheme('light')}>

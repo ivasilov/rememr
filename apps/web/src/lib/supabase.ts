@@ -1,13 +1,11 @@
 'use server'
 
-import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { createClient } from '../utils/supabase/server'
 import { Database } from './database.types'
 
 export const checkAuthentication = async (pathname: string) => {
-  const cookieStore = cookies()
-  const supabase = createClient(cookieStore)
+  const supabase = await createClient()
 
   const {
     data: { user },

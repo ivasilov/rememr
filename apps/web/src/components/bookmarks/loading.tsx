@@ -1,6 +1,8 @@
 import { cn } from '@rememr/ui'
 import { LoadingBookmark } from '../bookmark'
 
+import type { JSX } from "react";
+
 export const LoadingBookmarks = ({ count = 3, className }: { count?: number; className?: string }) => {
   const result: JSX.Element[] = []
 

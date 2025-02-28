@@ -3,15 +3,14 @@ import { MainContentLayout } from '@/src/components/main-content-layout'
 import { checkAuthentication } from '@/src/lib/supabase'
 import { createClient } from '@/src/utils/supabase/server'
 import { FileStack } from 'lucide-react'
-import { cookies } from 'next/headers'
 import { SinglePageError } from './components/error'
 import { SessionBookmarks } from './session-bookmarks'
 
-const SessionPage = async ({ params: { id } }: { params: { id: string } }) => {
+const SessionPage = async ({ params }: { params: Promise<{ id: string }> }) => {
+  const { id } = await params
   await checkAuthentication(`/sessions/${id}`)
 
-  const cookieStore = cookies()
-  const supabase = createClient(cookieStore)
+  const supabase = await createClient()
   const { data, error } = await supabase.from('sessions').select('*').eq('id', id)
   const session = data![0]
   if (error) {

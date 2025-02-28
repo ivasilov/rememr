@@ -1,12 +1,10 @@
 'use server'
 
 import { createClient } from '@/src/utils/supabase/server'
-import { cookies } from 'next/headers'
 import { SearchInputInner } from './inner'
 
 export const SearchInput = async () => {
-  const cookieStore = cookies()
-  const supabase = createClient(cookieStore)
+  const supabase = await createClient()
 
   const { data: tags } = await supabase.from('tags').select('*').order('name', { ascending: false })
 

@@ -15,7 +15,6 @@ import {
   SidebarMenuSkeleton,
 } from '@rememr/ui'
 import { ChevronDown, Home, Inbox } from 'lucide-react'
-import { cookies } from 'next/headers'
 import Link from 'next/link'
 import { Suspense } from 'react'
 import { createClient } from '../../utils/supabase/server'
@@ -24,8 +23,7 @@ import { SidebarMenuLink } from './sidebar-menu-link'
 import { TagsMenu } from './tags-menu'
 
 export async function AppSidebar() {
-  const cookieStore = cookies()
-  const supabase = createClient(cookieStore)
+  const supabase = await createClient()
   const {
     data: { user },
   } = await supabase.auth.getUser()
