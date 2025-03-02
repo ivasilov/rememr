@@ -42,7 +42,7 @@ export const save = async (name: string, url: string, tagIds: IdName[]) => {
 
   // If the URL is watchable, add it to the watchlist
   if (isWatchable(url)) {
-    await addToWatchlist(bookmark.id)
+    await addToWatchlist(supabase, bookmark.id)
   }
 
   revalidatePath('/bookmarks')

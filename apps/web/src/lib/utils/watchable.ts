@@ -20,8 +20,8 @@ function extractDomain(url: string): string {
  * Checks if a URL points to a video hosting platform
  */
 function isVideoHostingPlatform(url: string): boolean {
-  const domain = extractDomain(url)
-  return VIDEO_DOMAINS.has(domain) || VIDEO_DOMAINS.has(`www.${domain}`)
+  const domain = extractDomain(url).replace(/^www\./, '')
+  return VIDEO_DOMAINS.has(domain)
 }
 
 /**
