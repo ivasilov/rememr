@@ -24,6 +24,7 @@ import {
 import { toast } from 'sonner'
 import { EditPagesForBookmark } from '../../../../components/edit-pages-for-bookmark'
 import { createClient } from '../../../../utils/supabase/client'
+import { save } from './action'
 
 const formId = 'create-new-bookmark'
 
@@ -56,34 +57,15 @@ export const NewBookmarkComponent = () => {
   })
 
   const onSubmit: SubmitHandler<z.infer<typeof NewBookmarkSchema>> = async values => {
-    const tagNames = values.tagIds.filter(t => !t.id).map(t => ({ name: t.name }))
-    const { data: newTags } = await supabase.from('tags').insert(tagNames).select()
-
-    const { data, error } = await supabase
-      .from('bookmarks')
-      .insert({
-        name: values.name,
-        url: values.url,
-        read: values.read,
+    try {
+      await save(values.name, values.url, values.tagIds)
+      toast.success('Bookmark created')
+      router.push('/bookmarks')
+    } catch (error) {
+      toast.error('Failed to create bookmark', {
+        description: error instanceof Error ? error.message : 'Please try again',
       })
-      .select()
-
-    if (error || data.length !== 1) {
-      // TODO: handle this case
-      return
     }
-    const bookmark = data[0]
-
-    const existingTags = values.tagIds.filter(t => t.id)
-    const relations = [...(newTags || []), ...existingTags].map(r => ({ tag_id: r.id!, bookmark_id: bookmark.id }))
-
-    await supabase.from('bookmarks_tags').delete().eq('bookmark_id', bookmark.id)
-    if (relations.length > 0) {
-      await supabase.from('bookmarks_tags').insert(relations)
-    }
-
-    toast.success('Bookmark created')
-    router.push(`/bookmarks`)
   }
 
   return (

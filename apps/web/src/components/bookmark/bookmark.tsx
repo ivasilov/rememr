@@ -1,6 +1,9 @@
 'use client'
 
 import { BookmarkType } from '@/src/lib/supabase'
+import { isWatchable } from '@/src/lib/utils/watchable'
+import { addToWatchlist, isInWatchlist, removeFromWatchlist } from '@/src/lib/utils/watchlist'
+import { createClient } from '@/src/utils/supabase/client'
 import {
   Button,
   Card,
@@ -11,15 +14,19 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@rememr/ui'
-import { EllipsisVertical, Pen, Trash2 } from 'lucide-react'
-import { useState } from 'react'
+import { EllipsisVertical, Pen, Trash2, Video } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { DeleteBookmarkDialog } from '../delete-bookmark'
 import { EditBookmarkDialog } from '../edit-bookmark'
 import { ChatSheet } from './chat-sheet'
 
+const supabase = createClient()
+
 export const Bookmark = (props: { bookmark: BookmarkType }) => {
   const [editBookmarkDialogShown, setEditBookmarkDialogShown] = useState(false)
   const [deleteBookmarkDialogShown, setDeleteBookmarkDialogShown] = useState(false)
+  const [isInWatchlistState, setIsInWatchlistState] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const bookmark = props.bookmark
   let hostname = ''
@@ -27,6 +34,32 @@ export const Bookmark = (props: { bookmark: BookmarkType }) => {
   try {
     hostname = new URL(bookmark.url).hostname
   } catch {}
+
+  const isBookmarkWatchable = isWatchable(bookmark.url)
+
+  useEffect(() => {
+    if (isBookmarkWatchable) {
+      isInWatchlist(supabase, bookmark.id).then(setIsInWatchlistState)
+    }
+  }, [bookmark.id, isBookmarkWatchable])
+
+  const handleWatchlistToggle = async () => {
+    if (isLoading) return
+    setIsLoading(true)
+    try {
+      if (isInWatchlistState) {
+        await removeFromWatchlist(supabase, bookmark.id)
+        setIsInWatchlistState(false)
+      } else {
+        await addToWatchlist(supabase, bookmark.id)
+        setIsInWatchlistState(true)
+      }
+    } catch (error) {
+      console.error('Error toggling watchlist:', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   return (
     <Card className="group flex overflow-hidden px-6 py-4">
@@ -50,6 +83,18 @@ export const Bookmark = (props: { bookmark: BookmarkType }) => {
         </div>
 
         <div className="flex gap-2">
+          {isBookmarkWatchable && (
+            <Button
+              size="icon"
+              variant={isInWatchlistState ? 'default' : 'outline'}
+              className="min-w-9"
+              onClick={handleWatchlistToggle}
+              disabled={isLoading}
+            >
+              <Video strokeWidth={2.5} className={isInWatchlistState ? 'text-white' : ''} />
+            </Button>
+          )}
+
           <ChatSheet bookmarkTitle={bookmark.name} bookmarkUrl={bookmark.url} />
 
           <DropdownMenu>

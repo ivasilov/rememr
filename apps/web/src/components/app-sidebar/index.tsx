@@ -14,7 +14,7 @@ import {
   SidebarMenuItem,
   SidebarMenuSkeleton,
 } from '@rememr/ui'
-import { ChevronDown, Home, Inbox } from 'lucide-react'
+import { ChevronDown, Home, Inbox, Video } from 'lucide-react'
 import Link from 'next/link'
 import { Suspense } from 'react'
 import { createClient } from '../../utils/supabase/server'
@@ -53,6 +53,12 @@ export async function AppSidebar() {
                 <SidebarMenuLink href="/bookmarks/unread">
                   <Inbox />
                   <span>Reading list</span>
+                </SidebarMenuLink>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuLink href="/watchlist">
+                  <Video />
+                  <span>Watchlist</span>
                 </SidebarMenuLink>
               </SidebarMenuItem>
             </SidebarMenu>
