@@ -1,1 +1,4 @@
+@import 'tailwindcss';
+@import '@rememr/ui/styles.css';
 
+@source './src';

@@ -29,8 +29,8 @@ export const Bookmark = (props: { bookmark: BookmarkType }) => {
   } catch {}
 
   return (
-    <Card className="group flex overflow-hidden px-6 py-4">
-      <div className="min-w-5 mr-5 mt-1">
+    <Card className="group flex flex-row overflow-hidden px-6 py-4">
+      <div className="min-w-5 mt-1">
         <img
           className="w-5 object-contain"
           alt=""
