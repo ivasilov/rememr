@@ -20,4 +20,4 @@ export * from './components/switch'
 export * from './components/message-circle-more'
 export * from './components/settings-gear'
 
-export { cn } from './utils'
+export { cn } from './lib/utils'

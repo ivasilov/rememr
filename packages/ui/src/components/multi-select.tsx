@@ -4,7 +4,7 @@ import { Command as CommandPrimitive, useCommandState } from 'cmdk'
 import { X } from 'lucide-react'
 import * as React from 'react'
 
-import { cn } from '../utils'
+import { cn } from '../lib/utils'
 import { Badge } from './badge'
 import { Command, CommandGroup, CommandItem, CommandList } from './command'
 
