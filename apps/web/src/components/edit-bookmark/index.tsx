@@ -36,15 +36,15 @@ const EditBookmarkSchema = z.object({
   read: z.boolean(),
   tagIds: z.array(
     z.object({
-      id: z.string().optional(),
+      id: z.string(),
       name: z.string(),
     }),
   ),
 })
 
-export const EditBookmarkDialog = ({ bookmark, onClose }: Props) => {
-  const supabase = createClient()
+const supabase = createClient()
 
+export const EditBookmarkDialog = ({ bookmark, onClose }: Props) => {
   const { mutateAsync, isPending } = useEditBookmarkMutation()
 
   const form = useForm<z.infer<typeof EditBookmarkSchema>>({
@@ -82,7 +82,7 @@ export const EditBookmarkDialog = ({ bookmark, onClose }: Props) => {
     try {
       await mutateAsync({
         id: bookmark.id,
-        tagIds: values.tagIds.map(t => ({ id: t.id!, name: t.name })),
+        tagIds: values.tagIds.map(t => ({ id: t.id, name: t.name })),
         name: values.name,
         url: values.url,
         read: values.read,
