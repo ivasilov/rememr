@@ -1,5 +1,4 @@
 import { Toaster, cn } from '@rememr/ui'
-import { Lora, Plus_Jakarta_Sans, Roboto_Mono } from 'next/font/google'
 import { ReactNode } from 'react'
 import { Providers } from './providers'
 
@@ -10,20 +9,10 @@ export const metadata = {
   description: 'A stream of bookmarks',
 }
 
-const jakarta = Plus_Jakarta_Sans({
-  variable: '--font-jakarta',
-})
-const lora = Lora({
-  variable: '--font-lora',
-})
-const roboto = Roboto_Mono({
-  variable: '--font-roboto',
-})
-
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html suppressHydrationWarning>
-      <body className={cn(jakarta.variable, lora.variable, roboto.variable, 'antialiased')}>
+      <body className={cn('font-sans antialiased')}>
         <Providers>
           {children}
           <Toaster position="top-right" />
