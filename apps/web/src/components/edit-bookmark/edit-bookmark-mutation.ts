@@ -13,6 +13,7 @@ const mutationFn = async (values: {
   name: string
   url: string
   read: boolean
+  description: string | null
   tagIds: { id: string; name: string }[]
 }) => {
   const tagNames = values.tagIds.filter(t => !isUUID(t.id)).map(t => ({ name: t.name }))
@@ -24,6 +25,7 @@ const mutationFn = async (values: {
       name: values.name,
       url: values.url,
       read: values.read,
+      description: values.description,
     })
     .eq('id', values.id)
 

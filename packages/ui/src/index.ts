@@ -15,6 +15,7 @@ export * from './components/sheet'
 export * from './components/sidebar'
 export * from './components/sonner'
 export * from './components/switch'
+export * from './components/textarea'
 
 // Icons
 export * from './components/message-circle-more'

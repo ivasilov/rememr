@@ -1,3 +1,4 @@
+import { BookmarkType } from '@/lib/supabase'
 import { createClient } from '@/lib/supabase/client'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
@@ -14,6 +15,7 @@ import {
   FormMessage,
   Input,
   Switch,
+  Textarea,
 } from '@rememr/ui'
 import { uniqBy } from 'lodash'
 import { useEffect } from 'react'
@@ -26,14 +28,15 @@ import { useEditBookmarkMutation } from './edit-bookmark-mutation'
 const formId = 'edit-bookmark'
 
 interface Props {
-  bookmark: { id: string }
+  bookmark: BookmarkType
   onClose: () => void
 }
 
 const EditBookmarkSchema = z.object({
-  name: z.string(),
-  url: z.string(),
+  name: z.string().trim(),
+  url: z.string().trim(),
   read: z.boolean(),
+  description: z.string().trim(),
   tagIds: z.array(
     z.object({
       id: z.string(),
@@ -50,9 +53,10 @@ export const EditBookmarkDialog = ({ bookmark, onClose }: Props) => {
   const form = useForm<z.infer<typeof EditBookmarkSchema>>({
     resolver: zodResolver(EditBookmarkSchema),
     defaultValues: {
-      name: '',
-      url: '',
-      read: false,
+      name: bookmark.name,
+      url: bookmark.url,
+      read: bookmark.read,
+      description: bookmark.description || '',
       tagIds: [],
     },
   })
@@ -73,6 +77,7 @@ export const EditBookmarkDialog = ({ bookmark, onClose }: Props) => {
           name: bookmark.name,
           url: bookmark.url,
           read: bookmark.read,
+          description: bookmark.description || '',
           tagIds: tagIds,
         })
       })
@@ -85,6 +90,7 @@ export const EditBookmarkDialog = ({ bookmark, onClose }: Props) => {
         tagIds: values.tagIds.map(t => ({ id: t.id, name: t.name })),
         name: values.name,
         url: values.url,
+        description: values.description,
         read: values.read,
       })
       toast.success(
@@ -117,7 +123,7 @@ export const EditBookmarkDialog = ({ bookmark, onClose }: Props) => {
               <FormItem>
                 <FormLabel>Name of the bookmark</FormLabel>
                 <FormControl>
-                  <Input placeholder="shadcn" {...field} />
+                  <Input placeholder="Good bookmarking app" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -130,7 +136,20 @@ export const EditBookmarkDialog = ({ bookmark, onClose }: Props) => {
               <FormItem>
                 <FormLabel>Url of the bookmark</FormLabel>
                 <FormControl>
-                  <Input placeholder="shadcn" {...field} />
+                  <Input placeholder="https://rememr.com" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Description</FormLabel>
+                <FormControl>
+                  <Textarea placeholder="" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
