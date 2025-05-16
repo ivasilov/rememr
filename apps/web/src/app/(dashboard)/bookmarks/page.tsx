@@ -3,12 +3,9 @@ import { MainContentLayout } from '@/components/main-content-layout'
 import { getQueryClient } from '@/lib/react-query-client'
 import { HydrationBoundary, dehydrate } from '@tanstack/react-query'
 import { Home } from 'lucide-react'
-import { checkAuthentication } from '../../../lib/supabase'
 import { AllBookmarks } from './all-bookmarks'
 
 const BookmarksPage = async () => {
-  await checkAuthentication('/bookmarks')
-
   const queryClient = getQueryClient()
 
   return (

@@ -1,6 +1,5 @@
 'use server'
 import { MainContentLayout } from '@/components/main-content-layout'
-import { checkAuthentication } from '@/lib/supabase'
 import { createClient } from '@/lib/supabase/server'
 import { FileStack } from 'lucide-react'
 import { SinglePageError } from './components/error'
@@ -8,7 +7,6 @@ import { SessionBookmarks } from './session-bookmarks'
 
 const SessionPage = async ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params
-  await checkAuthentication(`/sessions/${id}`)
 
   const supabase = await createClient()
   const { data, error } = await supabase.from('sessions').select('*').eq('id', id)

@@ -1,14 +1,11 @@
 'use server'
 import { MainContentLayout } from '@/components/main-content-layout'
 import { getQueryClient } from '@/lib/react-query-client'
-import { checkAuthentication } from '@/lib/supabase'
 import { HydrationBoundary, dehydrate } from '@tanstack/react-query'
 import { Inbox } from 'lucide-react'
 import { UnreadBookmarks } from './unread-bookmarks'
 
 const BookmarksPage = async () => {
-  await checkAuthentication('/bookmarks/unread')
-
   const queryClient = getQueryClient()
 
   return (

@@ -1,14 +1,12 @@
 'use server'
 
 import { MainContentLayout } from '@/components/main-content-layout'
-import { checkAuthentication } from '@/lib/supabase'
 import { createClient } from '@/lib/supabase/server'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@rememr/ui'
 import { AccountInformation } from './account-information'
 import { Imports } from './imports'
 
 const AccountPage = async () => {
-  await checkAuthentication('/settings')
   const supabase = await createClient()
 
   const {
