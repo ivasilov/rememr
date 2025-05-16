@@ -1,4 +1,4 @@
-import { createClient } from '@/utils/supabase/client'
+import { createClient } from '@/lib/supabase/client'
 import { compact, noop, uniq, uniqBy } from 'lodash'
 import { z } from 'zod'
 

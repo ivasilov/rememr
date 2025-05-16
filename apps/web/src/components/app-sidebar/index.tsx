@@ -17,7 +17,7 @@ import {
 import { ChevronDown, Home, Inbox } from 'lucide-react'
 import Link from 'next/link'
 import { Suspense } from 'react'
-import { createClient } from '../../utils/supabase/server'
+import { createClient } from '../../lib/supabase/server'
 import { SessionsMenu } from './sessions-menu'
 import { SidebarMenuLink } from './sidebar-menu-link'
 import { TagsMenu } from './tags-menu'

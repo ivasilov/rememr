@@ -1,7 +1,7 @@
 'use server'
 import { MainContentLayout } from '@/components/main-content-layout'
 import { checkAuthentication } from '@/lib/supabase'
-import { createClient } from '@/utils/supabase/server'
+import { createClient } from '@/lib/supabase/server'
 import { FileStack } from 'lucide-react'
 import { SinglePageError } from './components/error'
 import { SessionBookmarks } from './session-bookmarks'

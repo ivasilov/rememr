@@ -1,4 +1,4 @@
-import { createClient } from '@/utils/supabase/server'
+import { createClient } from '@/lib/supabase/server'
 import { SidebarMenuBadge, SidebarMenuItem } from '@rememr/ui'
 import { User } from '@supabase/supabase-js'
 import { Tag } from 'lucide-react'

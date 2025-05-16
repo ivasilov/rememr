@@ -1,6 +1,6 @@
 'use server'
 
-import { createClient } from '@/utils/supabase/server'
+import { createClient } from '@/lib/supabase/server'
 import { SearchInputInner } from './inner'
 
 export const SearchInput = async () => {

@@ -1,6 +1,6 @@
 'use client'
 
-import { createClient } from '@/utils/supabase/client'
+import { createClient } from '@/lib/supabase/client'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Form, FormControl, FormField, FormItem, FormLabel, FormMessage, Input } from '@rememr/ui'
 import Link from 'next/link'

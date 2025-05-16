@@ -1,4 +1,4 @@
-import { createClient } from '@/utils/supabase/client'
+import { createClient } from '@/lib/supabase/client'
 import { MultipleSelector, Option } from '@rememr/ui'
 import { useEffect, useMemo } from 'react'
 import { Loading } from '../loading'

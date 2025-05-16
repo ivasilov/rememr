@@ -23,7 +23,7 @@ import {
 } from '@rememr/ui'
 import { toast } from 'sonner'
 import { EditPagesForBookmark } from '../../../../components/edit-pages-for-bookmark'
-import { createClient } from '../../../../utils/supabase/client'
+import { createClient } from '../../../../lib/supabase/client'
 
 const formId = 'create-new-bookmark'
 

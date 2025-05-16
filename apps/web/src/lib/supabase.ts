@@ -1,7 +1,7 @@
 'use server'
 
 import { redirect } from 'next/navigation'
-import { createClient } from '../utils/supabase/server'
+import { createClient } from '../lib/supabase/server'
 import { Database } from './database.types'
 
 export const checkAuthentication = async (pathname: string) => {
