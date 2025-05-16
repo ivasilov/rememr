@@ -1,6 +1,6 @@
 'use server'
-import type { IdName } from '@/src/components/edit-pages-for-bookmark'
-import { createClient } from '@/src/utils/supabase/server'
+import type { IdName } from '@/components/edit-pages-for-bookmark'
+import { createClient } from '@/utils/supabase/server'
 import { revalidatePath } from 'next/cache'
 
 export const save = async (name: string, url: string, tagIds: IdName[]) => {

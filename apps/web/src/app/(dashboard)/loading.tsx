@@ -1,4 +1,4 @@
-import { Loading } from '@/src/components/loading'
+import { Loading } from '@/components/loading'
 
 export default function RootLoading() {
   return (

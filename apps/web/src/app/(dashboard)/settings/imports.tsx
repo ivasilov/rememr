@@ -1,5 +1,5 @@
 'use client'
-import { EditPagesForBookmark } from '@/src/components/edit-pages-for-bookmark'
+import { EditPagesForBookmark } from '@/components/edit-pages-for-bookmark'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   Button,

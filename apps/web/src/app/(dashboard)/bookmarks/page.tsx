@@ -1,6 +1,6 @@
 'use server'
-import { MainContentLayout } from '@/src/components/main-content-layout'
-import { getQueryClient } from '@/src/lib/react-query-client'
+import { MainContentLayout } from '@/components/main-content-layout'
+import { getQueryClient } from '@/lib/react-query-client'
 import { HydrationBoundary, dehydrate } from '@tanstack/react-query'
 import { Home } from 'lucide-react'
 import { checkAuthentication } from '../../../lib/supabase'

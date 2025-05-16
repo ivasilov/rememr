@@ -1,4 +1,4 @@
-import { Chat } from '@/src/components/chat'
+import { Chat } from '@/components/chat'
 import { Button, MessageCircleMoreIcon, Sheet, SheetContent, SheetTrigger } from '@rememr/ui'
 
 export function ChatSheet({ bookmarkTitle, bookmarkUrl }: { bookmarkTitle: string; bookmarkUrl: string }) {

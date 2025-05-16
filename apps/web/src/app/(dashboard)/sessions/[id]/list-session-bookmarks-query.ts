@@ -1,5 +1,5 @@
-import { BookmarkType } from '@/src/lib/supabase'
-import { createClient } from '@/src/utils/supabase/client'
+import { BookmarkType } from '@/lib/supabase'
+import { createClient } from '@/utils/supabase/client'
 import { GetNextPageParamFunction, InfiniteData, infiniteQueryOptions, useInfiniteQuery } from '@tanstack/react-query'
 
 const queryKey = (searchQuery: string | null, sessionId: string) => ['bookmarks', { searchQuery, sessionId }]

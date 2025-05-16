@@ -1,5 +1,5 @@
-import { Database } from '@/src/lib/database.types'
-import { createClient } from '@/src/utils/supabase/client'
+import { Database } from '@/lib/database.types'
+import { createClient } from '@/utils/supabase/client'
 import { compact, uniqBy } from 'lodash'
 
 type InsertableBookmark = Database['public']['Tables']['bookmarks']['Insert']

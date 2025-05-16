@@ -1,8 +1,8 @@
 'use server'
 
-import { MainContentLayout } from '@/src/components/main-content-layout'
-import { checkAuthentication } from '@/src/lib/supabase'
-import { createClient } from '@/src/utils/supabase/server'
+import { MainContentLayout } from '@/components/main-content-layout'
+import { checkAuthentication } from '@/lib/supabase'
+import { createClient } from '@/utils/supabase/server'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@rememr/ui'
 import { AccountInformation } from './account-information'
 import { Imports } from './imports'

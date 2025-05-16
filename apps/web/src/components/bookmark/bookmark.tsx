@@ -1,6 +1,6 @@
 'use client'
 
-import { BookmarkType } from '@/src/lib/supabase'
+import { BookmarkType } from '@/lib/supabase'
 import {
   Button,
   Card,

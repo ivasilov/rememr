@@ -1,6 +1,6 @@
 'use client'
 
-import { createClient } from '@/src/utils/supabase/client'
+import { createClient } from '@/utils/supabase/client'
 import { Button, CardContent, Input, Label } from '@rememr/ui'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'

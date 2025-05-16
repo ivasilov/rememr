@@ -1,5 +1,5 @@
 'use server'
-import { checkAuthentication } from '@/src/lib/supabase'
+import { checkAuthentication } from '@/lib/supabase'
 import { NewBookmarkComponent } from './component'
 
 const NewBookmarkPage = async () => {

@@ -1,4 +1,4 @@
-import { BookmarkType } from '@/src/lib/supabase'
+import { BookmarkType } from '@/lib/supabase'
 import { Button } from '@rememr/ui'
 import { UseInfiniteQueryResult } from '@tanstack/react-query'
 import Link from 'next/link'
