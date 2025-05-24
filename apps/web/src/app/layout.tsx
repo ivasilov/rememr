@@ -31,6 +31,9 @@ const geistSerif = Geist_Mono({
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html suppressHydrationWarning>
+      <head>
+        <meta name="apple-mobile-web-app-title" content="rememr" />
+      </head>
       <body className={cn(geistSans.variable, geistMono.variable, geistSerif.variable, 'antialiased')}>
         <Providers>
           {children}

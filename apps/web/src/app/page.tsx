@@ -1,3 +1,4 @@
+import { Logo } from '@/components/logo'
 import { Button } from '@rememr/ui'
 import { Github } from 'lucide-react'
 import Link from 'next/link'
@@ -5,7 +6,8 @@ export default function HomePage() {
   return (
     <div className="from-background to-muted min-h-screen bg-gradient-to-b">
       {/* Hero Section */}
-      <section className="container mx-auto px-4 pb-20 pt-32 text-center">
+      <section className="text-foreground container mx-auto px-4 pb-20 pt-32 text-center">
+        <Logo className="mx-auto mb-10" />
         <h1 className="text-foreground text-4xl font-bold tracking-tight sm:text-6xl">rememr</h1>
         <p className="text-muted-foreground mx-auto mt-6 max-w-3xl text-lg">
           Open-source bookmark management. Organize bookmarks seamlessly across the web.
