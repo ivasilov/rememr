@@ -1,9 +1,5 @@
 'use client'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { SubmitHandler, useForm } from 'react-hook-form'
-import { z } from 'zod'
-
 import {
   Button,
   Card,
@@ -21,9 +17,13 @@ import {
   Input,
   Switch,
 } from '@rememr/ui'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useForm, type SubmitHandler } from 'react-hook-form'
 import { toast } from 'sonner'
-import { EditPagesForBookmark } from '../../../../components/edit-pages-for-bookmark'
-import { createClient } from '../../../../lib/supabase/client'
+import { z } from 'zod'
+
+import { EditPagesForBookmark } from '@/components/edit-pages-for-bookmark'
+import { useCreateBookmarkMutation } from './create-bookmark-mutation'
 
 const formId = 'create-new-bookmark'
 
@@ -31,6 +31,7 @@ const NewBookmarkSchema = z.object({
   name: z.string().trim().min(1),
   url: z.string().trim().min(1),
   read: z.boolean().default(true),
+  description: z.string().trim(),
   tagIds: z
     .array(
       z.object({
@@ -42,8 +43,6 @@ const NewBookmarkSchema = z.object({
 })
 
 export const NewBookmarkComponent = () => {
-  const supabase = createClient()
-
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -52,38 +51,29 @@ export const NewBookmarkComponent = () => {
     defaultValues: {
       name: searchParams.get('title') || '',
       url: searchParams.get('url') || '',
+      description: '',
     },
   })
 
+  const { mutate: createBookmark, isPending } = useCreateBookmarkMutation()
+
   const onSubmit: SubmitHandler<z.infer<typeof NewBookmarkSchema>> = async values => {
-    const tagNames = values.tagIds.filter(t => !t.id).map(t => ({ name: t.name }))
-    const { data: newTags } = await supabase.from('tags').insert(tagNames).select()
-
-    const { data, error } = await supabase
-      .from('bookmarks')
-      .insert({
-        name: values.name,
-        url: values.url,
-        read: values.read,
+    try {
+      createBookmark(values, {
+        onSuccess: () => {
+          toast.success('Bookmark created successfully')
+          router.push('/bookmarks')
+        },
+        onError: error => {
+          toast.error(`Failed to create bookmark: ${error.message}`)
+        },
       })
-      .select()
 
-    if (error || data.length !== 1) {
-      // TODO: handle this case
-      return
+      toast.success('Bookmark created')
+      router.push(`/bookmarks`)
+    } catch (error) {
+      toast.error('An unexpected error occurred')
     }
-    const bookmark = data[0]
-
-    const existingTags = values.tagIds.filter(t => t.id)
-    const relations = [...(newTags || []), ...existingTags].map(r => ({ tag_id: r.id!, bookmark_id: bookmark.id }))
-
-    await supabase.from('bookmarks_tags').delete().eq('bookmark_id', bookmark.id)
-    if (relations.length > 0) {
-      await supabase.from('bookmarks_tags').insert(relations)
-    }
-
-    toast.success('Bookmark created')
-    router.push(`/bookmarks`)
   }
 
   return (
@@ -101,7 +91,7 @@ export const NewBookmarkComponent = () => {
                 <FormItem>
                   <FormLabel>Name of the bookmark</FormLabel>
                   <FormControl>
-                    <Input placeholder="Rememr" {...field} />
+                    <Input placeholder="Rememr" {...field} disabled={isPending} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -114,7 +104,7 @@ export const NewBookmarkComponent = () => {
                 <FormItem>
                   <FormLabel>Url of the bookmark</FormLabel>
                   <FormControl>
-                    <Input placeholder="https://rememr.com" {...field} />
+                    <Input placeholder="https://rememr.com" {...field} disabled={isPending} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -130,7 +120,7 @@ export const NewBookmarkComponent = () => {
                     <FormDescription>If marked as unread, it will show up in the unread list.</FormDescription>
                   </div>
                   <FormControl>
-                    <Switch checked={field.value} onCheckedChange={field.onChange} />
+                    <Switch checked={field.value} onCheckedChange={field.onChange} disabled={isPending} />
                   </FormControl>
                 </FormItem>
               )}
@@ -143,7 +133,11 @@ export const NewBookmarkComponent = () => {
                 <FormItem>
                   <FormLabel>Tags which have this bookmark</FormLabel>
                   <FormControl>
-                    <EditPagesForBookmark pages={field.value} onChange={ids => field.onChange(ids)} />
+                    <EditPagesForBookmark
+                      pages={field.value}
+                      onChange={ids => field.onChange(ids)}
+                      disabled={isPending}
+                    />
                   </FormControl>
                 </FormItem>
               )}
@@ -152,11 +146,11 @@ export const NewBookmarkComponent = () => {
         </Form>
       </CardContent>
       <CardFooter className="flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2">
-        <Button variant="secondary" onClick={() => router.push('/bookmarks')}>
+        <Button variant="secondary" onClick={() => router.push('/bookmarks')} disabled={isPending}>
           Cancel
         </Button>
-        <Button variant="default" type="submit" form={formId}>
-          Save
+        <Button variant="default" type="submit" form={formId} disabled={isPending}>
+          {isPending ? 'Creating...' : 'Save'}
         </Button>
       </CardFooter>
     </Card>
