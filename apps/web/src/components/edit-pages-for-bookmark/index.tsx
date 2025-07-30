@@ -8,6 +8,7 @@ export type IdName = { id?: string; name: string }
 interface Props {
   pages: IdName[]
   onChange: (p: IdName[]) => void
+  disabled?: boolean
 }
 
 const memoizedSearchSet = new Map<string, { value: string; label: string }[]>()
@@ -23,7 +24,7 @@ const memoizedOnSearch = async (value: string) => {
   return memoizedSearchSet.get(value)!
 }
 
-export const EditPagesForBookmark = ({ pages, onChange }: Props) => {
+export const EditPagesForBookmark = ({ pages, onChange, disabled }: Props) => {
   // clear the memoizedSearchSet on first render
   useEffect(() => memoizedSearchSet.clear(), [])
 
@@ -43,10 +44,11 @@ export const EditPagesForBookmark = ({ pages, onChange }: Props) => {
       creatable
       onChange={handleChange}
       placeholder=""
+      disabled={disabled}
       loadingIndicator={
-        <p className="py-3 text-gray-600 dark:text-gray-400">
+        <div className="py-3 text-gray-600 dark:text-gray-400">
           <Loading size={24} />
-        </p>
+        </div>
       }
       emptyIndicator="No results found."
       hideClearAllButton
