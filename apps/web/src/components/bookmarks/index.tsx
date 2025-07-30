@@ -1,14 +1,14 @@
-import { BookmarkType } from '@/lib/supabase'
-import { Button } from '@rememr/ui'
+import { BookmarkWithTags } from '@/app/(dashboard)/bookmarks/list-all-bookmarks-query'
+import { Button, Table, TableBody, TableHead, TableHeader, TableRow } from '@rememr/ui'
 import { UseInfiniteQueryResult } from '@tanstack/react-query'
 import Link from 'next/link'
-import { Bookmark } from '../bookmark'
-import { Loading } from '../loading'
+import { BookmarkRow } from '../bookmark/bookmark-row'
+import { LoadingBookmarkRow } from '../bookmark/loading-bookmark-row'
 import { LoadMoreBookmarks } from './load-more-bookmarks'
 
 type BookmarksProps = UseInfiniteQueryResult<
   {
-    bookmarks: BookmarkType[]
+    bookmarks: BookmarkWithTags[]
     count: number
   },
   Error
@@ -17,9 +17,22 @@ type BookmarksProps = UseInfiniteQueryResult<
 export const Bookmarks = ({ isSuccess, isLoading, data, fetchNextPage, isFetchingNextPage }: BookmarksProps) => {
   if (isLoading) {
     return (
-      <div className="h-screen">
-        <Loading />
-      </div>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-8"></TableHead>
+            <TableHead>Name</TableHead>
+            <TableHead>URL</TableHead>
+            <TableHead>Tags</TableHead>
+            <TableHead className="w-32">Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {Array.from({ length: 10 }).map((_, index) => (
+            <LoadingBookmarkRow key={index} />
+          ))}
+        </TableBody>
+      </Table>
     )
   }
 
@@ -51,16 +64,29 @@ export const Bookmarks = ({ isSuccess, isLoading, data, fetchNextPage, isFetchin
   }
 
   return (
-    <div className="flex grow flex-col space-y-3">
-      {bookmarks.map(b => (
-        <Bookmark key={b.id} bookmark={b} />
-      ))}
+    <div className="flex grow flex-col space-y-3 py-3">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-8"></TableHead>
+            <TableHead>Name</TableHead>
+            <TableHead>URL</TableHead>
+            <TableHead>Tags</TableHead>
+            <TableHead className="w-32">Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {bookmarks.map(b => (
+            <BookmarkRow key={b.id} bookmark={b} />
+          ))}
 
-      <LoadMoreBookmarks
-        hasMore={count > bookmarks.length}
-        loading={isFetchingNextPage}
-        fetchMore={() => fetchNextPage()}
-      />
+          <LoadMoreBookmarks
+            hasMore={count > bookmarks.length}
+            loading={isFetchingNextPage}
+            fetchMore={() => fetchNextPage()}
+          />
+        </TableBody>
+      </Table>
     </div>
   )
 }

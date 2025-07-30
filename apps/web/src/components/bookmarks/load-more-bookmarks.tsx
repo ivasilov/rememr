@@ -1,10 +1,11 @@
 import { useEffect, useRef } from 'react'
+import { LoadingBookmarkRow } from '../bookmark/loading-bookmark-row'
 import { LoadingBookmarks } from './loading'
 
 export type LoadMoreBookmarksProps = { hasMore: boolean; loading: boolean; fetchMore: () => Promise<unknown> }
 
 export const LoadMoreBookmarks = ({ hasMore, loading, fetchMore }: LoadMoreBookmarksProps) => {
-  const loader = useRef<HTMLDivElement>(null)
+  const loader = useRef<HTMLTableRowElement>(null)
 
   useEffect(() => {
     const currentEl = loader.current
@@ -37,11 +38,7 @@ export const LoadMoreBookmarks = ({ hasMore, loading, fetchMore }: LoadMoreBookm
     return <LoadingBookmarks />
   }
   if (hasMore) {
-    return (
-      <div className="flex pb-6" ref={loader}>
-        <span className="mx-auto">Load more?</span>
-      </div>
-    )
+    return <LoadingBookmarkRow key="load-more" ref={loader} />
   }
   return null
 }
