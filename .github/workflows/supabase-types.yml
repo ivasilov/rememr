@@ -18,9 +18,25 @@ jobs:
       - name: Start Supabase local development setup
         run: supabase start
 
+      - name: Cache pnpm modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-
+
+      - uses: pnpm/action-setup@v4
+
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+          cache: 'pnpm'
+
       - name: Verify generated types are checked in
         run: |
-          supabase gen types typescript --local > apps/web/src/lib/database.types.ts
+          pnpm --filter @rememr/web generate:types
           if ! git diff --ignore-space-at-eol --exit-code --quiet apps/web/src/lib/database.types.ts; then
             echo "Detected uncommitted changes after build. See status below:"
             git diff
