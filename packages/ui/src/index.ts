@@ -1,4 +1,5 @@
 export * from './components/avatar'
+export * from './components/badge'
 export * from './components/button'
 export * from './components/card'
 export * from './components/collapsible'
@@ -13,9 +14,12 @@ export * from './components/popover'
 export * from './components/progress'
 export * from './components/sheet'
 export * from './components/sidebar'
+export * from './components/skeleton'
 export * from './components/sonner'
 export * from './components/switch'
+export * from './components/table'
 export * from './components/textarea'
+export * from './components/tooltip'
 
 // Icons
 export * from './components/message-circle-more'
