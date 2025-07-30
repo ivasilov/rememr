@@ -19,7 +19,7 @@ const SessionPage = async ({ params }: { params: Promise<{ id: string }> }) => {
     return (
       <MainContentLayout>
         <div className="flex">
-          <div className="flex h-full flex-1 items-center gap-2">
+          <div className="flex items-center gap-2">
             <FileStack size={20} className="pt-1" />
             <h1 className="text-foreground flex-1 text-3xl font-semibold">{session.name}</h1>
           </div>
