@@ -1,4 +1,4 @@
-import { BookmarkType } from '@/lib/supabase'
+import { BookmarkWithTags } from '../../bookmarks/list-all-bookmarks-query'
 import { createClient } from '@/lib/supabase/client'
 import { GetNextPageParamFunction, InfiniteData, useInfiniteQuery } from '@tanstack/react-query'
 
@@ -25,7 +25,15 @@ const queryFn = async ({
 
   let query = supabaseClient
     .from('bookmarks')
-    .select(`*, bookmarks_tags!inner()`, { count: 'exact' })
+    .select(`
+      *, 
+      bookmarks_tags!inner(
+        tags (
+          id,
+          name
+        )
+      )
+    `, { count: 'exact' })
     .in('bookmarks_tags.tag_id', tags)
 
   if (searchQuery && searchQuery.length > 0) {
@@ -39,25 +47,13 @@ const queryFn = async ({
     .range(skip, skip + PAGE_SIZE)
     .throwOnError()
 
-  return { data, count } as { data: NonNullable<typeof data>; count: number }
+  return { data, count } as { data: BookmarkWithTags[]; count: number }
 }
 
 const getNextPageParam: GetNextPageParamFunction<
   number,
   {
-    data: NonNullable<
-      | {
-          created_at: string
-          description: string | null
-          id: string
-          name: string
-          read: boolean
-          updated_at: string
-          url: string
-          user_id: string
-        }[]
-      | null
-    >
+    data: BookmarkWithTags[]
     count: number
   }
 > = (_, pages) => {
@@ -69,7 +65,7 @@ const supabaseClient = createClient()
 const selectData = (
   data: InfiniteData<
     {
-      data: NonNullable<BookmarkType[] | null>
+      data: BookmarkWithTags[]
       count: number
     },
     number
