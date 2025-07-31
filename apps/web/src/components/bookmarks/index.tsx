@@ -2,8 +2,7 @@ import { BookmarkWithTags } from '@/app/(dashboard)/bookmarks/list-all-bookmarks
 import { Button, Table, TableBody, TableHead, TableHeader, TableRow } from '@rememr/ui'
 import { UseInfiniteQueryResult } from '@tanstack/react-query'
 import Link from 'next/link'
-import { BookmarkRow } from '../bookmark/bookmark-row'
-import { LoadingBookmarkRow } from '../bookmark/loading-bookmark-row'
+import { BookmarkRow, LoadingBookmarkRow } from '../bookmark'
 import { LoadMoreBookmarks } from './load-more-bookmarks'
 
 type BookmarksProps = UseInfiniteQueryResult<

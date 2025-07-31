@@ -1,2 +1,2 @@
-export { Bookmark } from './bookmark'
-export { LoadingBookmark } from './loading-bookmark'
+export { BookmarkRow } from './bookmark-row'
+export { LoadingBookmarkRow } from './loading-bookmark-row'
