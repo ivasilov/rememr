@@ -16,7 +16,7 @@ import { EllipsisVertical, Pen, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { DeleteBookmarkDialog } from '../delete-bookmark'
 import { EditBookmarkDialog } from '../edit-bookmark'
-import { ChatSheet } from './chat-sheet'
+import { ChatDropdownMenuItem } from './chat-dropdown-menu-item'
 import { TagsBadge } from './tags-badge'
 
 const MAX_NAME_LENGTH = 60
@@ -29,12 +29,11 @@ export const BookmarkRow = (props: { bookmark: BookmarkWithTags }) => {
   let hostname = ''
   // new URL can throw and make the whole page unresponsive
   try {
-    hostname = new URL(bookmark.url).hostname
+    hostname = new URL(bookmark.url).hostname.replace('www.', '')
   } catch {}
 
-  const truncatedName = bookmark.name.length > MAX_NAME_LENGTH 
-    ? `${bookmark.name.slice(0, MAX_NAME_LENGTH)}...` 
-    : bookmark.name
+  const truncatedName =
+    bookmark.name.length > MAX_NAME_LENGTH ? `${bookmark.name.slice(0, MAX_NAME_LENGTH)}...` : bookmark.name
 
   const tags = bookmark.bookmarks_tags.map(bt => bt.tags)
 
@@ -53,24 +52,16 @@ export const BookmarkRow = (props: { bookmark: BookmarkWithTags }) => {
           />
         </TableCell>
         <TableCell className="font-medium">
-          <a 
-            className="text-foreground hover:underline" 
-            href={bookmark.url}
-            title={bookmark.name}
-          >
+          <a className="text-foreground hover:underline" href={bookmark.url} title={bookmark.name}>
             {truncatedName}
           </a>
         </TableCell>
-        <TableCell className="text-muted-foreground">
-          {hostname}
-        </TableCell>
+        <TableCell className="text-muted-foreground">{hostname}</TableCell>
         <TableCell>
           <TagsBadge tags={tags} />
         </TableCell>
         <TableCell className="w-32">
-          <div className="flex items-center gap-2 justify-end">
-            <ChatSheet bookmarkTitle={bookmark.name} bookmarkUrl={bookmark.url} />
-            
+          <div className="flex items-center justify-end gap-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button size="icon" variant="outline" className="h-8 w-8">
@@ -78,6 +69,7 @@ export const BookmarkRow = (props: { bookmark: BookmarkWithTags }) => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" forceMount>
+                <ChatDropdownMenuItem bookmarkTitle={bookmark.name} bookmarkUrl={bookmark.url} />
                 <DropdownMenuItem className="flex items-center gap-2" onClick={() => setEditBookmarkDialogShown(true)}>
                   <Pen strokeWidth={2.5} className="h-4 w-4" />
                   <span>Edit</span>
@@ -94,7 +86,7 @@ export const BookmarkRow = (props: { bookmark: BookmarkWithTags }) => {
           </div>
         </TableCell>
       </TableRow>
-      
+
       <Dialog open={editBookmarkDialogShown} onOpenChange={open => setEditBookmarkDialogShown(open)}>
         <DialogContent>
           <EditBookmarkDialog bookmark={bookmark} onClose={() => setEditBookmarkDialogShown(false)} />

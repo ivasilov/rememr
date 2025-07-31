@@ -66,15 +66,6 @@ export const Bookmarks = ({ isSuccess, isLoading, data, fetchNextPage, isFetchin
   return (
     <div className="flex grow flex-col space-y-3 py-3">
       <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-8"></TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>URL</TableHead>
-            <TableHead>Tags</TableHead>
-            <TableHead className="w-32">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
         <TableBody>
           {bookmarks.map(b => (
             <BookmarkRow key={b.id} bookmark={b} />

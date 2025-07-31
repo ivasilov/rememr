@@ -20,7 +20,6 @@ export const LoadingBookmarkRow = forwardRef<HTMLTableRowElement, React.HTMLProp
         <TableCell className="w-32">
           <div className="flex items-center justify-end gap-2">
             <Skeleton className="h-8 w-8" />
-            <Skeleton className="h-8 w-8" />
           </div>
         </TableCell>
       </TableRow>
