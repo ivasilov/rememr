@@ -19,7 +19,7 @@ const TagPage = async ({ params }: { params: Promise<{ id: string }> }) => {
   if (tag) {
     return (
       <MainContentLayout>
-        <div className="flex">
+        <div className="flex items-center justify-between pr-2">
           <div className="flex items-center gap-2">
             <Tag size={20} className="pt-1" />
             <h1 className="text-foreground flex-1 text-3xl font-semibold">{tag.name}</h1>
