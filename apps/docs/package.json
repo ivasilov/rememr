@@ -13,6 +13,7 @@
   "dependencies": {
     "@rememr/ui": "workspace:^",
     "lucide-react": "^0.424.0",
+    "motion": "11.18.2",
     "next": "15.4.5",
     "react": "19.1.0",
     "react-dom": "19.1.0"
