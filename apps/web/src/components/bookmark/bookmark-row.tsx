@@ -52,7 +52,7 @@ export const BookmarkRow = (props: { bookmark: BookmarkWithTags }) => {
           />
         </TableCell>
         <TableCell className="font-medium">
-          <a className="text-foreground hover:underline" href={bookmark.url} title={bookmark.name}>
+          <a className="text-foreground hover:underline" href={bookmark.url} target="_blank" rel="noopener noreferrer" title={bookmark.name}>
             {truncatedName}
           </a>
         </TableCell>
