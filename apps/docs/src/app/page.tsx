@@ -22,7 +22,7 @@ export default function HomePage() {
             <Button size="lg" className="min-w-40" asChild>
               <a href="https://github.com/ivasilov/rememr" target="_blank" rel="noopener noreferrer">
                 <Github className="mr-2 h-4 w-4" />
-                View documention on GitHub
+                View documentation on GitHub
               </a>
             </Button>
           </div>

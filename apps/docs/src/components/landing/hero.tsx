@@ -9,7 +9,7 @@ export default function HeroSection() {
         <div className="relative z-10 mx-auto max-w-5xl px-6 text-center">
           <div>
             <h1 className="text-balance mx-auto mt-8 max-w-3xl text-4xl font-bold tracking-tight sm:text-5xl">
-              Open-source bookmark management
+              The last bookmarking app you&apos;ll ever need
             </h1>
             <p className="text-muted-foreground text-balance mx-auto my-6 max-w-xl text-xl">
               Organize bookmarks seamlessly across the web.
