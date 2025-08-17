@@ -3,9 +3,10 @@
   "private": true,
   "scripts": {
     "lint": "ultracite lint",
-    "format": "ultracite format",
+    "format": "npx @biomejs/biome check ./ --diagnostic-level=error",
     "prune:extension": "turbo prune @rememr/extension",
     "migration:create": "supabase db diff | supabase migration new",
+    "test:types": "turbo run test:types --parallel",
     "clean": "turbo run clean --parallel && rimraf -G node_modules/{*,.bin,.modules.yaml}"
   },
   "devDependencies": {

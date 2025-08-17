@@ -5,6 +5,10 @@
     "clean": {
       "outputs": [],
       "cache": false
+    },
+    "test:types": {
+      "outputs": [],
+      "cache": false
     }
   }
 }
