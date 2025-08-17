@@ -14,7 +14,6 @@ export default async function SignUp({
   searchParams: Promise<Record<string, string>>
 }) {
   const params = await searchParams
-  const signUpSuccess = params['success']
 
   return (
     <div className="flex min-h-screen w-full items-center justify-center">

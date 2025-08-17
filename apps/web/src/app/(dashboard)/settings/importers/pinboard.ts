@@ -25,6 +25,7 @@ export const importPinboardBookmarks = async (
   progress: (current: number, max: number) => void = noop
 ) => {
   const supabaseClient = createClient()
+  // biome-ignore lint/suspicious/noEvolvingTypes: <explanation>
   const errors = []
 
   const {

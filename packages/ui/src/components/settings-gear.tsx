@@ -3,7 +3,7 @@
 import { motion, type SVGMotionProps, useAnimation } from 'motion/react'
 import React, { useCallback, useImperativeHandle, useRef } from 'react'
 
-export interface SettingsGearHandle {
+export type SettingsGearHandle = {
   startAnimation: () => void
   stopAnimation: () => void
 }

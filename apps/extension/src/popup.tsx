@@ -33,7 +33,9 @@ const sendTabsToRememr = async (
 
     const { error } = await supabase.from('bookmarks').insert(bookmarks)
 
-    if (error) throw error
+    if (error) {
+      throw error
+    }
     browser.tabs.remove(tabs.map((tab) => tab.id))
   } catch (error) {
     console.error('Error sending tabs:', error)

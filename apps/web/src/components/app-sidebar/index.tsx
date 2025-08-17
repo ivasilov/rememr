@@ -74,6 +74,7 @@ export async function AppSidebar() {
                 <SidebarMenu>
                   <Suspense
                     fallback={Array.from({ length: 3 }).map((_, index) => (
+                      // biome-ignore lint/suspicious/noArrayIndexKey: this is loading array
                       <SidebarMenuItem key={index}>
                         <SidebarMenuSkeleton />
                       </SidebarMenuItem>

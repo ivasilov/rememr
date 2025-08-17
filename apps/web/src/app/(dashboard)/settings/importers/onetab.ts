@@ -6,8 +6,7 @@ type InsertableBookmark = Database['public']['Tables']['bookmarks']['Insert']
 
 export const importOnetabBookmarks = async (
   data: string,
-  { tags, unread }: { tags: string[]; unread: boolean },
-  progress?: (current: number, max: number) => void
+  { tags, unread }: { tags: string[]; unread: boolean }
 ) => {
   const supabaseClient = createClient()
 
@@ -39,7 +38,9 @@ export const importOnetabBookmarks = async (
     .from('bookmarks')
     .insert(translated)
     .select('id')
-  if (insertError) throw insertError
+  if (insertError) {
+    throw insertError
+  }
   const savedBookmarkIds = savedBookmarks as { id: string }[]
 
   const { data: foundTags } = await supabaseClient

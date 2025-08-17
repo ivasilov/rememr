@@ -5,7 +5,7 @@ import { NuqsAdapter } from 'nuqs/adapters/next/app'
 import type { PropsWithChildren } from 'react'
 import { getQueryClient } from '../lib/react-query-client'
 
-export const Providers = ({ children }: PropsWithChildren<{}>) => {
+export const Providers = ({ children }: PropsWithChildren<object>) => {
   const queryClient = getQueryClient()
 
   return (

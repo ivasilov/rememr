@@ -49,7 +49,7 @@ export const Bookmarks = ({
   }
 
   if (!isSuccess) {
-    return <></>
+    return null
   }
 
   const { bookmarks, count } = data

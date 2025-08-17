@@ -2,7 +2,7 @@ import { Button, DialogFooter, DialogHeader, DialogTitle } from '@rememr/ui'
 import { toast } from 'sonner'
 import { useDeleteBookmarkMutation } from './delete-bookmark-mutation'
 
-interface Props {
+type Props = {
   bookmark: { id: string; name: string }
   onClose: () => void
 }

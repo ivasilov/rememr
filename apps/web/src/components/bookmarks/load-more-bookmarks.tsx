@@ -18,7 +18,7 @@ export const LoadMoreBookmarks = ({
   useEffect(() => {
     const currentEl = loader.current
     if (currentEl) {
-      var options = {
+      const options = {
         root: null,
         rootMargin: '20px',
         threshold: 1.0,

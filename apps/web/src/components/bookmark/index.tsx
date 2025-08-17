@@ -31,6 +31,7 @@ export const BookmarkRow = (props: { bookmark: BookmarkWithTags }) => {
   // new URL can throw and make the whole page unresponsive
   try {
     hostname = new URL(bookmark.url).hostname.replace('www.', '')
+    // biome-ignore lint/suspicious/noEmptyBlockStatements: <explanation>
   } catch {}
 
   const truncatedName =
@@ -125,3 +126,6 @@ export const BookmarkRow = (props: { bookmark: BookmarkWithTags }) => {
     </>
   )
 }
+
+// biome-ignore lint/performance/noBarrelFile: reexport
+export { LoadingBookmarkRow } from './loading-bookmark-row'

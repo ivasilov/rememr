@@ -5,7 +5,7 @@ import { MainContentLayout } from '@/components/main-content-layout'
 import { getQueryClient } from '@/lib/react-query-client'
 import { UnreadBookmarks } from './unread-bookmarks'
 
-const BookmarksPage = async () => {
+const BookmarksPage = () => {
   const queryClient = getQueryClient()
 
   return (

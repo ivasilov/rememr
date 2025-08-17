@@ -169,9 +169,7 @@ const UploadDialog = (props: {
                         id="file-upload"
                         onChange={(e) => {
                           if (
-                            e &&
-                            e.target &&
-                            e.target.validity.valid &&
+                            e?.target?.validity.valid &&
                             e.target.files &&
                             e.target.files[0]
                           ) {
@@ -242,12 +240,10 @@ const UploadDialog = (props: {
           </>
         )}
         {stage === 'finished' && (
-          <>
-            <span>
-              Successfully imported {progress.current} out of {progress.max}{' '}
-              bookmarks.
-            </span>
-          </>
+          <span>
+            Successfully imported {progress.current} out of {progress.max}{' '}
+            bookmarks.
+          </span>
         )}
       </div>
       <DialogFooter>

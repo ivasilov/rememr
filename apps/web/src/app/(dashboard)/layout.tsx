@@ -10,10 +10,10 @@ import { CircleUser } from 'lucide-react'
 import Link from 'next/link'
 import { type PropsWithChildren, Suspense } from 'react'
 import { AppSidebar } from '@/components/app-sidebar'
-import { LayoutDropdownMenuContent } from './LayoutDropdownMenuContent'
+import { LayoutDropdownMenuContent } from './layout-dropdown-menu-content'
 import { SearchInput } from './search-input'
 
-export default async function RootLayout({ children }: PropsWithChildren<{}>) {
+export default function RootLayout({ children }: PropsWithChildren<void>) {
   return (
     <SidebarProvider>
       <AppSidebar />

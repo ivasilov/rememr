@@ -30,7 +30,7 @@ const geistSerif = Geist_Mono({
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <head>
         <meta content="rememr" name="apple-mobile-web-app-title" />
       </head>

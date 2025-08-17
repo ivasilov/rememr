@@ -5,7 +5,7 @@ import { Loading } from '../loading'
 
 export type IdName = { id?: string; name: string }
 
-interface Props {
+type Props = {
   pages: IdName[]
   onChange: (p: IdName[]) => void
   disabled?: boolean
@@ -34,7 +34,7 @@ export const EditPagesForBookmark = ({ pages, onChange, disabled }: Props) => {
 
   const value = useMemo(
     () =>
-      (pages || []).map((p) => ({
+      pages.map((p) => ({
         value: p.id || p.name,
         label: p.name,
         id: p.id,

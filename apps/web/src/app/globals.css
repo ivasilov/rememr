@@ -1,3 +1,4 @@
 @import "@rememr/ui/styles.css";
 
+/* biome-ignore lint/suspicious/noUnknownAtRules: needed for tailwind */
 @source './src';

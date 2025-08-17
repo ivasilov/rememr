@@ -27,7 +27,7 @@ import { useEditBookmarkMutation } from './edit-bookmark-mutation'
 
 const formId = 'edit-bookmark'
 
-interface Props {
+type Props = {
   bookmark: BookmarkType
   onClose: () => void
 }

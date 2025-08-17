@@ -1,3 +1,4 @@
+// biome-ignore lint/performance/noBarrelFile: This file exports all components for this package
 export * from './components/avatar'
 export * from './components/badge'
 export * from './components/button'

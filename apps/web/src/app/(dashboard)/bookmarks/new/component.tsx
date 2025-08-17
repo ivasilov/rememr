@@ -57,7 +57,7 @@ export const NewBookmarkComponent = () => {
 
   const { mutate: createBookmark, isPending } = useCreateBookmarkMutation()
 
-  const onSubmit: SubmitHandler<z.infer<typeof NewBookmarkSchema>> = async (
+  const onSubmit: SubmitHandler<z.infer<typeof NewBookmarkSchema>> = (
     values
   ) => {
     try {

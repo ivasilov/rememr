@@ -1,10 +1,13 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* biome-ignore lint/suspicious/noUnknownAtRules: <explanation> */
 @source './src';
 
+/* biome-ignore lint/suspicious/noUnknownAtRules: <explanation> */
 @custom-variant dark (&:is(.dark *));
 
+/* biome-ignore lint/suspicious/noUnknownAtRules: <explanation> */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -193,13 +196,16 @@
 
 @layer base {
   * {
+    /* biome-ignore lint/suspicious/noUnknownAtRules: <explanation> */
     @apply border-border outline-ring/50;
   }
   body {
+    /* biome-ignore lint/suspicious/noUnknownAtRules: <explanation> */
     @apply bg-background text-foreground;
   }
 }
 
+/* biome-ignore lint/suspicious/noUnknownAtRules: <explanation> */
 @utility container {
   margin-inline: auto;
   padding-inline: 2rem;
