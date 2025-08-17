@@ -1,8 +1,15 @@
-import { BookmarkWithTags } from '../list-all-bookmarks-query'
+import {
+  type GetNextPageParamFunction,
+  type InfiniteData,
+  useInfiniteQuery,
+} from '@tanstack/react-query'
 import { createClient } from '@/lib/supabase/client'
-import { GetNextPageParamFunction, InfiniteData, useInfiniteQuery } from '@tanstack/react-query'
+import type { BookmarkWithTags } from '../list-all-bookmarks-query'
 
-const queryKey = (searchQuery: string | null) => ['bookmarks', { searchQuery, unread: true }]
+const queryKey = (searchQuery: string | null) => [
+  'bookmarks',
+  { searchQuery, unread: true },
+]
 
 // The range starts from 0 to 19, so we need to subtract 1 from the skip to get the correct range of 20 items
 const PAGE_SIZE = 19
@@ -15,13 +22,14 @@ const queryFn = async ({
   queryKey: (string | { searchQuery: string | null })[]
 }) => {
   let searchQuery: string | null = null
-  if (queryKey.length === 2) {
-    if (typeof queryKey[1] !== 'string') {
-      searchQuery = queryKey[1].searchQuery
-    }
+  if (queryKey.length === 2 && typeof queryKey[1] !== 'string') {
+    searchQuery = queryKey[1].searchQuery
   }
 
-  let query = supabaseClient.from('bookmarks').select(`
+  let query = supabaseClient
+    .from('bookmarks')
+    .select(
+      `
     *,
     bookmarks_tags (
       tags (
@@ -29,7 +37,10 @@ const queryFn = async ({
         name
       )
     )
-  `, { count: 'exact' }).eq('read', false)
+  `,
+      { count: 'exact' }
+    )
+    .eq('read', false)
 
   if (searchQuery && searchQuery.length > 0) {
     query = query.ilike('name', `%${searchQuery}%`)
@@ -52,7 +63,7 @@ const getNextPageParam: GetNextPageParamFunction<
     count: number
   }
 > = (_, pages) => {
-  const bookmarks = pages.flatMap(p => p.data)
+  const bookmarks = pages.flatMap((p) => p.data)
   return bookmarks.length
 }
 
@@ -64,17 +75,20 @@ const selectData = (
       count: number
     },
     number
-  >,
+  >
 ) => {
-  return { bookmarks: data.pages.flatMap(p => p.data), count: data.pages[0].count }
+  return {
+    bookmarks: data.pages.flatMap((p) => p.data),
+    count: data.pages[0].count,
+  }
 }
 
 export const useListUnreadBookmarksQuery = (searchQuery: string | null) => {
   return useInfiniteQuery({
     queryKey: queryKey(searchQuery),
-    queryFn: queryFn,
+    queryFn,
     staleTime: 5000,
-    getNextPageParam: getNextPageParam,
+    getNextPageParam,
     initialPageParam: 0,
     select: selectData,
   })

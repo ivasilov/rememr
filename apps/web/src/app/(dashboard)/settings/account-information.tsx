@@ -1,10 +1,6 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
-
-import { createClient } from '@/lib/supabase/client'
 import {
   Button,
   Card,
@@ -20,8 +16,11 @@ import {
   FormMessage,
   Input,
 } from '@rememr/ui'
-import { User } from '@supabase/supabase-js'
+import type { User } from '@supabase/supabase-js'
+import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
+import { z } from 'zod'
+import { createClient } from '@/lib/supabase/client'
 
 const FormId = 'account-information-form'
 
@@ -40,7 +39,9 @@ export const AccountInformation = ({ user }: { user: User }) => {
   async function onSubmit(values: z.infer<typeof FormSchema>) {
     const supabase = createClient()
     // TODO: Wrap this in react-query
-    const { data, error } = await supabase.auth.updateUser({ email: values.email })
+    const { data, error } = await supabase.auth.updateUser({
+      email: values.email,
+    })
     if (data) {
       toast.success('Account information updated')
     } else if (error) {
@@ -57,7 +58,11 @@ export const AccountInformation = ({ user }: { user: User }) => {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form id={FormId} onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
+          <form
+            className="w-2/3 space-y-6"
+            id={FormId}
+            onSubmit={form.handleSubmit(onSubmit)}
+          >
             <FormField
               control={form.control}
               name="email"
@@ -65,7 +70,11 @@ export const AccountInformation = ({ user }: { user: User }) => {
                 <FormItem>
                   <FormLabel>Username</FormLabel>
                   <FormControl>
-                    <Input placeholder="Your email" {...field} autoComplete="off" />
+                    <Input
+                      placeholder="Your email"
+                      {...field}
+                      autoComplete="off"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -75,7 +84,7 @@ export const AccountInformation = ({ user }: { user: User }) => {
         </Form>
       </CardContent>
       <CardFooter className="border-t px-6 py-4">
-        <Button type="submit" form={FormId}>
+        <Button form={FormId} type="submit">
           Save
         </Button>
       </CardFooter>

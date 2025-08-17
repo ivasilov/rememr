@@ -1,10 +1,10 @@
 'use client'
 
-import { TagType } from '@/lib/supabase'
 import { Button } from '@rememr/ui'
 import { Loader2 } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
+import type { TagType } from '@/lib/supabase'
 import { deleteTag } from './action'
 
 export const TagActions = ({ tag }: { tag: TagType }) => {
@@ -18,7 +18,7 @@ export const TagActions = ({ tag }: { tag: TagType }) => {
   }
 
   return (
-    <Button variant="destructive" disabled={loading} onClick={onDelete}>
+    <Button disabled={loading} onClick={onDelete} variant="destructive">
       {loading && <Loader2 className="animate-spin" />}
       Delete
     </Button>

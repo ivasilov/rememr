@@ -1,11 +1,24 @@
 'use client'
 
-import { createClient } from '@/lib/supabase/client'
-import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Input, Label, cn } from '@rememr/ui'
+import {
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  cn,
+  Input,
+  Label,
+} from '@rememr/ui'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { createClient } from '@/lib/supabase/client'
 
-export function UpdatePasswordForm({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
+export function UpdatePasswordForm({
+  className,
+  ...props
+}: React.ComponentPropsWithoutRef<'div'>) {
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
@@ -34,7 +47,9 @@ export function UpdatePasswordForm({ className, ...props }: React.ComponentProps
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl">Reset Your Password</CardTitle>
-          <CardDescription>Please enter your new password below.</CardDescription>
+          <CardDescription>
+            Please enter your new password below.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleForgotPassword}>
@@ -43,15 +58,15 @@ export function UpdatePasswordForm({ className, ...props }: React.ComponentProps
                 <Label htmlFor="password">New password</Label>
                 <Input
                   id="password"
-                  type="password"
+                  onChange={(e) => setPassword(e.target.value)}
                   placeholder="New password"
                   required
+                  type="password"
                   value={password}
-                  onChange={e => setPassword(e.target.value)}
                 />
               </div>
-              {error && <p className="text-sm text-red-500">{error}</p>}
-              <Button type="submit" className="w-full" disabled={isLoading}>
+              {error && <p className="text-red-500 text-sm">{error}</p>}
+              <Button className="w-full" disabled={isLoading} type="submit">
                 {isLoading ? 'Saving...' : 'Save new password'}
               </Button>
             </div>

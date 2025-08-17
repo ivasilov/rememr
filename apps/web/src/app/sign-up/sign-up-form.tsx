@@ -1,10 +1,10 @@
 'use client'
 
-import { createClient } from '@/lib/supabase/client'
 import { Button, CardContent, Input, Label } from '@rememr/ui'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { createClient } from '@/lib/supabase/client'
 
 export const SignUpForm = () => {
   const [email, setEmail] = useState('')
@@ -44,13 +44,13 @@ export const SignUpForm = () => {
             </div> */}
         <div className="grid gap-2">
           <Label htmlFor="email">Email</Label>
-          <Input id="email" type="email" placeholder="m@example.com" required />
+          <Input id="email" placeholder="m@example.com" required type="email" />
         </div>
         <div className="grid gap-2">
           <Label htmlFor="password">Password</Label>
           <Input id="password" type="password" />
         </div>
-        <Button type="submit" className="w-full">
+        <Button className="w-full" type="submit">
           Create an account
         </Button>
         {/* <Button variant="outline" className="w-full">
@@ -59,7 +59,7 @@ export const SignUpForm = () => {
       </div>
       <div className="mt-4 text-center text-sm">
         Already have an account?{' '}
-        <Link href="/login" className="underline">
+        <Link className="underline" href="/login">
           Sign in
         </Link>
       </div>

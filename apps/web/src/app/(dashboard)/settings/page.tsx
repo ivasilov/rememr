@@ -1,8 +1,14 @@
 'use server'
 
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@rememr/ui'
 import { MainContentLayout } from '@/components/main-content-layout'
 import { createClient } from '@/lib/supabase/server'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@rememr/ui'
 import { AccountInformation } from './account-information'
 import { Imports } from './imports'
 
@@ -19,13 +25,16 @@ const AccountPage = async () => {
 
   return (
     <MainContentLayout>
-      <h1 className="text-3xl font-semibold">Settings</h1>
+      <h1 className="font-semibold text-3xl">Settings</h1>
       <div className="mx-auto grid w-full items-start gap-4 md:gap-8">
         <AccountInformation user={user} />
         <Card>
           <CardHeader>
             <CardTitle>Import bookmarks from other sources</CardTitle>
-            <CardDescription>You can use the built-in importers to import bookmarks from other apps.</CardDescription>
+            <CardDescription>
+              You can use the built-in importers to import bookmarks from other
+              apps.
+            </CardDescription>
             {/* TODO: Add a link for requesting importers from other apps */}
           </CardHeader>
           <CardContent className="flex flex-row gap-3">

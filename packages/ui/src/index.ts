@@ -9,9 +9,12 @@ export * from './components/dropdown-menu'
 export * from './components/form'
 export * from './components/input'
 export * from './components/label'
+// Icons
+export * from './components/message-circle-more'
 export * from './components/multi-select'
 export * from './components/popover'
 export * from './components/progress'
+export * from './components/settings-gear'
 export * from './components/sheet'
 export * from './components/sidebar'
 export * from './components/skeleton'
@@ -20,9 +23,5 @@ export * from './components/switch'
 export * from './components/table'
 export * from './components/textarea'
 export * from './components/tooltip'
-
-// Icons
-export * from './components/message-circle-more'
-export * from './components/settings-gear'
 
 export { cn } from './lib/utils'

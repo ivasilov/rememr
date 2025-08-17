@@ -1,13 +1,13 @@
-import { Database } from '@/lib/database.types'
-import { createClient } from '@/lib/supabase/client'
 import { compact, uniqBy } from 'lodash'
+import type { Database } from '@/lib/database.types'
+import { createClient } from '@/lib/supabase/client'
 
 type InsertableBookmark = Database['public']['Tables']['bookmarks']['Insert']
 
 export const importOnetabBookmarks = async (
   data: string,
   { tags, unread }: { tags: string[]; unread: boolean },
-  progress?: (current: number, max: number) => void,
+  progress?: (current: number, max: number) => void
 ) => {
   const supabaseClient = createClient()
 
@@ -21,13 +21,13 @@ export const importOnetabBookmarks = async (
   const validated = data.split('\n')
   const compacted = compact(validated) as string[]
 
-  const translated = compacted.map(b => {
+  const translated = compacted.map((b) => {
     const splitted = b.split('|')
     const [url, ...rest] = splitted
 
     const obj: InsertableBookmark = {
       url: (url ?? '').trim(),
-      name: compact(rest.map(e => (e ?? '').trim())).join(' | '),
+      name: compact(rest.map((e) => (e ?? '').trim())).join(' | '),
       user_id: user.id,
       read: !unread,
     }
@@ -51,23 +51,37 @@ export const importOnetabBookmarks = async (
   const nonNullableFoundTags = foundTags as NonNullable<typeof foundTags>
 
   const tagsToBeSaved = tags
-    .filter(tagName => !nonNullableFoundTags.find(f => f.name === tagName))
-    .map(tagName => ({ name: tagName, user_id: user.id }))
+    .filter((tagName) => !nonNullableFoundTags.find((f) => f.name === tagName))
+    .map((tagName) => ({ name: tagName, user_id: user.id }))
 
-  const { data: addedTags } = await supabaseClient.from('tags').insert(tagsToBeSaved).select().throwOnError()
+  const { data: addedTags } = await supabaseClient
+    .from('tags')
+    .insert(tagsToBeSaved)
+    .select()
+    .throwOnError()
   const nonNullableAddedTags = addedTags as NonNullable<typeof addedTags>
 
-  const savedTagIds = uniqBy(nonNullableFoundTags.concat(nonNullableAddedTags), t => t.id).map(t => t.id)
+  const savedTagIds = uniqBy(
+    nonNullableFoundTags.concat(nonNullableAddedTags),
+    (t) => t.id
+  ).map((t) => t.id)
 
   const bookmarksTags = savedTagIds.reduce(
     (combinations, tagId) => {
-      return combinations.concat(savedBookmarkIds.map(bookmark => ({ bookmark_id: bookmark.id, tag_id: tagId })))
+      return combinations.concat(
+        savedBookmarkIds.map((bookmark) => ({
+          bookmark_id: bookmark.id,
+          tag_id: tagId,
+        }))
+      )
     },
-    [] as { bookmark_id: string; tag_id: string }[],
+    [] as { bookmark_id: string; tag_id: string }[]
   )
 
   if (bookmarksTags.length > 0) {
-    const { error } = await supabaseClient.from('bookmarks_tags').upsert(bookmarksTags)
+    const { error } = await supabaseClient
+      .from('bookmarks_tags')
+      .upsert(bookmarksTags)
   }
 
   return savedBookmarkIds.length

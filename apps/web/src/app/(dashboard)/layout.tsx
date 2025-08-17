@@ -1,4 +1,3 @@
-import { AppSidebar } from '@/components/app-sidebar'
 import {
   Button,
   DropdownMenu,
@@ -9,7 +8,8 @@ import {
 } from '@rememr/ui'
 import { CircleUser } from 'lucide-react'
 import Link from 'next/link'
-import { PropsWithChildren, Suspense } from 'react'
+import { type PropsWithChildren, Suspense } from 'react'
+import { AppSidebar } from '@/components/app-sidebar'
 import { LayoutDropdownMenuContent } from './LayoutDropdownMenuContent'
 import { SearchInput } from './search-input'
 
@@ -19,7 +19,7 @@ export default async function RootLayout({ children }: PropsWithChildren<{}>) {
       <AppSidebar />
       <div className="grid min-h-screen w-full">
         <div className="flex max-h-screen flex-col">
-          <header className="bg-muted/40 flex h-14 items-center gap-4 border-b px-4 shadow-md lg:h-[60px] lg:px-6">
+          <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 shadow-md lg:h-[60px] lg:px-6">
             <SidebarTrigger />
             <Suspense>
               <SearchInput />
@@ -29,7 +29,11 @@ export default async function RootLayout({ children }: PropsWithChildren<{}>) {
             </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="secondary" size="icon" className="rounded-full">
+                <Button
+                  className="rounded-full"
+                  size="icon"
+                  variant="secondary"
+                >
                   <CircleUser className="h-5 w-5" />
                   <span className="sr-only">Toggle user menu</span>
                 </Button>
@@ -39,7 +43,10 @@ export default async function RootLayout({ children }: PropsWithChildren<{}>) {
               </DropdownMenuContent>
             </DropdownMenu>
           </header>
-          <main className="bg-muted/40 flex-1 overflow-auto" style={{ scrollbarGutter: 'stable' }}>
+          <main
+            className="flex-1 overflow-auto bg-muted/40"
+            style={{ scrollbarGutter: 'stable' }}
+          >
             {children}
           </main>
         </div>

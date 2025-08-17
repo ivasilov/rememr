@@ -1,11 +1,24 @@
 'use client'
 
-import { createClient } from '@/lib/supabase/client'
-import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Input, Label, cn } from '@rememr/ui'
+import {
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  cn,
+  Input,
+  Label,
+} from '@rememr/ui'
 import Link from 'next/link'
 import { useState } from 'react'
+import { createClient } from '@/lib/supabase/client'
 
-export function ForgotPasswordForm({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
+export function ForgotPasswordForm({
+  className,
+  ...props
+}: React.ComponentPropsWithoutRef<'div'>) {
   const [email, setEmail] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
@@ -41,7 +54,8 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
           </CardHeader>
           <CardContent>
             <p className="text-muted-foreground text-sm">
-              If you registered using your email and password, you will receive a password reset email.
+              If you registered using your email and password, you will receive
+              a password reset email.
             </p>
           </CardContent>
         </Card>
@@ -49,7 +63,10 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
         <Card>
           <CardHeader>
             <CardTitle className="text-2xl">Reset Your Password</CardTitle>
-            <CardDescription>Type in your email and we&apos;ll send you a link to reset your password</CardDescription>
+            <CardDescription>
+              Type in your email and we&apos;ll send you a link to reset your
+              password
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleForgotPassword}>
@@ -58,21 +75,24 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
                   <Label htmlFor="email">Email</Label>
                   <Input
                     id="email"
-                    type="email"
+                    onChange={(e) => setEmail(e.target.value)}
                     placeholder="m@example.com"
                     required
+                    type="email"
                     value={email}
-                    onChange={e => setEmail(e.target.value)}
                   />
                 </div>
-                {error && <p className="text-sm text-red-500">{error}</p>}
-                <Button type="submit" className="w-full" disabled={isLoading}>
+                {error && <p className="text-red-500 text-sm">{error}</p>}
+                <Button className="w-full" disabled={isLoading} type="submit">
                   {isLoading ? 'Sending...' : 'Send reset email'}
                 </Button>
               </div>
               <div className="mt-4 text-center text-sm">
                 Already have an account?{' '}
-                <Link href="/auth/login" className="underline underline-offset-4">
+                <Link
+                  className="underline underline-offset-4"
+                  href="/auth/login"
+                >
                   Login
                 </Link>
               </div>

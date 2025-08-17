@@ -1,7 +1,7 @@
 'use server'
+import { Tag } from 'lucide-react'
 import { MainContentLayout } from '@/components/main-content-layout'
 import { createClient } from '@/lib/supabase/server'
-import { Tag } from 'lucide-react'
 import { SinglePageError } from './components/error'
 import { TagActions } from './tag-actions'
 import { TagBookmarks } from './tag-bookmarks'
@@ -10,7 +10,10 @@ const TagPage = async ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params
 
   const supabase = await createClient()
-  const { data, error } = await supabase.from('tags').select('*, bookmarks (*)').eq('id', id)
+  const { data, error } = await supabase
+    .from('tags')
+    .select('*, bookmarks (*)')
+    .eq('id', id)
   const tag = data![0]
   if (error) {
     return <SinglePageError />
@@ -21,8 +24,10 @@ const TagPage = async ({ params }: { params: Promise<{ id: string }> }) => {
       <MainContentLayout>
         <div className="flex items-center justify-between pr-2">
           <div className="flex items-center gap-2">
-            <Tag size={20} className="pt-1" />
-            <h1 className="text-foreground flex-1 text-3xl font-semibold">{tag.name}</h1>
+            <Tag className="pt-1" size={20} />
+            <h1 className="flex-1 font-semibold text-3xl text-foreground">
+              {tag.name}
+            </h1>
           </div>
 
           <TagActions tag={tag} />

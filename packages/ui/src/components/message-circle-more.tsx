@@ -1,7 +1,12 @@
 'use client'
 
 import { motion, useAnimation, type Variants } from 'motion/react'
-import React, { SVGProps, useCallback, useImperativeHandle, useRef } from 'react'
+import React, {
+  type SVGProps,
+  useCallback,
+  useImperativeHandle,
+  useRef,
+} from 'react'
 
 const dotVariants: Variants = {
   normal: {
@@ -32,53 +37,69 @@ export interface MessageCircleMoreHandle {
   stopAnimation: () => void
 }
 
-const MessageCircleMoreIcon = React.forwardRef<MessageCircleMoreHandle, SVGProps<SVGSVGElement>>(
-  ({ onMouseEnter, onMouseLeave, ...props }, ref) => {
-    const controls = useAnimation()
-    const isControlledRef = useRef(false)
+const MessageCircleMoreIcon = React.forwardRef<
+  MessageCircleMoreHandle,
+  SVGProps<SVGSVGElement>
+>(({ onMouseEnter, onMouseLeave, ...props }, ref) => {
+  const controls = useAnimation()
+  const isControlledRef = useRef(false)
 
-    useImperativeHandle(ref, () => {
-      isControlledRef.current = true // Mark as externally controlled when ref is used
-      return {
-        startAnimation: () => controls.start('animate'),
-        stopAnimation: () => controls.start('normal'),
-      }
-    })
+  useImperativeHandle(ref, () => {
+    isControlledRef.current = true // Mark as externally controlled when ref is used
+    return {
+      startAnimation: () => controls.start('animate'),
+      stopAnimation: () => controls.start('normal'),
+    }
+  })
 
-    const handleMouseEnter = useCallback(() => {
-      if (!isControlledRef.current) {
-        controls.start('animate')
-      }
-    }, [controls])
+  const handleMouseEnter = useCallback(() => {
+    if (!isControlledRef.current) {
+      controls.start('animate')
+    }
+  }, [controls])
 
-    const handleMouseLeave = useCallback(() => {
-      if (!isControlledRef.current) {
-        controls.start('normal')
-      }
-    }, [controls])
+  const handleMouseLeave = useCallback(() => {
+    if (!isControlledRef.current) {
+      controls.start('normal')
+    }
+  }, [controls])
 
-    return (
-      <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="28"
-          height="28"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          {...props}
-        >
-          <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
-          <motion.path d="M8 12h.01" variants={dotVariants} animate={controls} custom={0} />
-          <motion.path d="M12 12h.01" variants={dotVariants} animate={controls} custom={1} />
-          <motion.path d="M16 12h.01" variants={dotVariants} animate={controls} custom={2} />
-        </svg>
-      </div>
-    )
-  },
-)
+  return (
+    <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+      <svg
+        fill="none"
+        height="28"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
+        viewBox="0 0 24 24"
+        width="28"
+        xmlns="http://www.w3.org/2000/svg"
+        {...props}
+      >
+        <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
+        <motion.path
+          animate={controls}
+          custom={0}
+          d="M8 12h.01"
+          variants={dotVariants}
+        />
+        <motion.path
+          animate={controls}
+          custom={1}
+          d="M12 12h.01"
+          variants={dotVariants}
+        />
+        <motion.path
+          animate={controls}
+          custom={2}
+          d="M16 12h.01"
+          variants={dotVariants}
+        />
+      </svg>
+    </div>
+  )
+})
 
 export { MessageCircleMoreIcon }

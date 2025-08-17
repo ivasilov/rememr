@@ -1,7 +1,7 @@
 'use client'
 
-import { Bookmarks } from '@/components/bookmarks'
 import { useQueryState } from 'nuqs'
+import { Bookmarks } from '@/components/bookmarks'
 import { useListUnreadBookmarksQuery } from './list-unread-bookmarks-query'
 
 type BookmarksProps = {

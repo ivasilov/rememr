@@ -1,7 +1,7 @@
-import { createClient } from '@/lib/supabase/server'
 import { SidebarMenuBadge, SidebarMenuItem } from '@rememr/ui'
-import { User } from '@supabase/supabase-js'
+import type { User } from '@supabase/supabase-js'
 import { Tag } from 'lucide-react'
+import { createClient } from '@/lib/supabase/server'
 import { SidebarMenuLink } from './sidebar-menu-link'
 
 export const TagsMenu = async ({ user }: { user: User }) => {
@@ -15,7 +15,7 @@ export const TagsMenu = async ({ user }: { user: User }) => {
 
   if (tags?.length === 0) {
     return (
-      <div className="text-muted-foreground border-border mx-2 flex items-center justify-center rounded-md border border-dashed py-4 text-sm">
+      <div className="mx-2 flex items-center justify-center rounded-md border border-border border-dashed py-4 text-muted-foreground text-sm">
         No tags saved yet.
       </div>
     )
@@ -23,9 +23,12 @@ export const TagsMenu = async ({ user }: { user: User }) => {
 
   const sorted = (tags || []).sort((a, b) => a.name.localeCompare(b.name))
 
-  return sorted?.map(t => (
+  return sorted?.map((t) => (
     <SidebarMenuItem key={t.id}>
-      <SidebarMenuLink href={`/tags/${t.id}`} className="align-center flex items-center">
+      <SidebarMenuLink
+        className="flex items-center align-center"
+        href={`/tags/${t.id}`}
+      >
         <Tag />
         <span className="w-40 truncate">{t.name}</span>
       </SidebarMenuLink>

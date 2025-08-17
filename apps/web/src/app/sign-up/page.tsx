@@ -1,8 +1,18 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@rememr/ui'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@rememr/ui'
 import { Suspense } from 'react'
 import { SignUpForm } from './sign-up-form'
 
-export default async function SignUp({ searchParams }: { searchParams: Promise<Record<string, string>> }) {
+export default async function SignUp({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string>>
+}) {
   const params = await searchParams
   const signUpSuccess = params['success']
 
@@ -11,7 +21,9 @@ export default async function SignUp({ searchParams }: { searchParams: Promise<R
       <Card className="mx-auto max-w-sm">
         <CardHeader>
           <CardTitle className="text-xl">Sign Up</CardTitle>
-          <CardDescription>Enter your information to create an account</CardDescription>
+          <CardDescription>
+            Enter your information to create an account
+          </CardDescription>
         </CardHeader>
         <Suspense fallback={<div>Loading...</div>}>
           <CardContent>

@@ -1,7 +1,19 @@
+import {
+  DropdownMenuItem,
+  MessageCircleMoreIcon,
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+} from '@rememr/ui'
 import { Chat } from '@/components/chat'
-import { DropdownMenuItem, MessageCircleMoreIcon, Sheet, SheetContent, SheetTrigger } from '@rememr/ui'
 
-export function ChatDropdownMenuItem({ bookmarkTitle, bookmarkUrl }: { bookmarkTitle: string; bookmarkUrl: string }) {
+export function ChatDropdownMenuItem({
+  bookmarkTitle,
+  bookmarkUrl,
+}: {
+  bookmarkTitle: string
+  bookmarkUrl: string
+}) {
   return (
     <Sheet modal={false}>
       <SheetTrigger asChild>

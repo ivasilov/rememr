@@ -3,11 +3,16 @@
 import { SidebarMenuButton } from '@rememr/ui'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { ComponentProps, PropsWithChildren } from 'react'
+import type { ComponentProps, PropsWithChildren } from 'react'
 
-type SidebarMenuLinkProps = PropsWithChildren<{ href: string }> & ComponentProps<typeof SidebarMenuButton>
+type SidebarMenuLinkProps = PropsWithChildren<{ href: string }> &
+  ComponentProps<typeof SidebarMenuButton>
 
-export function SidebarMenuLink({ href, children, ...props }: SidebarMenuLinkProps) {
+export function SidebarMenuLink({
+  href,
+  children,
+  ...props
+}: SidebarMenuLinkProps) {
   const pathname = usePathname()
 
   return (
