@@ -1,6 +1,5 @@
-import { createClient } from '@supabase/supabase-js'
-
 import { Storage } from '@plasmohq/storage'
+import { createClient } from '@supabase/supabase-js'
 import type { Database } from '~lib/database.types'
 
 const storage = new Storage({
@@ -17,5 +16,5 @@ export const supabase = createClient<Database>(
       persistSession: true,
       detectSessionInUrl: true,
     },
-  },
+  }
 )

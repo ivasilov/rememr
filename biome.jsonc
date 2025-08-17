@@ -1,0 +1,52 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.2.0/schema.json",
+  "extends": ["ultracite"],
+  "javascript": {
+    "formatter": {
+      "semicolons": "asNeeded"
+    }
+  },
+  "linter": {
+    "rules": {
+      "style": {
+        "noNonNullAssertion": "warn",
+        "useTemplate": "warn",
+        "noMagicNumbers": "warn",
+        "noNestedTernary": "warn",
+        "useAtIndex": "warn",
+        "useBlockStatements": "off"
+      },
+      "complexity": {
+        "noForEach": "warn",
+        "noExcessiveCognitiveComplexity": "warn",
+        "noVoid": "warn"
+      },
+      "performance": {
+        "noImgElement": "warn"
+      },
+      "suspicious": {
+        "noConsole": "warn",
+        "noArrayIndexKey": "warn",
+        "noDocumentCookie": "warn",
+        "noExplicitAny": "warn",
+        "useIterableCallbackReturn": "warn"
+      },
+      "nursery": {
+        "noShadow": "warn",
+        "useImageSize": "warn",
+        "useConsistentTypeDefinitions": "warn",
+        "useAnchorHref": "warn"
+      },
+      "correctness": {
+        "useExhaustiveDependencies": "warn",
+        "noUnusedVariables": "warn"
+      },
+      "a11y": {
+        "noNoninteractiveElementInteractions": "warn",
+        "noSvgWithoutTitle": "warn",
+        "noStaticElementInteractions": "warn",
+        "useKeyWithClickEvents": "warn"
+      }
+    }
+  }
+}

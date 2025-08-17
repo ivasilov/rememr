@@ -1,6 +1,6 @@
-import { createClient } from '@/lib/supabase/client'
 import { compact, noop, uniq, uniqBy } from 'lodash'
 import { z } from 'zod'
+import { createClient } from '@/lib/supabase/client'
 
 const bookmarkSchema = z.object({
   href: z.string(),
@@ -11,7 +11,7 @@ const bookmarkSchema = z.object({
   time: z.string(),
   shared: z.enum(['yes', 'no']),
   toread: z.enum(['yes', 'no']),
-  tags: z.string().transform(t => t.split(' ')),
+  tags: z.string().transform((t) => t.split(' ')),
 })
 
 const bookmarksSchema = z.array(bookmarkSchema)
@@ -22,9 +22,10 @@ export const importPinboardBookmarks = async (
   data: string,
   // names of the tags to be added on each imported bookmark
   { tags }: { tags: string[] },
-  progress: (current: number, max: number) => void = noop,
+  progress: (current: number, max: number) => void = noop
 ) => {
   const supabaseClient = createClient()
+  // biome-ignore lint/suspicious/noEvolvingTypes: <explanation>
   const errors = []
 
   const {
@@ -38,12 +39,14 @@ export const importPinboardBookmarks = async (
 
   const bookmarks = bookmarksSchema.parse(bookmarksData)
 
-  const importedTags = uniq(compact(bookmarks.flatMap(b => b.tags)).concat(tags)).map(t => ({
+  const importedTags = uniq(
+    compact(bookmarks.flatMap((b) => b.tags)).concat(tags)
+  ).map((t) => ({
     name: t,
     user_id: user.id,
   }))
 
-  const importedTagNames = importedTags.map(t => t.name)
+  const importedTagNames = importedTags.map((t) => t.name)
 
   const { data: foundTags } = await supabaseClient
     .from('tags')
@@ -53,13 +56,22 @@ export const importPinboardBookmarks = async (
     .throwOnError()
   const nonNullableFoundTags = foundTags as NonNullable<typeof foundTags>
 
-  const tagsToBeSaved = importedTags.filter(t => !nonNullableFoundTags.find(f => f.name === t.name))
+  const tagsToBeSaved = importedTags.filter(
+    (t) => !nonNullableFoundTags.find((f) => f.name === t.name)
+  )
 
-  const { data: addedTags } = await supabaseClient.from('tags').insert(tagsToBeSaved).select().throwOnError()
+  const { data: addedTags } = await supabaseClient
+    .from('tags')
+    .insert(tagsToBeSaved)
+    .select()
+    .throwOnError()
   const nonNullableAddedTags = addedTags as NonNullable<typeof addedTags>
 
-  const savedTags = uniqBy(nonNullableFoundTags.concat(nonNullableAddedTags), t => t.id)
-  const additionalTags = savedTags.filter(st => tags.includes(st.name))
+  const savedTags = uniqBy(
+    nonNullableFoundTags.concat(nonNullableAddedTags),
+    (t) => t.id
+  )
+  const additionalTags = savedTags.filter((st) => tags.includes(st.name))
 
   let count = 0
   for (const b of bookmarks) {
@@ -74,11 +86,12 @@ export const importPinboardBookmarks = async (
 
     let savedBookmarkId: string | null = null
 
-    const { data: foundBookmark, error: foundBookmarkError } = await supabaseClient
-      .from('bookmarks')
-      .select('id')
-      .eq('url', bookmark.url)
-      .maybeSingle()
+    const { data: foundBookmark, error: foundBookmarkError } =
+      await supabaseClient
+        .from('bookmarks')
+        .select('id')
+        .eq('url', bookmark.url)
+        .maybeSingle()
     if (foundBookmarkError) {
       errors.push(foundBookmarkError.message)
       continue
@@ -87,7 +100,11 @@ export const importPinboardBookmarks = async (
     if (foundBookmark) {
       savedBookmarkId = foundBookmark.id
     } else {
-      const { data, error } = await supabaseClient.from('bookmarks').insert(bookmark).select('id').single()
+      const { data, error } = await supabaseClient
+        .from('bookmarks')
+        .insert(bookmark)
+        .select('id')
+        .single()
       if (error) {
         errors.push(error.message)
         continue
@@ -96,13 +113,17 @@ export const importPinboardBookmarks = async (
     }
 
     if (savedBookmarkId) {
-      const foundTags = compact(b.tags.map(tag => savedTags.find(st => st.name === tag))).concat(additionalTags)
+      const foundTags = compact(
+        b.tags.map((tag) => savedTags.find((st) => st.name === tag))
+      ).concat(additionalTags)
 
-      const bookmarksTags = foundTags.map(tag => {
+      const bookmarksTags = foundTags.map((tag) => {
         return { bookmark_id: savedBookmarkId as string, tag_id: tag.id }
       })
       if (bookmarksTags.length > 0) {
-        const { error } = await supabaseClient.from('bookmarks_tags').upsert(bookmarksTags)
+        const { error } = await supabaseClient
+          .from('bookmarks_tags')
+          .upsert(bookmarksTags)
         if (error) {
           errors.push(error.message)
         }

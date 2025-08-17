@@ -1,18 +1,18 @@
 'use client'
 
-import { createClient } from '@/lib/supabase/client'
 import {
   DropdownMenuCheckboxItem,
   DropdownMenuItem,
   DropdownMenuSeparator,
-  SettingsGearHandle,
+  type SettingsGearHandle,
   SettingsGearIcon,
 } from '@rememr/ui'
 import { LogOut } from 'lucide-react'
-import { useTheme } from 'next-themes'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { useTheme } from 'next-themes'
 import { useCallback, useRef } from 'react'
+import { createClient } from '@/lib/supabase/client'
 
 export const LayoutDropdownMenuContent = () => {
   const { theme, setTheme } = useTheme()
@@ -27,13 +27,22 @@ export const LayoutDropdownMenuContent = () => {
 
   return (
     <>
-      <DropdownMenuCheckboxItem checked={theme === 'light'} onCheckedChange={() => setTheme('light')}>
+      <DropdownMenuCheckboxItem
+        checked={theme === 'light'}
+        onCheckedChange={() => setTheme('light')}
+      >
         Light
       </DropdownMenuCheckboxItem>
-      <DropdownMenuCheckboxItem checked={theme === 'dark'} onCheckedChange={() => setTheme('dark')}>
+      <DropdownMenuCheckboxItem
+        checked={theme === 'dark'}
+        onCheckedChange={() => setTheme('dark')}
+      >
         Dark
       </DropdownMenuCheckboxItem>
-      <DropdownMenuCheckboxItem checked={theme === 'system'} onCheckedChange={() => setTheme('system')}>
+      <DropdownMenuCheckboxItem
+        checked={theme === 'system'}
+        onCheckedChange={() => setTheme('system')}
+      >
         System
       </DropdownMenuCheckboxItem>
       <DropdownMenuSeparator />

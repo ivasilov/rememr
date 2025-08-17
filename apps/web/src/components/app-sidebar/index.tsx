@@ -36,7 +36,10 @@ export async function AppSidebar() {
     <Sidebar>
       <SidebarContent>
         <SidebarHeader>
-          <Link href="/bookmarks" className="flex items-center gap-2 font-semibold">
+          <Link
+            className="flex items-center gap-2 font-semibold"
+            href="/bookmarks"
+          >
             <span className="">rememr</span>
           </Link>
         </SidebarHeader>
@@ -58,7 +61,7 @@ export async function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-        <Collapsible defaultOpen className="group/collapsible">
+        <Collapsible className="group/collapsible" defaultOpen>
           <SidebarGroup>
             <SidebarGroupLabel asChild>
               <CollapsibleTrigger>
@@ -71,6 +74,7 @@ export async function AppSidebar() {
                 <SidebarMenu>
                   <Suspense
                     fallback={Array.from({ length: 3 }).map((_, index) => (
+                      // biome-ignore lint/suspicious/noArrayIndexKey: this is loading array
                       <SidebarMenuItem key={index}>
                         <SidebarMenuSkeleton />
                       </SidebarMenuItem>
@@ -84,7 +88,7 @@ export async function AppSidebar() {
           </SidebarGroup>
         </Collapsible>
 
-        <Collapsible defaultOpen className="group/collapsible">
+        <Collapsible className="group/collapsible" defaultOpen>
           <SidebarGroup>
             <SidebarGroupLabel asChild>
               <CollapsibleTrigger>

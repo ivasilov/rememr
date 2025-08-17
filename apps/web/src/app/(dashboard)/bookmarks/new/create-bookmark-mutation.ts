@@ -1,10 +1,12 @@
-import { createClient } from '@/lib/supabase/client'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { createClient } from '@/lib/supabase/client'
 
 const supabase = createClient()
 
+const regex =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+
 const isUUID = (s: string) => {
-  const regex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
   return regex.test(s || '')
 }
 
@@ -15,8 +17,14 @@ const mutationFn = async (values: {
   description: string | null
   tagIds: { id: string; name: string }[]
 }) => {
-  const tagNames = values.tagIds.filter(t => !isUUID(t.id)).map(t => ({ name: t.name }))
-  const { data: newTags } = await supabase.from('tags').insert(tagNames).throwOnError().select()
+  const tagNames = values.tagIds
+    .filter((t) => !isUUID(t.id))
+    .map((t) => ({ name: t.name }))
+  const { data: newTags } = await supabase
+    .from('tags')
+    .insert(tagNames)
+    .throwOnError()
+    .select()
 
   const { data, error } = await supabase
     .from('bookmarks')
@@ -30,18 +38,23 @@ const mutationFn = async (values: {
     .select()
     .single()
 
-  debugger
   if (error) {
     throw new Error(error.message)
-    return
   }
 
   const bookmark = data
 
-  const existingTags = values.tagIds.filter(t => isUUID(t.id))
-  const relations = [...(newTags || []), ...existingTags].map(r => ({ tag_id: r.id, bookmark_id: bookmark.id }))
+  const existingTags = values.tagIds.filter((t) => isUUID(t.id))
+  const relations = [...(newTags || []), ...existingTags].map((r) => ({
+    tag_id: r.id,
+    bookmark_id: bookmark.id,
+  }))
 
-  await supabase.from('bookmarks_tags').delete().eq('bookmark_id', bookmark.id).throwOnError()
+  await supabase
+    .from('bookmarks_tags')
+    .delete()
+    .eq('bookmark_id', bookmark.id)
+    .throwOnError()
   if (relations.length > 0) {
     await supabase.from('bookmarks_tags').insert(relations).throwOnError()
   }

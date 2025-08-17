@@ -1,14 +1,10 @@
 'use client'
 
-import { Bookmarks } from '@/components/bookmarks'
 import { useQueryState } from 'nuqs'
+import { Bookmarks } from '@/components/bookmarks'
 import { useListAllBookmarksQuery } from './list-all-bookmarks-query'
 
-type BookmarksProps = {
-  searchQuery?: string
-}
-
-export const AllBookmarks = ({}: BookmarksProps) => {
+export const AllBookmarks = () => {
   const [searchQuery] = useQueryState('q')
 
   const result = useListAllBookmarksQuery(searchQuery)

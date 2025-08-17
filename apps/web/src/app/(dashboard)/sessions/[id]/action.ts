@@ -1,6 +1,6 @@
 'use server'
-import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
+import { createClient } from '@/lib/supabase/server'
 
 export const deleteTag = async (tagId: string) => {
   const supabase = await createClient()

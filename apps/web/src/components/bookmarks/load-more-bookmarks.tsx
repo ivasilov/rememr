@@ -2,15 +2,23 @@ import { useEffect, useRef } from 'react'
 import { LoadingBookmarkRow } from '../bookmark/loading-bookmark-row'
 import { LoadingBookmarks } from './loading'
 
-export type LoadMoreBookmarksProps = { hasMore: boolean; loading: boolean; fetchMore: () => Promise<unknown> }
+export type LoadMoreBookmarksProps = {
+  hasMore: boolean
+  loading: boolean
+  fetchMore: () => Promise<unknown>
+}
 
-export const LoadMoreBookmarks = ({ hasMore, loading, fetchMore }: LoadMoreBookmarksProps) => {
+export const LoadMoreBookmarks = ({
+  hasMore,
+  loading,
+  fetchMore,
+}: LoadMoreBookmarksProps) => {
   const loader = useRef<HTMLTableRowElement>(null)
 
   useEffect(() => {
     const currentEl = loader.current
     if (currentEl) {
-      var options = {
+      const options = {
         root: null,
         rootMargin: '20px',
         threshold: 1.0,

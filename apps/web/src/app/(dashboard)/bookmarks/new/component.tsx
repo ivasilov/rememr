@@ -18,7 +18,7 @@ import {
   Switch,
 } from '@rememr/ui'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useForm, type SubmitHandler } from 'react-hook-form'
+import { type SubmitHandler, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
@@ -37,7 +37,7 @@ const NewBookmarkSchema = z.object({
       z.object({
         id: z.string(),
         name: z.string(),
-      }),
+      })
     )
     .default([]),
 })
@@ -57,20 +57,22 @@ export const NewBookmarkComponent = () => {
 
   const { mutate: createBookmark, isPending } = useCreateBookmarkMutation()
 
-  const onSubmit: SubmitHandler<z.infer<typeof NewBookmarkSchema>> = async values => {
+  const onSubmit: SubmitHandler<z.infer<typeof NewBookmarkSchema>> = (
+    values
+  ) => {
     try {
       createBookmark(values, {
         onSuccess: () => {
           toast.success('Bookmark created successfully')
           router.push('/bookmarks')
         },
-        onError: error => {
+        onError: (error) => {
           toast.error(`Failed to create bookmark: ${error.message}`)
         },
       })
 
       toast.success('Bookmark created')
-      router.push(`/bookmarks`)
+      router.push('/bookmarks')
     } catch (error) {
       toast.error('An unexpected error occurred')
     }
@@ -83,7 +85,11 @@ export const NewBookmarkComponent = () => {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form id={formId} onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col space-y-4">
+          <form
+            className="flex flex-col space-y-4"
+            id={formId}
+            onSubmit={form.handleSubmit(onSubmit)}
+          >
             <FormField
               control={form.control}
               name="name"
@@ -91,7 +97,11 @@ export const NewBookmarkComponent = () => {
                 <FormItem>
                   <FormLabel>Name of the bookmark</FormLabel>
                   <FormControl>
-                    <Input placeholder="Rememr" {...field} disabled={isPending} />
+                    <Input
+                      placeholder="Rememr"
+                      {...field}
+                      disabled={isPending}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -104,7 +114,11 @@ export const NewBookmarkComponent = () => {
                 <FormItem>
                   <FormLabel>Url of the bookmark</FormLabel>
                   <FormControl>
-                    <Input placeholder="https://rememr.com" {...field} disabled={isPending} />
+                    <Input
+                      placeholder="https://rememr.com"
+                      {...field}
+                      disabled={isPending}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -117,10 +131,16 @@ export const NewBookmarkComponent = () => {
                 <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
                   <div className="space-y-0.5">
                     <FormLabel>Read</FormLabel>
-                    <FormDescription>If marked as unread, it will show up in the unread list.</FormDescription>
+                    <FormDescription>
+                      If marked as unread, it will show up in the unread list.
+                    </FormDescription>
                   </div>
                   <FormControl>
-                    <Switch checked={field.value} onCheckedChange={field.onChange} disabled={isPending} />
+                    <Switch
+                      checked={field.value}
+                      disabled={isPending}
+                      onCheckedChange={field.onChange}
+                    />
                   </FormControl>
                 </FormItem>
               )}
@@ -134,9 +154,9 @@ export const NewBookmarkComponent = () => {
                   <FormLabel>Tags which have this bookmark</FormLabel>
                   <FormControl>
                     <EditPagesForBookmark
-                      pages={field.value}
-                      onChange={ids => field.onChange(ids)}
                       disabled={isPending}
+                      onChange={(ids) => field.onChange(ids)}
+                      pages={field.value}
                     />
                   </FormControl>
                 </FormItem>
@@ -146,10 +166,19 @@ export const NewBookmarkComponent = () => {
         </Form>
       </CardContent>
       <CardFooter className="flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2">
-        <Button variant="secondary" onClick={() => router.push('/bookmarks')} disabled={isPending}>
+        <Button
+          disabled={isPending}
+          onClick={() => router.push('/bookmarks')}
+          variant="secondary"
+        >
           Cancel
         </Button>
-        <Button variant="default" type="submit" form={formId} disabled={isPending}>
+        <Button
+          disabled={isPending}
+          form={formId}
+          type="submit"
+          variant="default"
+        >
           {isPending ? 'Creating...' : 'Save'}
         </Button>
       </CardFooter>

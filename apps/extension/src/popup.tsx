@@ -5,7 +5,10 @@ import { browser } from 'browser-namespace'
 import { useEffect, useState } from 'react'
 import { supabase } from '~core/supabase'
 
-const sendTabsToRememr = async (tabCount: 'single' | 'all', readLater: boolean) => {
+const sendTabsToRememr = async (
+  tabCount: 'single' | 'all',
+  readLater: boolean
+) => {
   try {
     const {
       data: { user },
@@ -15,10 +18,13 @@ const sendTabsToRememr = async (tabCount: 'single' | 'all', readLater: boolean) 
       throw userError
     }
 
-    const tabs = await browser.tabs.query({ currentWindow: true, ...(tabCount === 'all' ? {} : { active: true }) })
+    const tabs = await browser.tabs.query({
+      currentWindow: true,
+      ...(tabCount === 'all' ? {} : { active: true }),
+    })
     const bookmarks = tabs
-      .filter(tab => tab.url && tab.title)
-      .map(tab => ({
+      .filter((tab) => tab.url && tab.title)
+      .map((tab) => ({
         user_id: user.id,
         url: tab.url!,
         name: tab.title!,
@@ -27,8 +33,10 @@ const sendTabsToRememr = async (tabCount: 'single' | 'all', readLater: boolean) 
 
     const { error } = await supabase.from('bookmarks').insert(bookmarks)
 
-    if (error) throw error
-    browser.tabs.remove(tabs.map(tab => tab.id))
+    if (error) {
+      throw error
+    }
+    browser.tabs.remove(tabs.map((tab) => tab.id))
   } catch (error) {
     console.error('Error sending tabs:', error)
     alert('Failed to send tabs to rememr.com')
@@ -47,8 +55,8 @@ const saveTabsAsSession = async () => {
 
     const tabs = await browser.tabs.query({ currentWindow: true })
     const bookmarks = tabs
-      .filter(tab => tab.url && tab.title)
-      .map(tab => ({
+      .filter((tab) => tab.url && tab.title)
+      .map((tab) => ({
         user_id: user.id,
         url: tab.url!,
         name: tab.title!,
@@ -79,13 +87,16 @@ const saveTabsAsSession = async () => {
       .select('id')
       .throwOnError()
 
-    const bookmarksSessions = bookmarkIds.map(bookmarkId => ({
+    const bookmarksSessions = bookmarkIds.map((bookmarkId) => ({
       bookmark_id: bookmarkId.id,
       session_id: session.id,
     }))
-    await supabase.from('bookmarks_sessions').insert(bookmarksSessions).throwOnError()
+    await supabase
+      .from('bookmarks_sessions')
+      .insert(bookmarksSessions)
+      .throwOnError()
 
-    browser.tabs.remove(tabs.map(tab => tab.id))
+    browser.tabs.remove(tabs.map((tab) => tab.id))
   } catch (error) {
     console.error('Error saving a session:', error)
     alert('Failed to save a session' + error)
@@ -110,17 +121,25 @@ function IndexPopup() {
     <div className="flex w-80">
       {isLoggedIn ? (
         <div className="flex flex-1 flex-col">
-          <Button variant="ghost" onClick={() => saveTabsAsSession()} className="justify-start rounded-none">
+          <Button
+            className="justify-start rounded-none"
+            onClick={() => saveTabsAsSession()}
+            variant="ghost"
+          >
             Save all tabs as a session for reading later
           </Button>
           <Button
-            variant="ghost"
-            onClick={() => sendTabsToRememr('single', true)}
             className="justify-start rounded-none"
+            onClick={() => sendTabsToRememr('single', true)}
+            variant="ghost"
           >
             Save this tab for reading later
           </Button>
-          <Button variant="ghost" onClick={() => sendTabsToRememr('all', true)} className="justify-start rounded-none">
+          <Button
+            className="justify-start rounded-none"
+            onClick={() => sendTabsToRememr('all', true)}
+            variant="ghost"
+          >
             Save all tabs for reading later
           </Button>
           {/* <DropdownMenuSeparator className="bg-foreground mx-0 my-0" />
@@ -137,10 +156,14 @@ function IndexPopup() {
         </div>
       ) : (
         <div className="flex flex-1 flex-col justify-center gap-4 px-4 py-4">
-          <p className="text-sm font-semibold">
-            You need to login to your Rememr account to be able to save your tabs.
+          <p className="font-semibold text-sm">
+            You need to login to your Rememr account to be able to save your
+            tabs.
           </p>
-          <Button variant="default" onClick={() => browser.runtime.openOptionsPage()}>
+          <Button
+            onClick={() => browser.runtime.openOptionsPage()}
+            variant="default"
+          >
             Login on rememr.com
           </Button>
         </div>

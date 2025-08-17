@@ -1,6 +1,5 @@
 'use client'
 
-import { BookmarkWithTags } from '@/app/(dashboard)/bookmarks/list-all-bookmarks-query'
 import {
   Button,
   Dialog,
@@ -14,6 +13,7 @@ import {
 } from '@rememr/ui'
 import { EllipsisVertical, Pen, Trash2 } from 'lucide-react'
 import { useState } from 'react'
+import type { BookmarkWithTags } from '@/app/(dashboard)/bookmarks/list-all-bookmarks-query'
 import { DeleteBookmarkDialog } from '../delete-bookmark'
 import { EditBookmarkDialog } from '../edit-bookmark'
 import { ChatDropdownMenuItem } from './chat-dropdown-menu-item'
@@ -23,36 +23,44 @@ const MAX_NAME_LENGTH = 60
 
 export const BookmarkRow = (props: { bookmark: BookmarkWithTags }) => {
   const [editBookmarkDialogShown, setEditBookmarkDialogShown] = useState(false)
-  const [deleteBookmarkDialogShown, setDeleteBookmarkDialogShown] = useState(false)
+  const [deleteBookmarkDialogShown, setDeleteBookmarkDialogShown] =
+    useState(false)
 
   const bookmark = props.bookmark
   let hostname = ''
   // new URL can throw and make the whole page unresponsive
   try {
     hostname = new URL(bookmark.url).hostname.replace('www.', '')
+    // biome-ignore lint/suspicious/noEmptyBlockStatements: <explanation>
   } catch {}
 
   const truncatedName =
-    bookmark.name.length > MAX_NAME_LENGTH ? `${bookmark.name.slice(0, MAX_NAME_LENGTH)}...` : bookmark.name
+    bookmark.name.length > MAX_NAME_LENGTH
+      ? `${bookmark.name.slice(0, MAX_NAME_LENGTH)}...`
+      : bookmark.name
 
-  const tags = bookmark.bookmarks_tags.map(bt => bt.tags)
+  const tags = bookmark.bookmarks_tags.map((bt) => bt.tags)
 
   return (
     <>
       <TableRow>
         <TableCell className="w-8">
           <img
-            className="w-5 object-contain"
             alt=""
-            src={`https://s2.googleusercontent.com/s2/favicons?domain=${hostname}&sz=16`}
-            onError={e => {
+            className="w-5 object-contain"
+            onError={(e) => {
               e.currentTarget.onerror = null
               e.currentTarget.src = '/images/globe.png'
             }}
+            src={`https://s2.googleusercontent.com/s2/favicons?domain=${hostname}&sz=16`}
           />
         </TableCell>
         <TableCell className="font-medium">
-          <a className="text-foreground hover:underline" href={bookmark.url} title={bookmark.name}>
+          <a
+            className="text-foreground hover:underline"
+            href={bookmark.url}
+            title={bookmark.name}
+          >
             {truncatedName}
           </a>
         </TableCell>
@@ -64,21 +72,27 @@ export const BookmarkRow = (props: { bookmark: BookmarkWithTags }) => {
           <div className="flex items-center justify-end gap-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button size="icon" variant="outline" className="h-8 w-8">
-                  <EllipsisVertical strokeWidth={2.5} className="h-4 w-4" />
+                <Button className="h-8 w-8" size="icon" variant="outline">
+                  <EllipsisVertical className="h-4 w-4" strokeWidth={2.5} />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" forceMount>
-                <ChatDropdownMenuItem bookmarkTitle={bookmark.name} bookmarkUrl={bookmark.url} />
-                <DropdownMenuItem className="flex items-center gap-2" onClick={() => setEditBookmarkDialogShown(true)}>
-                  <Pen strokeWidth={2.5} className="h-4 w-4" />
+                <ChatDropdownMenuItem
+                  bookmarkTitle={bookmark.name}
+                  bookmarkUrl={bookmark.url}
+                />
+                <DropdownMenuItem
+                  className="flex items-center gap-2"
+                  onClick={() => setEditBookmarkDialogShown(true)}
+                >
+                  <Pen className="h-4 w-4" strokeWidth={2.5} />
                   <span>Edit</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  className="text-destructive flex items-center gap-2"
+                  className="flex items-center gap-2 text-destructive"
                   onClick={() => setDeleteBookmarkDialogShown(true)}
                 >
-                  <Trash2 strokeWidth={2.5} className="h-4 w-4" />
+                  <Trash2 className="h-4 w-4" strokeWidth={2.5} />
                   <span>Delete</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -87,16 +101,31 @@ export const BookmarkRow = (props: { bookmark: BookmarkWithTags }) => {
         </TableCell>
       </TableRow>
 
-      <Dialog open={editBookmarkDialogShown} onOpenChange={open => setEditBookmarkDialogShown(open)}>
+      <Dialog
+        onOpenChange={(open) => setEditBookmarkDialogShown(open)}
+        open={editBookmarkDialogShown}
+      >
         <DialogContent>
-          <EditBookmarkDialog bookmark={bookmark} onClose={() => setEditBookmarkDialogShown(false)} />
+          <EditBookmarkDialog
+            bookmark={bookmark}
+            onClose={() => setEditBookmarkDialogShown(false)}
+          />
         </DialogContent>
       </Dialog>
-      <Dialog open={deleteBookmarkDialogShown} onOpenChange={open => setDeleteBookmarkDialogShown(open)}>
+      <Dialog
+        onOpenChange={(open) => setDeleteBookmarkDialogShown(open)}
+        open={deleteBookmarkDialogShown}
+      >
         <DialogContent>
-          <DeleteBookmarkDialog bookmark={bookmark} onClose={() => setDeleteBookmarkDialogShown(false)} />
+          <DeleteBookmarkDialog
+            bookmark={bookmark}
+            onClose={() => setDeleteBookmarkDialogShown(false)}
+          />
         </DialogContent>
       </Dialog>
     </>
   )
 }
+
+// biome-ignore lint/performance/noBarrelFile: reexport
+export { LoadingBookmarkRow } from './loading-bookmark-row'

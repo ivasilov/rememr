@@ -1,13 +1,11 @@
 import '@rememr/ui/globals.css'
 
-import type { User } from '@supabase/supabase-js'
-import { useEffect, useState } from 'react'
-
 import { sendToBackground } from '@plasmohq/messaging'
 import { Storage } from '@plasmohq/storage'
 import { useStorage } from '@plasmohq/storage/hook'
-
 import { Button, Input, Label } from '@rememr/ui'
+import type { User } from '@supabase/supabase-js'
+import { useEffect, useState } from 'react'
 import { supabase } from '~core/supabase'
 
 function IndexOptions() {
@@ -29,7 +27,7 @@ function IndexOptions() {
         console.error(error)
         return
       }
-      if (!!data.session) {
+      if (data.session) {
         setUser(data.session.user)
         sendToBackground({
           name: 'init-session',
@@ -37,7 +35,7 @@ function IndexOptions() {
             refresh_token: data.session.refresh_token,
             access_token: data.session.access_token,
           },
-        })
+        } as any)
       }
     }
 
@@ -66,7 +64,7 @@ function IndexOptions() {
   }
 
   return (
-    <main className="align-center flex h-screen items-center justify-center">
+    <main className="flex h-screen items-center justify-center align-center">
       <div className="flex h-fit flex-col gap-4">
         {user && (
           <>
@@ -88,10 +86,10 @@ function IndexOptions() {
             <div>
               <Label>Email</Label>
               <Input
-                type="text"
+                onChange={(e) => setUsername(e.target.value)}
                 placeholder="Your Username"
+                type="text"
                 value={username}
-                onChange={e => setUsername(e.target.value)}
               />
             </div>
 
@@ -99,14 +97,16 @@ function IndexOptions() {
               <Label>Password</Label>
 
               <Input
-                type="password"
+                onChange={(e) => setPassword(e.target.value)}
                 placeholder="Your password"
+                type="password"
                 value={password}
-                onChange={e => setPassword(e.target.value)}
               />
             </div>
 
-            <Button onClick={() => handleEmailLogin(username, password)}>Login</Button>
+            <Button onClick={() => handleEmailLogin(username, password)}>
+              Login
+            </Button>
           </>
         )}
       </div>

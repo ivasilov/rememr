@@ -7,16 +7,20 @@ import {
   CommandItem,
   CommandList,
   CommandSeparator,
+  cn,
   Popover,
   PopoverContent,
   PopoverTrigger,
-  cn,
 } from '@rememr/ui'
 import { useRouter } from 'next/navigation'
 import { useQueryState } from 'nuqs'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-export const SearchInputInner = ({ tags }: { tags: { id: string; name: string }[] }) => {
+export const SearchInputInner = ({
+  tags,
+}: {
+  tags: { id: string; name: string }[]
+}) => {
   const router = useRouter()
   const [searchQuery, setSearchQuery] = useQueryState('q')
   const [searchTerm, setSearchTerm] = useState(searchQuery)
@@ -34,10 +38,12 @@ export const SearchInputInner = ({ tags }: { tags: { id: string; name: string }[
         setSearchQuery(null, { shallow: false, scroll: false })
       }
     },
-    [searchQuery, setSearchQuery],
+    [searchQuery, setSearchQuery]
   )
 
-  const filteredTags = tags.filter(tag => tag.name.includes(searchTerm ?? '')).slice(0, 4)
+  const filteredTags = tags
+    .filter((tag) => tag.name.includes(searchTerm ?? ''))
+    .slice(0, 4)
 
   // Focus the input when the user presses cmd+k
   useEffect(() => {
@@ -56,21 +62,28 @@ export const SearchInputInner = ({ tags }: { tags: { id: string; name: string }[
     <div className="w-full flex-1">
       <div className="relative">
         <Command
+          className={cn(
+            'transition-width duration-300 ease-in-out',
+            open ? 'md:w-full lg:w-2/3' : 'md:w-2/3 lg:w-1/3'
+          )}
           shouldFilter={false}
-          className={cn(`transition-width duration-300 ease-in-out`, open ? 'md:w-full lg:w-2/3' : `md:w-2/3 lg:w-1/3`)}
         >
           <CommandInput
+            className="shadow-none"
+            onBlur={() => setOpen(false)}
+            onFocus={() => setOpen(true)}
+            onValueChange={setSearchTerm}
             placeholder="Search bookmarks..."
             ref={inputRef}
-            className="shadow-none"
-            onValueChange={setSearchTerm}
             value={searchTerm ?? ''}
-            onFocus={() => setOpen(true)}
-            onBlur={() => setOpen(false)}
           />
-          <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger></PopoverTrigger>
-            <PopoverContent className="w-[200px] p-0" onOpenAutoFocus={e => e.preventDefault()} sameWidthAsTrigger>
+          <Popover onOpenChange={setOpen} open={open}>
+            <PopoverTrigger />
+            <PopoverContent
+              className="w-[200px] p-0"
+              onOpenAutoFocus={(e) => e.preventDefault()}
+              sameWidthAsTrigger
+            >
               <CommandList>
                 {(searchTerm || '').length > 0 && (
                   <CommandGroup heading="Bookmarks">
@@ -89,7 +102,7 @@ export const SearchInputInner = ({ tags }: { tags: { id: string; name: string }[
                   <>
                     <CommandSeparator />
                     <CommandGroup heading="Tags">
-                      {filteredTags.map(tag => (
+                      {filteredTags.map((tag) => (
                         <CommandItem
                           key={tag.id}
                           onSelect={() => {

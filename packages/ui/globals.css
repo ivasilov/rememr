@@ -1,10 +1,13 @@
-@import 'tailwindcss';
-@import 'tw-animate-css';
+@import "tailwindcss";
+@import "tw-animate-css";
 
+/* biome-ignore lint/suspicious/noUnknownAtRules: <explanation> */
 @source './src';
 
+/* biome-ignore lint/suspicious/noUnknownAtRules: <explanation> */
 @custom-variant dark (&:is(.dark *));
 
+/* biome-ignore lint/suspicious/noUnknownAtRules: <explanation> */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -125,11 +128,16 @@
   --radius: 0rem;
   --shadow-2xs: 0px 1px 0px 0px hsl(0 0% 10.2% / 0);
   --shadow-xs: 0px 1px 0px 0px hsl(0 0% 10.2% / 0);
-  --shadow-sm: 0px 1px 0px 0px hsl(0 0% 10.2% / 0), 0px 1px 2px -1px hsl(0 0% 10.2% / 0);
-  --shadow: 0px 1px 0px 0px hsl(0 0% 10.2% / 0), 0px 1px 2px -1px hsl(0 0% 10.2% / 0);
-  --shadow-md: 0px 1px 0px 0px hsl(0 0% 10.2% / 0), 0px 2px 4px -1px hsl(0 0% 10.2% / 0);
-  --shadow-lg: 0px 1px 0px 0px hsl(0 0% 10.2% / 0), 0px 4px 6px -1px hsl(0 0% 10.2% / 0);
-  --shadow-xl: 0px 1px 0px 0px hsl(0 0% 10.2% / 0), 0px 8px 10px -1px hsl(0 0% 10.2% / 0);
+  --shadow-sm:
+    0px 1px 0px 0px hsl(0 0% 10.2% / 0), 0px 1px 2px -1px hsl(0 0% 10.2% / 0);
+  --shadow:
+    0px 1px 0px 0px hsl(0 0% 10.2% / 0), 0px 1px 2px -1px hsl(0 0% 10.2% / 0);
+  --shadow-md:
+    0px 1px 0px 0px hsl(0 0% 10.2% / 0), 0px 2px 4px -1px hsl(0 0% 10.2% / 0);
+  --shadow-lg:
+    0px 1px 0px 0px hsl(0 0% 10.2% / 0), 0px 4px 6px -1px hsl(0 0% 10.2% / 0);
+  --shadow-xl:
+    0px 1px 0px 0px hsl(0 0% 10.2% / 0), 0px 8px 10px -1px hsl(0 0% 10.2% / 0);
   --shadow-2xl: 0px 1px 0px 0px hsl(0 0% 10.2% / 0);
   --tracking-normal: 0;
 }
@@ -173,23 +181,31 @@
   --radius: 0rem;
   --shadow-2xs: 0px 1px 0px 0px hsl(0 0% 10.2% / 0);
   --shadow-xs: 0px 1px 0px 0px hsl(0 0% 10.2% / 0);
-  --shadow-sm: 0px 1px 0px 0px hsl(0 0% 10.2% / 0), 0px 1px 2px -1px hsl(0 0% 10.2% / 0);
-  --shadow: 0px 1px 0px 0px hsl(0 0% 10.2% / 0), 0px 1px 2px -1px hsl(0 0% 10.2% / 0);
-  --shadow-md: 0px 1px 0px 0px hsl(0 0% 10.2% / 0), 0px 2px 4px -1px hsl(0 0% 10.2% / 0);
-  --shadow-lg: 0px 1px 0px 0px hsl(0 0% 10.2% / 0), 0px 4px 6px -1px hsl(0 0% 10.2% / 0);
-  --shadow-xl: 0px 1px 0px 0px hsl(0 0% 10.2% / 0), 0px 8px 10px -1px hsl(0 0% 10.2% / 0);
+  --shadow-sm:
+    0px 1px 0px 0px hsl(0 0% 10.2% / 0), 0px 1px 2px -1px hsl(0 0% 10.2% / 0);
+  --shadow:
+    0px 1px 0px 0px hsl(0 0% 10.2% / 0), 0px 1px 2px -1px hsl(0 0% 10.2% / 0);
+  --shadow-md:
+    0px 1px 0px 0px hsl(0 0% 10.2% / 0), 0px 2px 4px -1px hsl(0 0% 10.2% / 0);
+  --shadow-lg:
+    0px 1px 0px 0px hsl(0 0% 10.2% / 0), 0px 4px 6px -1px hsl(0 0% 10.2% / 0);
+  --shadow-xl:
+    0px 1px 0px 0px hsl(0 0% 10.2% / 0), 0px 8px 10px -1px hsl(0 0% 10.2% / 0);
   --shadow-2xl: 0px 1px 0px 0px hsl(0 0% 10.2% / 0);
 }
 
 @layer base {
   * {
+    /* biome-ignore lint/suspicious/noUnknownAtRules: <explanation> */
     @apply border-border outline-ring/50;
   }
   body {
+    /* biome-ignore lint/suspicious/noUnknownAtRules: <explanation> */
     @apply bg-background text-foreground;
   }
 }
 
+/* biome-ignore lint/suspicious/noUnknownAtRules: <explanation> */
 @utility container {
   margin-inline: auto;
   padding-inline: 2rem;

@@ -1,6 +1,6 @@
-import { Toaster, cn } from '@rememr/ui'
+import { cn, Toaster } from '@rememr/ui'
 import { Geist_Mono } from 'next/font/google'
-import { ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import { Providers } from './providers'
 
 import './globals.css'
@@ -30,11 +30,18 @@ const geistSerif = Geist_Mono({
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <head>
-        <meta name="apple-mobile-web-app-title" content="rememr" />
+        <meta content="rememr" name="apple-mobile-web-app-title" />
       </head>
-      <body className={cn(geistSans.variable, geistMono.variable, geistSerif.variable, 'antialiased')}>
+      <body
+        className={cn(
+          geistSans.variable,
+          geistMono.variable,
+          geistSerif.variable,
+          'antialiased'
+        )}
+      >
         <Providers>
           {children}
           <Toaster position="top-right" />

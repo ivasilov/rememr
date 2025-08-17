@@ -1,5 +1,4 @@
 'use client'
-import { EditPagesForBookmark } from '@/components/edit-pages-for-bookmark'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   Button,
@@ -22,38 +21,51 @@ import {
 import { capitalize } from 'lodash'
 import { Loader2 } from 'lucide-react'
 import { useState } from 'react'
-import { SubmitHandler, useForm } from 'react-hook-form'
+import { type SubmitHandler, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { ZodError, z } from 'zod'
+import { EditPagesForBookmark } from '@/components/edit-pages-for-bookmark'
 import { importOnetabBookmarks } from './importers/onetab'
 import { importPinboardBookmarks } from './importers/pinboard'
 
 const FormSchema = z.object({
   file: z.any(),
-  tags: z.array(z.object({ id: z.string().optional(), name: z.string().trim().min(1) })),
+  tags: z.array(
+    z.object({ id: z.string().optional(), name: z.string().trim().min(1) })
+  ),
   unread: z.boolean().optional(),
 })
 
 const FormId = 'import-bookmarks-form'
 
 export const Imports = () => {
-  const [state, setState] = useState<{ dialogShown: boolean; type: string | undefined }>({
+  const [state, setState] = useState<{
+    dialogShown: boolean
+    type: string | undefined
+  }>({
     dialogShown: false,
     type: undefined,
   })
 
   return (
     <>
-      <Button onClick={() => setState({ dialogShown: true, type: 'pinboard' })}>Import from Pinboard</Button>
-      <Button onClick={() => setState({ dialogShown: true, type: 'onetab' })}>Import from Onetab</Button>
+      <Button onClick={() => setState({ dialogShown: true, type: 'pinboard' })}>
+        Import from Pinboard
+      </Button>
+      <Button onClick={() => setState({ dialogShown: true, type: 'onetab' })}>
+        Import from Onetab
+      </Button>
       <Dialog
-        open={state.dialogShown && (state.type === 'pinboard' || state.type === 'onetab')}
         onOpenChange={() => setState({ ...state, dialogShown: false })}
+        open={
+          state.dialogShown &&
+          (state.type === 'pinboard' || state.type === 'onetab')
+        }
       >
         <DialogContent>
           <UploadDialog
-            type={state.type as 'pinboard' | 'onetab'}
             onClose={() => setState({ ...state, dialogShown: false })}
+            type={state.type as 'pinboard' | 'onetab'}
           />
         </DialogContent>
       </Dialog>
@@ -61,7 +73,10 @@ export const Imports = () => {
   )
 }
 
-const UploadDialog = (props: { type: 'pinboard' | 'onetab'; onClose: () => void }) => {
+const UploadDialog = (props: {
+  type: 'pinboard' | 'onetab'
+  onClose: () => void
+}) => {
   const [loading, setLoading] = useState(false)
   const [progress, setProgress] = useState({ current: 0, max: 0 })
 
@@ -73,7 +88,11 @@ const UploadDialog = (props: { type: 'pinboard' | 'onetab'; onClose: () => void 
     },
   })
 
-  const onSubmit: SubmitHandler<z.infer<typeof FormSchema>> = async ({ file, unread, tags }) => {
+  const onSubmit: SubmitHandler<z.infer<typeof FormSchema>> = async ({
+    file,
+    unread,
+    tags,
+  }) => {
     setLoading(true)
 
     try {
@@ -81,14 +100,21 @@ const UploadDialog = (props: { type: 'pinboard' | 'onetab'; onClose: () => void 
         const text = await file.text()
 
         if (props.type === 'onetab') {
-          const count = await importOnetabBookmarks(text, { tags: tags.map(t => t.name), unread: !!unread })
+          const count = await importOnetabBookmarks(text, {
+            tags: tags.map((t) => t.name),
+            unread: !!unread,
+          })
           toast.success(`Successfully imported ${count} bookmarks`)
           props.onClose()
         }
         if (props.type === 'pinboard') {
-          const count = await importPinboardBookmarks(text, { tags: tags.map(t => t.name) }, (current, max) => {
-            setProgress({ current, max })
-          })
+          const count = await importPinboardBookmarks(
+            text,
+            { tags: tags.map((t) => t.name) },
+            (current, max) => {
+              setProgress({ current, max })
+            }
+          )
           toast.success(`Successfully imported ${count} bookmarks`)
           props.onClose()
         }
@@ -108,9 +134,16 @@ const UploadDialog = (props: { type: 'pinboard' | 'onetab'; onClose: () => void 
     }
   }
 
-  const progressPercentage = progress.current && progress.max > 0 ? (progress.current / progress.max) * 100 : 0
+  const progressPercentage =
+    progress.current && progress.max > 0
+      ? (progress.current / progress.max) * 100
+      : 0
 
-  const stage = loading ? 'loading' : progress.current > 0 ? 'finished' : 'start'
+  const stage = loading
+    ? 'loading'
+    : progress.current > 0
+      ? 'finished'
+      : 'start'
 
   return (
     <>
@@ -120,7 +153,11 @@ const UploadDialog = (props: { type: 'pinboard' | 'onetab'; onClose: () => void 
       <div>
         {stage === 'start' && (
           <Form {...form}>
-            <form id={FormId} onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form
+              className="space-y-4"
+              id={FormId}
+              onSubmit={form.handleSubmit(onSubmit)}
+            >
               <FormField
                 control={form.control}
                 name="file"
@@ -130,12 +167,16 @@ const UploadDialog = (props: { type: 'pinboard' | 'onetab'; onClose: () => void 
                     <FormControl>
                       <Input
                         id="file-upload"
-                        type="file"
-                        onChange={e => {
-                          if (e && e.target && e.target.validity.valid && e.target.files && e.target.files[0]) {
+                        onChange={(e) => {
+                          if (
+                            e?.target?.validity.valid &&
+                            e.target.files &&
+                            e.target.files[0]
+                          ) {
                             field.onChange(e.target.files[0])
                           }
                         }}
+                        type="file"
                       />
                     </FormControl>
                     <FormMessage />
@@ -147,9 +188,14 @@ const UploadDialog = (props: { type: 'pinboard' | 'onetab'; onClose: () => void 
                 name="tags"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Additional tags for the newly imported bookmarks</FormLabel>
+                    <FormLabel>
+                      Additional tags for the newly imported bookmarks
+                    </FormLabel>
                     <FormControl>
-                      <EditPagesForBookmark pages={field.value} onChange={ps => field.onChange(ps)} />
+                      <EditPagesForBookmark
+                        onChange={(ps) => field.onChange(ps)}
+                        pages={field.value}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -163,10 +209,16 @@ const UploadDialog = (props: { type: 'pinboard' | 'onetab'; onClose: () => void 
                     <FormItem className="flex flex-row items-center justify-between space-y-0">
                       <div className="h-full space-y-0.5">
                         <FormLabel>Read</FormLabel>
-                        <FormDescription>If marked as unread, it will show up in the unread list.</FormDescription>
+                        <FormDescription>
+                          If marked as unread, it will show up in the unread
+                          list.
+                        </FormDescription>
                       </div>
                       <FormControl>
-                        <Switch checked={field.value} onCheckedChange={field.onChange} />
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
                       </FormControl>
                     </FormItem>
                   )}
@@ -179,7 +231,8 @@ const UploadDialog = (props: { type: 'pinboard' | 'onetab'; onClose: () => void 
         {stage === 'loading' && (
           <>
             <span>
-              Imported {progress.current} out of {progress.max} bookmarks so far.
+              Imported {progress.current} out of {progress.max} bookmarks so
+              far.
             </span>
             <div>
               <Progress value={progressPercentage} />
@@ -187,15 +240,16 @@ const UploadDialog = (props: { type: 'pinboard' | 'onetab'; onClose: () => void 
           </>
         )}
         {stage === 'finished' && (
-          <>
-            <span>
-              Successfully imported {progress.current} out of {progress.max} bookmarks.
-            </span>
-          </>
+          <span>
+            Successfully imported {progress.current} out of {progress.max}{' '}
+            bookmarks.
+          </span>
         )}
       </div>
       <DialogFooter>
-        {(stage === 'start' || stage === 'loading') && <Button onClick={props.onClose}>Cancel</Button>}
+        {(stage === 'start' || stage === 'loading') && (
+          <Button onClick={props.onClose}>Cancel</Button>
+        )}
         {stage === 'start' && <Button form={FormId}>Save</Button>}
         {stage === 'loading' && (
           <Button disabled>

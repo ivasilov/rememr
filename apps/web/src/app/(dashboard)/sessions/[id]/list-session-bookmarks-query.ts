@@ -1,8 +1,16 @@
-import { BookmarkWithTags } from '../../bookmarks/list-all-bookmarks-query'
+import {
+  type GetNextPageParamFunction,
+  type InfiniteData,
+  infiniteQueryOptions,
+  useInfiniteQuery,
+} from '@tanstack/react-query'
 import { createClient } from '@/lib/supabase/client'
-import { GetNextPageParamFunction, InfiniteData, infiniteQueryOptions, useInfiniteQuery } from '@tanstack/react-query'
+import type { BookmarkWithTags } from '../../bookmarks/list-all-bookmarks-query'
 
-const queryKey = (searchQuery: string | null, sessionId: string) => ['bookmarks', { searchQuery, sessionId }]
+const queryKey = (searchQuery: string | null, sessionId: string) => [
+  'bookmarks',
+  { searchQuery, sessionId },
+]
 
 // The range starts from 0 to 19, so we need to subtract 1 from the skip to get the correct range of 20 items
 const PAGE_SIZE = 19
@@ -14,18 +22,17 @@ const queryFn = async ({
   pageParam: number
   queryKey: (string | { searchQuery: string | null; sessionId: string })[]
 }) => {
-  let searchQuery: string | undefined = undefined
-  let sessionId: string = ''
-  if (queryKey.length === 2) {
-    if (typeof queryKey[1] !== 'string') {
-      searchQuery = queryKey[1].searchQuery ? queryKey[1].searchQuery : undefined
-      sessionId = queryKey[1].sessionId
-    }
+  let searchQuery: string | undefined
+  let sessionId = ''
+  if (queryKey.length === 2 && typeof queryKey[1] !== 'string') {
+    searchQuery = queryKey[1].searchQuery ? queryKey[1].searchQuery : undefined
+    sessionId = queryKey[1].sessionId
   }
 
   let query = supabaseClient
     .from('bookmarks')
-    .select(`
+    .select(
+      `
       *, 
       bookmarks_sessions!inner(),
       bookmarks_tags (
@@ -34,7 +41,9 @@ const queryFn = async ({
           name
         )
       )
-    `, { count: 'exact' })
+    `,
+      { count: 'exact' }
+    )
     .in('bookmarks_sessions.session_id', [sessionId])
 
   if (searchQuery && searchQuery.length > 0) {
@@ -58,7 +67,7 @@ const getNextPageParam: GetNextPageParamFunction<
     count: number
   }
 > = (_, pages) => {
-  const bookmarks = pages.flatMap(p => p.data)
+  const bookmarks = pages.flatMap((p) => p.data)
   return bookmarks.length
 }
 
@@ -70,22 +79,28 @@ const selectData = (
       count: number
     },
     number
-  >,
+  >
 ) => {
-  return { bookmarks: data.pages.flatMap(p => p.data), count: data.pages[0].count }
+  return {
+    bookmarks: data.pages.flatMap((p) => p.data),
+    count: data.pages[0].count,
+  }
 }
 
 export const queryOptions = (searchQuery: string | null, sessionId: string) => {
   return infiniteQueryOptions({
     queryKey: queryKey(searchQuery, sessionId),
-    queryFn: queryFn,
+    queryFn,
     staleTime: 5000,
-    getNextPageParam: getNextPageParam,
+    getNextPageParam,
     initialPageParam: 0,
     select: selectData,
   })
 }
 
-export const useListSessionBookmarksQuery = (searchQuery: string | null, sessionId: string) => {
+export const useListSessionBookmarksQuery = (
+  searchQuery: string | null,
+  sessionId: string
+) => {
   return useInfiniteQuery(queryOptions(searchQuery, sessionId))
 }
