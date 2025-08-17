@@ -9,7 +9,7 @@
     "build": "plasmo build",
     "package": "plasmo package",
     "test:types": "tsc --noEmit",
-    "generate:types": "supabase gen types typescript --local > src/lib/database.types.ts && prettier --write src/lib/database.types.ts",
+    "generate:types": "supabase gen types typescript --local > src/lib/database.types.ts && biome format --write src/lib/database.types.ts",
     "clean": "rimraf node_modules .plasmo build"
   },
   "dependencies": {

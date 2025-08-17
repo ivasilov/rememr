@@ -6,7 +6,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "generate:types": "supabase gen types typescript --local > src/lib/database.types.ts && prettier --write src/lib/database.types.ts",
+    "generate:types": "supabase gen types typescript --local > src/lib/database.types.ts && biome format --write src/lib/database.types.ts",
     "test:types": "tsc --noEmit",
     "clean": "rimraf node_modules .next"
   },
