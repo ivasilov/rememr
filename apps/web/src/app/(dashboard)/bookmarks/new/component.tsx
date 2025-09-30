@@ -52,6 +52,7 @@ export const NewBookmarkComponent = () => {
       name: searchParams.get('title') || '',
       url: searchParams.get('url') || '',
       description: '',
+      tagIds: [],
     },
   })
 
