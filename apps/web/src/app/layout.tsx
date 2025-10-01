@@ -44,7 +44,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       >
         <Providers>
           {children}
-          <Toaster position="top-right" closeButton={true} />
+          <Toaster closeButton={true} position="top-right" />
         </Providers>
       </body>
     </html>

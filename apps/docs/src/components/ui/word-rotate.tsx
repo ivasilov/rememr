@@ -1,9 +1,8 @@
 'use client'
 
-import { AnimatePresence, motion, MotionProps } from 'motion/react'
-import { useEffect, useState } from 'react'
-
 import { cn } from '@rememr/ui'
+import { AnimatePresence, type MotionProps, motion } from 'motion/react'
+import { useEffect, useState } from 'react'
 
 interface WordRotateProps {
   words: string[]
@@ -27,7 +26,7 @@ export function WordRotate({
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setIndex(prevIndex => (prevIndex + 1) % words.length)
+      setIndex((prevIndex) => (prevIndex + 1) % words.length)
     }, duration)
 
     // Clean up interval on unmount
@@ -35,9 +34,13 @@ export function WordRotate({
   }, [words, duration])
 
   return (
-    <span className="text-primary overflow-hidden">
+    <span className="overflow-hidden text-primary">
       <AnimatePresence mode="wait">
-        <motion.strong key={words[index]} className={cn(className)} {...motionProps}>
+        <motion.strong
+          className={cn(className)}
+          key={words[index]}
+          {...motionProps}
+        >
           {words[index]}
         </motion.strong>
       </AnimatePresence>

@@ -1,15 +1,15 @@
 'use client'
 import { ThemeProvider } from 'next-themes'
-import { PropsWithChildren } from 'react'
+import type { PropsWithChildren } from 'react'
 
-export const Providers = ({ children }: PropsWithChildren<{}>) => {
+export const Providers = ({ children }: PropsWithChildren<void>) => {
   return (
     <ThemeProvider
       attribute="class"
-      enableSystem
-      themes={['light', 'dark']}
       defaultTheme="light"
+      enableSystem
       storageKey="rememr-theme-key"
+      themes={['light', 'dark']}
     >
       {children}
     </ThemeProvider>

@@ -1,6 +1,11 @@
 'use client'
 
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@rememr/ui'
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@rememr/ui'
 
 const faqItems = [
   {
@@ -11,7 +16,8 @@ const faqItems = [
   },
   {
     id: 'item-2',
-    question: 'Why should I use rememr when AI can build me an app for my specific needs?',
+    question:
+      'Why should I use rememr when AI can build me an app for my specific needs?',
     answer:
       'We believe that AI is a great tool to help you manage your bookmarks, but it is not a replacement for a human. We want to provide a tool that is easy to use and that you can trust.',
   },
@@ -28,17 +34,23 @@ export default function FAQs() {
     <section className="bg-transparent py-16 md:py-24">
       <div className="mx-auto max-w-5xl px-4 md:px-6">
         <div>
-          <h2 className="text-foreground text-4xl font-semibold">Frequently Asked Questions</h2>
+          <h2 className="font-semibold text-4xl text-foreground">
+            Frequently Asked Questions
+          </h2>
         </div>
 
         <div className="mt-12">
           <Accordion
-            type="single"
+            className="w-full rounded-(--radius) border border-transparent bg-card px-8 py-3 shadow ring-1 ring-foreground/5"
             collapsible
-            className="bg-card ring-foreground/5 rounded-(--radius) w-full border border-transparent px-8 py-3 shadow ring-1"
+            type="single"
           >
-            {faqItems.map(item => (
-              <AccordionItem key={item.id} value={item.id} className="border-dotted">
+            {faqItems.map((item) => (
+              <AccordionItem
+                className="border-dotted"
+                key={item.id}
+                value={item.id}
+              >
                 <AccordionTrigger className="cursor-pointer text-base hover:no-underline">
                   {item.question}
                 </AccordionTrigger>
