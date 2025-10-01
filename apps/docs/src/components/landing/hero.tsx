@@ -28,7 +28,7 @@ export default function HeroSection() {
           <div className="relative z-10 mx-auto max-w-5xl px-6">
             <div className="mt-12 md:mt-16">
               <div className="bg-background rounded-(--radius) relative mx-auto overflow-hidden border border-transparent shadow-lg shadow-black/10 ring-1 ring-black/10">
-                <Image src="/mist/tailark-2.png" alt="app screen" width="2880" height="1842" />
+                <Image src="/screenshot.png" alt="app screen" width="2880" height="1842" />
               </div>
             </div>
           </div>
