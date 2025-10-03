@@ -6,11 +6,11 @@ const nextConfig: NextConfig = {
       return [
         {
           source: '/dashboard',
-          destination: `${process.env.NEXT_PUBLIC_APP_URL}`,
+          destination: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard`,
         },
         {
           source: '/dashboard/:path*',
-          destination: `${process.env.NEXT_PUBLIC_APP_URL}/:path*`,
+          destination: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/:path*`,
         },
       ]
     }
