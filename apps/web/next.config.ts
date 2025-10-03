@@ -1,5 +1,6 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+import type { NextConfig } from 'next'
+
+const nextConfig: NextConfig = {
   redirects: () => [
     {
       source: '/',
@@ -10,4 +11,4 @@ const nextConfig = {
   transpilePackages: ['@rememr/ui'],
 }
 
-module.exports = nextConfig
+export default nextConfig
