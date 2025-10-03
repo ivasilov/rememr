@@ -13,7 +13,7 @@ import { AppSidebar } from '@/components/app-sidebar'
 import { LayoutDropdownMenuContent } from './layout-dropdown-menu-content'
 import { SearchInput } from './search-input'
 
-export default function RootLayout({ children }: PropsWithChildren<void>) {
+export default function RootLayout({ children }: PropsWithChildren<object>) {
   return (
     <SidebarProvider>
       <AppSidebar />

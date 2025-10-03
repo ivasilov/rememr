@@ -559,6 +559,13 @@ export type Database = {
         }
         Returns: undefined
       }
+      delete_leaf_prefixes: {
+        Args: {
+          bucket_ids: string[]
+          names: string[]
+        }
+        Returns: undefined
+      }
       delete_prefix: {
         Args: {
           _bucket_id: string
@@ -640,6 +647,13 @@ export type Database = {
           updated_at: string
         }[]
       }
+      lock_top_prefixes: {
+        Args: {
+          bucket_ids: string[]
+          names: string[]
+        }
+        Returns: undefined
+      }
       operation: {
         Args: Record<PropertyKey, never>
         Returns: string
@@ -711,6 +725,9 @@ export type Database = {
           limits?: number
           levels?: number
           start_after?: string
+          sort_order?: string
+          sort_column?: string
+          sort_column_after?: string
         }
         Returns: {
           key: string
@@ -718,6 +735,7 @@ export type Database = {
           id: string
           updated_at: string
           created_at: string
+          last_accessed_at: string
           metadata: Json
         }[]
       }
