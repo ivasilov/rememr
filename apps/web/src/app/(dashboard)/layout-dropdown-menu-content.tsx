@@ -1,5 +1,3 @@
-'use client'
-
 import {
   DropdownMenuCheckboxItem,
   DropdownMenuItem,
@@ -7,23 +5,25 @@ import {
   type SettingsGearHandle,
   SettingsGearIcon,
 } from '@rememr/ui'
+import { useQueryClient } from '@tanstack/react-query'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { LogOut } from 'lucide-react'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { useTheme } from 'next-themes'
 import { useCallback, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
 
 export const LayoutDropdownMenuContent = () => {
   const { theme, setTheme } = useTheme()
-  const router = useRouter()
+  const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const supabase = createClient()
   const settingsGearRef = useRef<SettingsGearHandle>(null)
 
   const signOut = useCallback(async () => {
     await supabase.auth.signOut()
-    router.push('/')
-  }, [router, supabase.auth])
+    queryClient.clear()
+    await navigate({ to: '/auth/login', replace: true })
+  }, [navigate, queryClient, supabase.auth])
 
   return (
     <>
@@ -48,9 +48,9 @@ export const LayoutDropdownMenuContent = () => {
       <DropdownMenuSeparator />
       <DropdownMenuItem asChild>
         <Link
-          href="/settings"
           onMouseEnter={() => settingsGearRef.current?.startAnimation()}
           onMouseLeave={() => settingsGearRef.current?.stopAnimation()}
+          to="/settings"
         >
           <SettingsGearIcon ref={settingsGearRef} />
           <span>Settings</span>

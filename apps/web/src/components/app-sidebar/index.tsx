@@ -1,5 +1,3 @@
-'use server'
-
 import {
   Collapsible,
   CollapsibleContent,
@@ -12,33 +10,22 @@ import {
   SidebarHeader,
   SidebarMenu,
   SidebarMenuItem,
-  SidebarMenuSkeleton,
 } from '@rememr/ui'
+import type { User } from '@supabase/supabase-js'
+import { Link } from '@tanstack/react-router'
 import { ChevronDown, Home, Inbox } from 'lucide-react'
-import Link from 'next/link'
-import { Suspense } from 'react'
-import { createClient } from '../../lib/supabase/server'
 import { SessionsMenu } from './sessions-menu'
 import { SidebarMenuLink } from './sidebar-menu-link'
 import { TagsMenu } from './tags-menu'
 
-export async function AppSidebar() {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  if (!user) {
-    return null
-  }
-
+export function AppSidebar({ user }: { user: User }) {
   return (
     <Sidebar>
       <SidebarContent>
         <SidebarHeader>
           <Link
             className="flex items-center gap-2 font-semibold"
-            href="/bookmarks"
+            to="/bookmarks"
           >
             <span className="">rememr</span>
           </Link>
@@ -47,13 +34,13 @@ export async function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuLink href="/bookmarks" size="default">
+                <SidebarMenuLink size="default" to="/bookmarks">
                   <Home />
                   <span>All bookmarks</span>
                 </SidebarMenuLink>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuLink href="/bookmarks/unread">
+                <SidebarMenuLink to="/bookmarks/unread">
                   <Inbox />
                   <span>Reading list</span>
                 </SidebarMenuLink>
@@ -72,16 +59,7 @@ export async function AppSidebar() {
             <CollapsibleContent>
               <SidebarGroupContent>
                 <SidebarMenu>
-                  <Suspense
-                    fallback={Array.from({ length: 3 }).map((_, index) => (
-                      // biome-ignore lint/suspicious/noArrayIndexKey: this is loading array
-                      <SidebarMenuItem key={index}>
-                        <SidebarMenuSkeleton />
-                      </SidebarMenuItem>
-                    ))}
-                  >
-                    <SessionsMenu user={user} />
-                  </Suspense>
+                  <SessionsMenu user={user} />
                 </SidebarMenu>
               </SidebarGroupContent>
             </CollapsibleContent>
@@ -99,15 +77,7 @@ export async function AppSidebar() {
             <CollapsibleContent>
               <SidebarGroupContent>
                 <SidebarMenu>
-                  <Suspense
-                    fallback={Array.from({ length: 3 }).map((_, index) => (
-                      <SidebarMenuItem key={index}>
-                        <SidebarMenuSkeleton />
-                      </SidebarMenuItem>
-                    ))}
-                  >
-                    <TagsMenu user={user} />
-                  </Suspense>
+                  <TagsMenu user={user} />
                 </SidebarMenu>
               </SidebarGroupContent>
             </CollapsibleContent>

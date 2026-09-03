@@ -1,5 +1,3 @@
-'use client'
-
 import {
   Button,
   Card,
@@ -11,7 +9,8 @@ import {
   Input,
   Label,
 } from '@rememr/ui'
-import { useRouter } from 'next/navigation'
+import { useQueryClient } from '@tanstack/react-query'
+import { useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 
@@ -22,7 +21,8 @@ export function UpdatePasswordForm({
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
+  const navigate = useNavigate()
+  const queryClient = useQueryClient()
 
   const handleForgotPassword = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -35,8 +35,8 @@ export function UpdatePasswordForm({
       if (error) {
         throw error
       }
-      // Update this route to redirect to an authenticated route. The user already has an active session.
-      router.push('/protected')
+      queryClient.clear()
+      await navigate({ to: '/bookmarks', replace: true })
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : 'An error occurred')
     } finally {

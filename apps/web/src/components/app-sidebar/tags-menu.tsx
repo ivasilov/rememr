@@ -1,17 +1,17 @@
 import { SidebarMenuBadge, SidebarMenuItem } from '@rememr/ui'
 import type { User } from '@supabase/supabase-js'
+import { useQuery } from '@tanstack/react-query'
 import { Tag } from 'lucide-react'
-import { createClient } from '@/lib/supabase/server'
+import { Loading } from '@/components/loading'
+import { sidebarTagsQueryOptions } from './queries'
 import { SidebarMenuLink } from './sidebar-menu-link'
 
-export const TagsMenu = async ({ user }: { user: User }) => {
-  const supabase = await createClient()
+export const TagsMenu = ({ user }: { user: User }) => {
+  const { data: tags, isLoading } = useQuery(sidebarTagsQueryOptions(user.id))
 
-  const { data: tags } = await supabase
-    .from('bookmarks_tags')
-    .select('...tags(id,name), bookmark_id.count()')
-    .eq('tags.user_id', user.id)
-    .throwOnError()
+  if (isLoading) {
+    return <Loading size={18} />
+  }
 
   if (tags?.length === 0) {
     return (
@@ -21,13 +21,12 @@ export const TagsMenu = async ({ user }: { user: User }) => {
     )
   }
 
-  const sorted = (tags || []).sort((a, b) => a.name.localeCompare(b.name))
-
-  return sorted?.map((t) => (
+  return tags?.map((t) => (
     <SidebarMenuItem key={t.id}>
       <SidebarMenuLink
         className="flex items-center align-center"
-        href={`/tags/${t.id}`}
+        params={{ id: t.id }}
+        to="/tags/$id"
       >
         <Tag />
         <span className="w-40 truncate">{t.name}</span>

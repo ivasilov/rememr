@@ -17,8 +17,11 @@ export const useDeleteBookmarkMutation = () => {
 
   return useMutation({
     mutationFn,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['bookmarks'] })
-    },
+    onSuccess: () =>
+      Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['bookmarks'] }),
+        queryClient.invalidateQueries({ queryKey: ['sessions'] }),
+        queryClient.invalidateQueries({ queryKey: ['tags'] }),
+      ]),
   })
 }

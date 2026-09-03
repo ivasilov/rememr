@@ -1,4 +1,3 @@
-'use client'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   Button,
@@ -17,7 +16,7 @@ import {
   Input,
   Switch,
 } from '@rememr/ui'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useNavigate } from '@tanstack/react-router'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
@@ -42,15 +41,20 @@ const NewBookmarkSchema = z.object({
     .default([]),
 })
 
-export const NewBookmarkComponent = () => {
-  const router = useRouter()
-  const searchParams = useSearchParams()
+export const NewBookmarkComponent = ({
+  title = '',
+  url = '',
+}: {
+  title?: string
+  url?: string
+}) => {
+  const navigate = useNavigate()
 
   const form = useForm<z.infer<typeof NewBookmarkSchema>>({
     resolver: zodResolver(NewBookmarkSchema),
     defaultValues: {
-      name: searchParams.get('title') || '',
-      url: searchParams.get('url') || '',
+      name: title,
+      url,
       description: '',
       tagIds: [],
     },
@@ -65,7 +69,7 @@ export const NewBookmarkComponent = () => {
       createBookmark(values, {
         onSuccess: () => {
           toast.success('Bookmark created successfully')
-          router.push('/bookmarks')
+          navigate({ to: '/bookmarks' })
         },
         onError: (error) => {
           toast.error(`Failed to create bookmark: ${error.message}`)
@@ -73,7 +77,7 @@ export const NewBookmarkComponent = () => {
       })
 
       toast.success('Bookmark created')
-      router.push('/bookmarks')
+      navigate({ to: '/bookmarks' })
     } catch (error) {
       toast.error('An unexpected error occurred')
     }
@@ -169,7 +173,7 @@ export const NewBookmarkComponent = () => {
       <CardFooter className="flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2">
         <Button
           disabled={isPending}
-          onClick={() => router.push('/bookmarks')}
+          onClick={() => navigate({ to: '/bookmarks' })}
           variant="secondary"
         >
           Cancel

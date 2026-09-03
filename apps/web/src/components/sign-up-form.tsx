@@ -1,5 +1,3 @@
-'use client'
-
 import {
   Button,
   Card,
@@ -11,9 +9,9 @@ import {
   Input,
   Label,
 } from '@rememr/ui'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
+import { getPublicUrl } from '@/lib/base-path'
 import { createClient } from '@/lib/supabase/client'
 
 export function SignUpForm({
@@ -25,7 +23,7 @@ export function SignUpForm({
   const [repeatPassword, setRepeatPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
+  const navigate = useNavigate()
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -44,11 +42,11 @@ export function SignUpForm({
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/bookmarks`,
+          emailRedirectTo: getPublicUrl('/bookmarks'),
         },
       })
       if (error) throw error
-      router.push('/auth/sign-up-success')
+      await navigate({ to: '/auth/sign-up-success' })
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : 'An error occurred')
     } finally {
@@ -108,7 +106,7 @@ export function SignUpForm({
             </div>
             <div className="mt-4 text-center text-sm">
               Already have an account?{' '}
-              <Link className="underline underline-offset-4" href="/auth/login">
+              <Link className="underline underline-offset-4" to="/auth/login">
                 Login
               </Link>
             </div>

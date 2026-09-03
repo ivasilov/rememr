@@ -1,23 +1,26 @@
-'use client'
-
 import { SidebarMenuButton } from '@rememr/ui'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import type { ComponentProps, PropsWithChildren } from 'react'
+import { Link, type LinkProps, useMatchRoute } from '@tanstack/react-router'
+import type { ComponentProps, ReactNode } from 'react'
 
-type SidebarMenuLinkProps = PropsWithChildren<{ href: string }> &
-  ComponentProps<typeof SidebarMenuButton>
+type SidebarMenuLinkProps = LinkProps &
+  Omit<ComponentProps<typeof SidebarMenuButton>, 'children'> & {
+    children: ReactNode
+  }
 
 export function SidebarMenuLink({
-  href,
+  to,
+  params,
   children,
   ...props
 }: SidebarMenuLinkProps) {
-  const pathname = usePathname()
+  const matchRoute = useMatchRoute()
+  const isActive = Boolean(matchRoute({ to, params, fuzzy: false }))
 
   return (
-    <SidebarMenuButton isActive={pathname === href} {...props} asChild>
-      <Link href={href as any}>{children}</Link>
+    <SidebarMenuButton isActive={isActive} {...props} asChild>
+      <Link params={params} to={to}>
+        {children}
+      </Link>
     </SidebarMenuButton>
   )
 }

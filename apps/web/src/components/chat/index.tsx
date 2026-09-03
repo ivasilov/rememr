@@ -1,8 +1,7 @@
-'use client'
-
 import { Button, Input, SheetFooter, SheetHeader, SheetTitle } from '@rememr/ui'
 import { useChat } from 'ai/react'
 import { Send } from 'lucide-react'
+import { getPublicPath } from '@/lib/base-path'
 import { Markdown } from '../markdown'
 
 export function Chat({
@@ -14,7 +13,7 @@ export function Chat({
 }) {
   const { messages, input, handleInputChange, handleSubmit, isLoading } =
     useChat({
-      api: '/api/ai/bookmark',
+      api: getPublicPath('/api/ai/bookmark'),
       initialMessages: [
         {
           id: '1',

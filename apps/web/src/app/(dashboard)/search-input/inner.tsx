@@ -1,5 +1,3 @@
-'use client'
-
 import {
   Command,
   CommandGroup,
@@ -12,17 +10,19 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@rememr/ui'
-import { useRouter } from 'next/navigation'
-import { useQueryState } from 'nuqs'
+import { useNavigate } from '@tanstack/react-router'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 export const SearchInputInner = ({
+  onSearchChange,
+  searchQuery,
   tags,
 }: {
+  onSearchChange: (value: string | undefined) => void
+  searchQuery: string | undefined
   tags: { id: string; name: string }[]
 }) => {
-  const router = useRouter()
-  const [searchQuery, setSearchQuery] = useQueryState('q')
+  const navigate = useNavigate()
   const [searchTerm, setSearchTerm] = useState(searchQuery)
   const [open, setOpen] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -33,12 +33,12 @@ export const SearchInputInner = ({
       }
 
       if (value && value.length > 0) {
-        setSearchQuery(value, { shallow: false, scroll: false })
+        onSearchChange(value)
       } else {
-        setSearchQuery(null, { shallow: false, scroll: false })
+        onSearchChange(undefined)
       }
     },
-    [searchQuery, setSearchQuery]
+    [onSearchChange, searchQuery]
   )
 
   const filteredTags = tags
@@ -89,7 +89,7 @@ export const SearchInputInner = ({
                   <CommandGroup heading="Bookmarks">
                     <CommandItem
                       onSelect={() => {
-                        appendSearchParam(searchTerm)
+                        appendSearchParam(searchTerm ?? null)
                         setSearchTerm('')
                         setOpen(false)
                       }}
@@ -106,7 +106,10 @@ export const SearchInputInner = ({
                         <CommandItem
                           key={tag.id}
                           onSelect={() => {
-                            router.push(`/tags/${tag.id}`)
+                            navigate({
+                              to: '/tags/$id',
+                              params: { id: tag.id },
+                            })
                             setSearchTerm('')
                             setOpen(false)
                           }}

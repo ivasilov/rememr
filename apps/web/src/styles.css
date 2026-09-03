@@ -1,0 +1,12 @@
+@import "@fontsource-variable/geist-mono";
+@import "@rememr/ui/styles.css";
+
+/* biome-ignore lint/suspicious/noUnknownAtRules: Tailwind scans the web app source in addition to the shared UI package. */
+@source './';
+
+:root,
+.dark {
+  --font-sans: "Geist Mono Variable", monospace;
+  --font-serif: "Geist Mono Variable", monospace;
+  --font-mono: "Geist Mono Variable", monospace;
+}
