@@ -1,5 +1,3 @@
-'use client'
-
 import {
   Button,
   Card,
@@ -11,9 +9,10 @@ import {
   Input,
   Label,
 } from '@rememr/ui'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useQueryClient } from '@tanstack/react-query'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
+import { getSafeReturnTo } from '@/lib/base-path'
 import { createClient } from '@/lib/supabase/client'
 
 type LoginFormProps = React.ComponentPropsWithoutRef<'div'> & {
@@ -29,7 +28,8 @@ export function LoginForm({
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
+  const navigate = useNavigate()
+  const queryClient = useQueryClient()
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -46,8 +46,11 @@ export function LoginForm({
         throw error
       }
       // Update this route to redirect to an authenticated route. The user already has an active session.
-      const returnTo = searchParams.returnTo || '/bookmarks'
-      router.push(decodeURIComponent(returnTo) as any)
+      queryClient.clear()
+      await navigate({
+        to: getSafeReturnTo(searchParams.returnTo),
+        replace: true,
+      })
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : 'An error occurred')
     } finally {
@@ -83,7 +86,7 @@ export function LoginForm({
                   <Label htmlFor="password">Password</Label>
                   <Link
                     className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                    href="/auth/forgot-password"
+                    to="/auth/forgot-password"
                   >
                     Forgot your password?
                   </Link>
@@ -103,10 +106,7 @@ export function LoginForm({
             </div>
             <div className="mt-4 text-center text-sm">
               Don&apos;t have an account?{' '}
-              <Link
-                className="underline underline-offset-4"
-                href="/auth/sign-up"
-              >
+              <Link className="underline underline-offset-4" to="/auth/sign-up">
                 Sign up
               </Link>
             </div>

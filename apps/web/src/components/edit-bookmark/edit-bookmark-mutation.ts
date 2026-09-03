@@ -58,8 +58,10 @@ export const useEditBookmarkMutation = () => {
 
   return useMutation({
     mutationFn,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['bookmarks'] })
-    },
+    onSuccess: () =>
+      Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['bookmarks'] }),
+        queryClient.invalidateQueries({ queryKey: ['tags'] }),
+      ]),
   })
 }

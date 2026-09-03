@@ -1,24 +1,27 @@
-'use server'
-
-import { createClient } from '@/lib/supabase/server'
+import type { User } from '@supabase/supabase-js'
+import { useQuery } from '@tanstack/react-query'
+import { sidebarTagsQueryOptions } from '@/components/app-sidebar/queries'
 import { SearchInputInner } from './inner'
 
-export const SearchInput = async () => {
-  const supabase = await createClient()
-
-  const { data: tags } = await supabase
-    .from('tags')
-    .select('*')
-    .order('name', { ascending: false })
-
-  if (!tags) {
-    return null
-  }
+export const SearchInput = ({
+  onSearchChange,
+  searchQuery,
+  user,
+}: {
+  onSearchChange: (value: string | undefined) => void
+  searchQuery: string | undefined
+  user: User
+}) => {
+  const { data: tags = [] } = useQuery(sidebarTagsQueryOptions(user.id))
 
   return (
     <div className="w-full flex-1">
       <div className="relative">
-        <SearchInputInner tags={tags} />
+        <SearchInputInner
+          onSearchChange={onSearchChange}
+          searchQuery={searchQuery}
+          tags={tags}
+        />
       </div>
     </div>
   )

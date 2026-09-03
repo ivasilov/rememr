@@ -1,6 +1,4 @@
-'use client'
-
-import { useQueryState } from 'nuqs'
+import { useSearch } from '@tanstack/react-router'
 import { Bookmarks } from '@/components/bookmarks'
 import { useListSessionBookmarksQuery } from './list-session-bookmarks-query'
 
@@ -9,9 +7,12 @@ type SessionBookmarksProps = {
 }
 
 export const SessionBookmarks = ({ sessionId }: SessionBookmarksProps) => {
-  const [searchQuery] = useQueryState('q')
+  const searchQuery = useSearch({
+    strict: false,
+    select: (search) => search.q as string | undefined,
+  })
 
-  const result = useListSessionBookmarksQuery(searchQuery, sessionId)
+  const result = useListSessionBookmarksQuery(searchQuery ?? null, sessionId)
 
   return <Bookmarks {...result} />
 }

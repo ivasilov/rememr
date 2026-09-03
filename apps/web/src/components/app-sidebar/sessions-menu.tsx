@@ -1,17 +1,19 @@
 import { SidebarMenuBadge, SidebarMenuItem } from '@rememr/ui'
 import type { User } from '@supabase/supabase-js'
+import { useQuery } from '@tanstack/react-query'
 import { FileStack } from 'lucide-react'
-import { createClient } from '@/lib/supabase/server'
+import { Loading } from '@/components/loading'
+import { sidebarSessionsQueryOptions } from './queries'
 import { SidebarMenuLink } from './sidebar-menu-link'
 
-export const SessionsMenu = async ({ user }: { user: User }) => {
-  const supabase = await createClient()
+export const SessionsMenu = ({ user }: { user: User }) => {
+  const { data: sessions, isLoading } = useQuery(
+    sidebarSessionsQueryOptions(user.id)
+  )
 
-  const { data: sessions } = await supabase
-    .from('bookmarks_sessions')
-    .select('...sessions(id,name), bookmark_id.count()')
-    .eq('sessions.user_id', user.id)
-    .order('created_at', { ascending: false, referencedTable: 'sessions' })
+  if (isLoading) {
+    return <Loading size={18} />
+  }
 
   if (sessions?.length === 0) {
     return (
@@ -25,7 +27,8 @@ export const SessionsMenu = async ({ user }: { user: User }) => {
     <SidebarMenuItem key={t.id}>
       <SidebarMenuLink
         className="flex items-center align-center"
-        href={`/sessions/${t.id}`}
+        params={{ id: t.id }}
+        to="/sessions/$id"
       >
         <FileStack />
         <span className="w-40 truncate">{t.name}</span>

@@ -1,5 +1,3 @@
-'use server'
-
 import type { Database } from './database.types'
 
 export type BookmarkType = Database['public']['Tables']['bookmarks']['Row']

@@ -7,7 +7,7 @@ import {
   TableRow,
 } from '@rememr/ui'
 import type { UseInfiniteQueryResult } from '@tanstack/react-query'
-import Link from 'next/link'
+import { Link } from '@tanstack/react-router'
 import type { BookmarkWithTags } from '@/app/(dashboard)/bookmarks/list-all-bookmarks-query'
 import { BookmarkRow, LoadingBookmarkRow } from '../bookmark'
 import { LoadMoreBookmarks } from './load-more-bookmarks'
@@ -69,7 +69,7 @@ export const Bookmarks = ({
               </p>
             </div>
             <Button asChild>
-              <Link href="/bookmarks/new">Add new bookmark</Link>
+              <Link to="/bookmarks/new">Add new bookmark</Link>
             </Button>
           </div>
         </div>

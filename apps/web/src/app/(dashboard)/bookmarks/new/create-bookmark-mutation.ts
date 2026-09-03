@@ -26,7 +26,7 @@ const mutationFn = async (values: {
     .throwOnError()
     .select()
 
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from('bookmarks')
     .insert({
       name: values.name,
@@ -37,10 +37,6 @@ const mutationFn = async (values: {
     .throwOnError()
     .select()
     .single()
-
-  if (error) {
-    throw new Error(error.message)
-  }
 
   const bookmark = data
 
@@ -65,8 +61,10 @@ export const useCreateBookmarkMutation = () => {
 
   return useMutation({
     mutationFn,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['bookmarks'] })
-    },
+    onSuccess: () =>
+      Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['bookmarks'] }),
+        queryClient.invalidateQueries({ queryKey: ['tags'] }),
+      ]),
   })
 }

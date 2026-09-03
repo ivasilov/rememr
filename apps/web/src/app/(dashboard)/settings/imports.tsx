@@ -1,4 +1,3 @@
-'use client'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   Button,
@@ -18,6 +17,7 @@ import {
   Progress,
   Switch,
 } from '@rememr/ui'
+import { useQueryClient } from '@tanstack/react-query'
 import { capitalize } from 'lodash'
 import { Loader2 } from 'lucide-react'
 import { useState } from 'react'
@@ -79,6 +79,7 @@ const UploadDialog = (props: {
 }) => {
   const [loading, setLoading] = useState(false)
   const [progress, setProgress] = useState({ current: 0, max: 0 })
+  const queryClient = useQueryClient()
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -104,6 +105,10 @@ const UploadDialog = (props: {
             tags: tags.map((t) => t.name),
             unread: !!unread,
           })
+          await Promise.all([
+            queryClient.invalidateQueries({ queryKey: ['bookmarks'] }),
+            queryClient.invalidateQueries({ queryKey: ['tags'] }),
+          ])
           toast.success(`Successfully imported ${count} bookmarks`)
           props.onClose()
         }
@@ -115,6 +120,10 @@ const UploadDialog = (props: {
               setProgress({ current, max })
             }
           )
+          await Promise.all([
+            queryClient.invalidateQueries({ queryKey: ['bookmarks'] }),
+            queryClient.invalidateQueries({ queryKey: ['tags'] }),
+          ])
           toast.success(`Successfully imported ${count} bookmarks`)
           props.onClose()
         }
