@@ -12,7 +12,7 @@
     "lint": "ultracite lint src vite.config.ts",
     "generate:types": "supabase gen types typescript --local > src/lib/database.types.ts && biome format --write src/lib/database.types.ts",
     "test:types": "tsc --noEmit",
-    "clean": "rimraf node_modules .output .vite"
+    "clean": "rimraf node_modules .output .vite .next"
   },
   "dependencies": {
     "@fontsource-variable/geist-mono": "5.3.0",
