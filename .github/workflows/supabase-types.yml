@@ -11,13 +11,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: supabase/setup-cli@v1
-        with:
-          version: latest
-
-      - name: Start Supabase local development setup
-        run: supabase start
-
       - uses: pnpm/action-setup@v4
 
       - name: Use Node.js 18.x
@@ -32,6 +25,7 @@ jobs:
 
       - name: Verify generated types are checked in
         run: |
+          pnpm dlx supabase start
           pnpm --filter @rememr/web generate:types
           if ! git diff --ignore-space-at-eol --exit-code --quiet apps/web/src/lib/database.types.ts; then
             echo "Detected uncommitted changes after build. See status below:"
