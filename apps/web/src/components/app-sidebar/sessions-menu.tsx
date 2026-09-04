@@ -1,15 +1,12 @@
 import { SidebarMenuBadge, SidebarMenuItem } from '@rememr/ui'
 import type { User } from '@supabase/supabase-js'
-import { useQuery } from '@tanstack/react-query'
 import { FileStack } from 'lucide-react'
 import { Loading } from '@/components/loading'
-import { sidebarSessionsQueryOptions } from './queries'
+import { useSidebarSessions } from './queries'
 import { SidebarMenuLink } from './sidebar-menu-link'
 
 export const SessionsMenu = ({ user }: { user: User }) => {
-  const { data: sessions, isLoading } = useQuery(
-    sidebarSessionsQueryOptions(user.id)
-  )
+  const { data: sessions, isLoading } = useSidebarSessions(user.id)
 
   if (isLoading) {
     return <Loading size={18} />
@@ -23,7 +20,7 @@ export const SessionsMenu = ({ user }: { user: User }) => {
     )
   }
 
-  return sessions?.map((t) => (
+  return sessions.map((t) => (
     <SidebarMenuItem key={t.id}>
       <SidebarMenuLink
         className="flex items-center align-center"

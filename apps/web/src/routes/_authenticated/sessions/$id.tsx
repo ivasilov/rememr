@@ -1,10 +1,9 @@
-import { useQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 import { FileStack } from 'lucide-react'
 import { SessionBookmarks } from '@/app/(dashboard)/sessions/[id]/session-bookmarks'
 import { Loading } from '@/components/loading'
 import { MainContentLayout } from '@/components/main-content-layout'
-import { sessionDetailQueryOptions } from '@/lib/detail-queries'
+import { useSessionDetail } from '@/lib/detail-queries'
 
 export const Route = createFileRoute('/_authenticated/sessions/$id')({
   component: SessionPage,
@@ -12,11 +11,7 @@ export const Route = createFileRoute('/_authenticated/sessions/$id')({
 
 function SessionPage() {
   const { id } = Route.useParams()
-  const {
-    data: session,
-    isLoading,
-    isError,
-  } = useQuery(sessionDetailQueryOptions(id))
+  const { data: session, isLoading, isError } = useSessionDetail(id)
 
   if (isLoading) {
     return <Loading />

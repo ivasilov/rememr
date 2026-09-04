@@ -6,27 +6,29 @@ import {
   TableHeader,
   TableRow,
 } from '@rememr/ui'
-import type { UseInfiniteQueryResult } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
-import type { BookmarkWithTags } from '@/app/(dashboard)/bookmarks/list-all-bookmarks-query'
+import type { BookmarkListResult } from '@/lib/database'
 import { BookmarkRow, LoadingBookmarkRow } from '../bookmark'
 import { LoadMoreBookmarks } from './load-more-bookmarks'
+import { useBookmarkTags } from './use-bookmark-tags'
 
-type BookmarksProps = UseInfiniteQueryResult<
-  {
-    bookmarks: BookmarkWithTags[]
-    count: number
-  },
-  Error
->
+const LOADING_ROW_IDS = Array.from(
+  { length: 10 },
+  (_, index) => `loading-bookmark-${index}`
+)
 
 export const Bookmarks = ({
-  isSuccess,
+  bookmarks,
+  fetchMore,
+  hasMore,
+  isError,
+  isFetchingMore,
   isLoading,
-  data,
-  fetchNextPage,
-  isFetchingNextPage,
-}: BookmarksProps) => {
+}: BookmarkListResult) => {
+  const bookmarkIds = bookmarks.map((bookmark) => bookmark.id)
+  const { isLoading: areTagsLoading, tagsByBookmarkId } =
+    useBookmarkTags(bookmarkIds)
+
   if (isLoading) {
     return (
       <Table>
@@ -40,21 +42,23 @@ export const Bookmarks = ({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {Array.from({ length: 10 }).map((_, index) => (
-            <LoadingBookmarkRow key={index} />
+          {LOADING_ROW_IDS.map((id) => (
+            <LoadingBookmarkRow key={id} />
           ))}
         </TableBody>
       </Table>
     )
   }
 
-  if (!isSuccess) {
-    return null
+  if (isError) {
+    return (
+      <div className="flex h-full items-center justify-center">
+        <p className="text-muted-foreground">Bookmarks could not be loaded.</p>
+      </div>
+    )
   }
 
-  const { bookmarks, count } = data
-
-  if (count === 0) {
+  if (bookmarks.length === 0) {
     return (
       <div className="flex h-full">
         <div className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm">
@@ -81,14 +85,21 @@ export const Bookmarks = ({
     <div className="flex grow flex-col space-y-3 py-3">
       <Table>
         <TableBody>
-          {bookmarks.map((b) => (
-            <BookmarkRow bookmark={b} key={b.id} />
+          {bookmarks.map((bookmark) => (
+            <BookmarkRow
+              bookmark={{
+                ...bookmark,
+                tags: tagsByBookmarkId.get(bookmark.id) ?? [],
+              }}
+              key={bookmark.id}
+              tagsLoading={areTagsLoading}
+            />
           ))}
 
           <LoadMoreBookmarks
-            fetchMore={() => fetchNextPage()}
-            hasMore={count > bookmarks.length}
-            loading={isFetchingNextPage}
+            fetchMore={fetchMore}
+            hasMore={hasMore}
+            loading={isFetchingMore}
           />
         </TableBody>
       </Table>

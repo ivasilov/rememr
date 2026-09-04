@@ -5,10 +5,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@rememr/ui'
-import type { TagType } from '@/lib/supabase'
+import type { Tag } from '@/lib/database'
 
 type TagsBadgeProps = {
-  tags: Pick<TagType, 'id' | 'name'>[]
+  tags: Pick<Tag, 'id' | 'name'>[]
 }
 
 export const TagsBadge = ({ tags }: TagsBadgeProps) => {

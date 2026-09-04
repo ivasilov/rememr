@@ -5,7 +5,7 @@ import { LoadingBookmarks } from './loading'
 export type LoadMoreBookmarksProps = {
   hasMore: boolean
   loading: boolean
-  fetchMore: () => Promise<unknown>
+  fetchMore: () => void
 }
 
 export const LoadMoreBookmarks = ({

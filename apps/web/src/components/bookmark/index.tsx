@@ -11,7 +11,7 @@ import {
 } from '@rememr/ui'
 import { EllipsisVertical, Pen, Trash2 } from 'lucide-react'
 import { useState } from 'react'
-import type { BookmarkWithTags } from '@/app/(dashboard)/bookmarks/list-all-bookmarks-query'
+import type { BookmarkRowModel } from '@/lib/database'
 import { DeleteBookmarkDialog } from '../delete-bookmark'
 import { EditBookmarkDialog } from '../edit-bookmark'
 import { ChatDropdownMenuItem } from './chat-dropdown-menu-item'
@@ -19,25 +19,28 @@ import { TagsBadge } from './tags-badge'
 
 const MAX_NAME_LENGTH = 60
 
-export const BookmarkRow = (props: { bookmark: BookmarkWithTags }) => {
+export const BookmarkRow = ({
+  bookmark,
+  tagsLoading,
+}: {
+  bookmark: BookmarkRowModel
+  tagsLoading: boolean
+}) => {
   const [editBookmarkDialogShown, setEditBookmarkDialogShown] = useState(false)
   const [deleteBookmarkDialogShown, setDeleteBookmarkDialogShown] =
     useState(false)
 
-  const bookmark = props.bookmark
   let hostname = ''
   // new URL can throw and make the whole page unresponsive
   try {
     hostname = new URL(bookmark.url).hostname.replace('www.', '')
-    // biome-ignore lint/suspicious/noEmptyBlockStatements: <explanation>
+    // biome-ignore lint/suspicious/noEmptyBlockStatements: Invalid bookmark URLs intentionally render the fallback icon.
   } catch {}
 
   const truncatedName =
     bookmark.name.length > MAX_NAME_LENGTH
       ? `${bookmark.name.slice(0, MAX_NAME_LENGTH)}...`
       : bookmark.name
-
-  const tags = bookmark.bookmarks_tags.map((bt) => bt.tags)
 
   return (
     <>
@@ -66,7 +69,7 @@ export const BookmarkRow = (props: { bookmark: BookmarkWithTags }) => {
         </TableCell>
         <TableCell className="text-muted-foreground">{hostname}</TableCell>
         <TableCell>
-          <TagsBadge tags={tags} />
+          {tagsLoading ? null : <TagsBadge tags={bookmark.tags} />}
         </TableCell>
         <TableCell className="w-32">
           <div className="flex items-center justify-end gap-2">

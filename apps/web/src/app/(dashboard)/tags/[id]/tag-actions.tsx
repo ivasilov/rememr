@@ -1,29 +1,28 @@
 import { Button } from '@rememr/ui'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
-import type { TagType } from '@/lib/supabase'
-import { createClient } from '@/lib/supabase/client'
+import { type Tag, useDatabase } from '@/lib/database'
 
-export const TagActions = ({ tag }: { tag: TagType }) => {
+export const TagActions = ({ tag }: { tag: Tag }) => {
   const navigate = useNavigate()
-  const queryClient = useQueryClient()
+  const { bookmarkTags, tags } = useDatabase()
   const deleteTag = useMutation({
     mutationFn: async (tagId: string) => {
-      const supabase = createClient()
-      await supabase
-        .from('bookmarks_tags')
-        .delete()
-        .eq('tag_id', tagId)
-        .throwOnError()
-      await supabase.from('tags').delete().eq('id', tagId).throwOnError()
+      const relations = bookmarkTags.toArray.filter(
+        (relation) => relation.tag_id === tagId
+      )
+
+      if (relations.length > 0) {
+        await bookmarkTags.delete(
+          relations.map((relation) => bookmarkTags.getKeyFromItem(relation))
+        ).isPersisted.promise
+      }
+
+      await tags.delete(tagId).isPersisted.promise
     },
     onSuccess: async () => {
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ['bookmarks'] }),
-        queryClient.invalidateQueries({ queryKey: ['tags'] }),
-      ])
       toast.success(`The tag ${tag.name} has been deleted.`)
       await navigate({ to: '/bookmarks' })
     },

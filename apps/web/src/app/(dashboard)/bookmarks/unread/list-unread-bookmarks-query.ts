@@ -1,95 +1,66 @@
-import {
-  type GetNextPageParamFunction,
-  type InfiniteData,
-  useInfiniteQuery,
-} from '@tanstack/react-query'
-import { createClient } from '@/lib/supabase/client'
-import type { BookmarkWithTags } from '../list-all-bookmarks-query'
+import { eq, useLiveQuery } from '@tanstack/react-db'
+import { useCallback, useMemo, useState } from 'react'
+import type { BookmarkListResult } from '@/lib/database'
+import { useDatabase } from '@/lib/database'
 
-const queryKey = (searchQuery: string | null) => [
-  'bookmarks',
-  { searchQuery, unread: true },
-]
+const PAGE_SIZE = 20
 
-// The range starts from 0 to 19, so we need to subtract 1 from the skip to get the correct range of 20 items
-const PAGE_SIZE = 19
-
-const queryFn = async ({
-  pageParam: skip,
-  queryKey,
-}: {
-  pageParam: number
-  queryKey: (string | { searchQuery: string | null })[]
-}) => {
-  let searchQuery: string | null = null
-  if (queryKey.length === 2 && typeof queryKey[1] !== 'string') {
-    searchQuery = queryKey[1].searchQuery
-  }
-
-  let query = supabaseClient
-    .from('bookmarks')
-    .select(
-      `
-    *,
-    bookmarks_tags (
-      tags (
-        id,
-        name
-      )
-    )
-  `,
-      { count: 'exact' }
-    )
-    .eq('read', false)
-
-  if (searchQuery && searchQuery.length > 0) {
-    query = query.ilike('name', `%${searchQuery}%`)
-  }
-
-  const { data, count } = await query
-    .order('created_at', { ascending: false })
-    // secondary sort by id to avoid pagination issues when imported bookmarks have the same created_at
-    .order('id', { ascending: false })
-    .range(skip, skip + PAGE_SIZE)
-    .throwOnError()
-
-  return { data, count } as { data: BookmarkWithTags[]; count: number }
-}
-
-const getNextPageParam: GetNextPageParamFunction<
-  number,
-  {
-    data: BookmarkWithTags[]
-    count: number
-  }
-> = (_, pages) => {
-  const bookmarks = pages.flatMap((p) => p.data)
-  return bookmarks.length
-}
-
-const supabaseClient = createClient()
-const selectData = (
-  data: InfiniteData<
-    {
-      data: BookmarkWithTags[]
-      count: number
-    },
-    number
-  >
-) => {
-  return {
-    bookmarks: data.pages.flatMap((p) => p.data),
-    count: data.pages[0].count,
-  }
-}
-
-export const useListUnreadBookmarksQuery = (searchQuery: string | null) => {
-  return useInfiniteQuery({
-    queryKey: queryKey(searchQuery),
-    queryFn,
-    staleTime: 5000,
-    getNextPageParam,
-    initialPageParam: 0,
-    select: selectData,
+export const useListUnreadBookmarksQuery = (
+  searchQuery: string | null
+): BookmarkListResult => {
+  const { bookmarks } = useDatabase()
+  const normalizedSearch = searchQuery?.toLocaleLowerCase() ?? ''
+  const [pagination, setPagination] = useState({
+    key: normalizedSearch,
+    visibleCount: PAGE_SIZE,
   })
+  const visibleCount =
+    pagination.key === normalizedSearch ? pagination.visibleCount : PAGE_SIZE
+
+  const { data, isError, isLoading } = useLiveQuery(
+    (query) => {
+      const orderedQuery = query
+        .from({ bookmark: bookmarks })
+        .where(({ bookmark }) => eq(bookmark.read, false))
+        .orderBy(({ bookmark }) => bookmark.created_at, 'desc')
+        .orderBy(({ bookmark }) => bookmark.id, 'desc')
+        .select(({ bookmark }) => ({ ...bookmark }))
+
+      return normalizedSearch
+        ? orderedQuery
+        : orderedQuery.limit(visibleCount + 1)
+    },
+    [normalizedSearch, visibleCount]
+  )
+
+  const filteredBookmarks = useMemo(() => {
+    if (!normalizedSearch) {
+      return data
+    }
+
+    return data.filter((bookmark) =>
+      bookmark.name.toLocaleLowerCase().includes(normalizedSearch)
+    )
+  }, [data, normalizedSearch])
+
+  const fetchMore = useCallback(
+    () =>
+      setPagination((current) => ({
+        key: normalizedSearch,
+        visibleCount:
+          (current.key === normalizedSearch
+            ? current.visibleCount
+            : PAGE_SIZE) + PAGE_SIZE,
+      })),
+    [normalizedSearch]
+  )
+
+  return {
+    bookmarks: filteredBookmarks.slice(0, visibleCount),
+    fetchMore,
+    hasMore: filteredBookmarks.length > visibleCount,
+    isError,
+    isFetchingMore: isLoading && visibleCount > PAGE_SIZE,
+    isLoading,
+  }
 }

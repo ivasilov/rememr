@@ -65,22 +65,15 @@ export const NewBookmarkComponent = ({
   const onSubmit: SubmitHandler<z.infer<typeof NewBookmarkSchema>> = (
     values
   ) => {
-    try {
-      createBookmark(values, {
-        onSuccess: () => {
-          toast.success('Bookmark created successfully')
-          navigate({ to: '/bookmarks' })
-        },
-        onError: (error) => {
-          toast.error(`Failed to create bookmark: ${error.message}`)
-        },
-      })
-
-      toast.success('Bookmark created')
-      navigate({ to: '/bookmarks' })
-    } catch (error) {
-      toast.error('An unexpected error occurred')
-    }
+    createBookmark(values, {
+      onSuccess: () => {
+        toast.success('Bookmark created successfully')
+        navigate({ to: '/bookmarks' })
+      },
+      onError: (error) => {
+        toast.error(`Failed to create bookmark: ${error.message}`)
+      },
+    })
   }
 
   return (

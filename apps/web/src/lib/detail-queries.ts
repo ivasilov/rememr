@@ -1,32 +1,30 @@
-import { queryOptions } from '@tanstack/react-query'
-import { createClient } from '@/lib/supabase/client'
+import { eq, useLiveQuery } from '@tanstack/react-db'
+import { useDatabase } from '@/lib/database'
 
-export const tagDetailQueryOptions = (id: string) =>
-  queryOptions({
-    queryKey: ['tags', 'detail', id],
-    queryFn: async () => {
-      const { data } = await createClient()
-        .from('tags')
-        .select('*, bookmarks (*)')
-        .eq('id', id)
-        .maybeSingle()
-        .throwOnError()
+export const useTagDetail = (id: string) => {
+  const { tags } = useDatabase()
 
-      return data
-    },
-  })
+  return useLiveQuery(
+    (query) =>
+      query
+        .from({ tag: tags })
+        .where(({ tag }) => eq(tag.id, id))
+        .select(({ tag }) => ({ ...tag }))
+        .findOne(),
+    [id]
+  )
+}
 
-export const sessionDetailQueryOptions = (id: string) =>
-  queryOptions({
-    queryKey: ['sessions', 'detail', id],
-    queryFn: async () => {
-      const { data } = await createClient()
-        .from('sessions')
-        .select('*')
-        .eq('id', id)
-        .maybeSingle()
-        .throwOnError()
+export const useSessionDetail = (id: string) => {
+  const { sessions } = useDatabase()
 
-      return data
-    },
-  })
+  return useLiveQuery(
+    (query) =>
+      query
+        .from({ session: sessions })
+        .where(({ session }) => eq(session.id, id))
+        .select(({ session }) => ({ ...session }))
+        .findOne(),
+    [id]
+  )
+}

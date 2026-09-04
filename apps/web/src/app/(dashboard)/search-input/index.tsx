@@ -1,6 +1,5 @@
 import type { User } from '@supabase/supabase-js'
-import { useQuery } from '@tanstack/react-query'
-import { sidebarTagsQueryOptions } from '@/components/app-sidebar/queries'
+import { useSidebarTags } from '@/components/app-sidebar/queries'
 import { SearchInputInner } from './inner'
 
 export const SearchInput = ({
@@ -12,7 +11,7 @@ export const SearchInput = ({
   searchQuery: string | undefined
   user: User
 }) => {
-  const { data: tags = [] } = useQuery(sidebarTagsQueryOptions(user.id))
+  const { data: tags } = useSidebarTags(user.id)
 
   return (
     <div className="w-full flex-1">

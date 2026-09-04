@@ -20,12 +20,13 @@ export const DeleteBookmarkDialog = ({ bookmark, onClose }: Props) => {
         </span>
       )
       onClose()
-    } catch (e: any) {
-      console.log(e)
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : 'An unknown error occurred'
       toast.error(
         <span>
           Error happened while trying to delete a bookmark:{' '}
-          <span className="text-destructive">{e?.message}</span>.
+          <span className="text-destructive">{message}</span>.
         </span>
       )
     }

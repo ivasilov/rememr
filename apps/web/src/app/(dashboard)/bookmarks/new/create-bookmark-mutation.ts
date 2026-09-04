@@ -1,70 +1,77 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { createClient } from '@/lib/supabase/client'
+import { useMutation } from '@tanstack/react-query'
+import { useDatabase } from '@/lib/database'
 
-const supabase = createClient()
-
-const regex =
+const UUID_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 
-const isUUID = (s: string) => {
-  return regex.test(s || '')
-}
+const isUuid = (value: string) => UUID_PATTERN.test(value)
 
-const mutationFn = async (values: {
-  name: string
-  url: string
-  read: boolean
+type CreateBookmarkValues = {
   description: string | null
+  name: string
+  read: boolean
   tagIds: { id: string; name: string }[]
-}) => {
-  const tagNames = values.tagIds
-    .filter((t) => !isUUID(t.id))
-    .map((t) => ({ name: t.name }))
-  const { data: newTags } = await supabase
-    .from('tags')
-    .insert(tagNames)
-    .throwOnError()
-    .select()
-
-  const { data } = await supabase
-    .from('bookmarks')
-    .insert({
-      name: values.name,
-      url: values.url,
-      read: values.read,
-      description: values.description,
-    })
-    .throwOnError()
-    .select()
-    .single()
-
-  const bookmark = data
-
-  const existingTags = values.tagIds.filter((t) => isUUID(t.id))
-  const relations = [...(newTags || []), ...existingTags].map((r) => ({
-    tag_id: r.id,
-    bookmark_id: bookmark.id,
-  }))
-
-  await supabase
-    .from('bookmarks_tags')
-    .delete()
-    .eq('bookmark_id', bookmark.id)
-    .throwOnError()
-  if (relations.length > 0) {
-    await supabase.from('bookmarks_tags').insert(relations).throwOnError()
-  }
+  url: string
 }
 
 export const useCreateBookmarkMutation = () => {
-  const queryClient = useQueryClient()
+  const { bookmarks, bookmarkTags, tags, userId } = useDatabase()
 
   return useMutation({
-    mutationFn,
-    onSuccess: () =>
-      Promise.all([
-        queryClient.invalidateQueries({ queryKey: ['bookmarks'] }),
-        queryClient.invalidateQueries({ queryKey: ['tags'] }),
-      ]),
+    mutationFn: async (values: CreateBookmarkValues) => {
+      const timestamp = new Date().toISOString()
+      const newTags = values.tagIds
+        .filter((tag) => !isUuid(tag.id))
+        .map((tag) => ({
+          created_at: timestamp,
+          id: crypto.randomUUID(),
+          name: tag.name,
+          updated_at: timestamp,
+          user_id: userId,
+        }))
+
+      if (newTags.length > 0) {
+        await tags.insert(newTags).isPersisted.promise
+      }
+
+      const bookmark = {
+        created_at: timestamp,
+        description: values.description,
+        id: crypto.randomUUID(),
+        name: values.name,
+        read: values.read,
+        updated_at: timestamp,
+        url: values.url,
+        user_id: userId,
+      }
+
+      await bookmarks.insert(bookmark).isPersisted.promise
+
+      const tagIds = values.tagIds.map((tag) => {
+        if (isUuid(tag.id)) {
+          return tag.id
+        }
+
+        const createdTag = newTags.find(
+          (candidate) => candidate.name === tag.name
+        )
+        if (!createdTag) {
+          throw new Error(`Failed to create tag ${tag.name}`)
+        }
+
+        return createdTag.id
+      })
+
+      if (tagIds.length > 0) {
+        await bookmarkTags.insert(
+          tagIds.map((tagId) => ({
+            bookmark_id: bookmark.id,
+            tag_id: tagId,
+          }))
+        ).isPersisted.promise
+      }
+
+      return bookmark
+    },
   })
 }
