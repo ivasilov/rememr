@@ -1,9 +1,10 @@
+import { eq, useLiveInfiniteQuery } from '@tanstack/react-db'
 import { useSearch } from '@tanstack/react-router'
+import { useMemo } from 'react'
 import { Bookmarks } from '@/components/bookmarks'
-import {
-  useListSessionBookmarksQuery,
-  useSearchSessionBookmarks,
-} from './list-session-bookmarks-query'
+import { bookmarkSessions, bookmarks } from '@/lib/database'
+
+const PAGE_SIZE = 20
 
 type SessionBookmarksProps = {
   sessionId: string
@@ -14,26 +15,49 @@ export const SessionBookmarks = ({ sessionId }: SessionBookmarksProps) => {
     strict: false,
     select: (search) => search.q as string | undefined,
   })
+  const normalizedSearch = searchQuery?.toLocaleLowerCase() ?? ''
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isError,
+    isFetchingNextPage,
+    isLoading,
+  } = useLiveInfiniteQuery(
+    (query) =>
+      query
+        .from({ bookmarkSession: bookmarkSessions })
+        .where(({ bookmarkSession }) =>
+          eq(bookmarkSession.session_id, sessionId)
+        )
+        .innerJoin({ bookmark: bookmarks }, ({ bookmarkSession, bookmark }) =>
+          eq(bookmarkSession.bookmark_id, bookmark.id)
+        )
+        .orderBy(({ bookmark }) => bookmark.created_at, 'desc')
+        .orderBy(({ bookmark }) => bookmark.id, 'desc')
+        .select(({ bookmark }) => ({ ...bookmark })),
+    { pageSize: PAGE_SIZE },
+    [normalizedSearch, sessionId]
+  )
 
-  if (searchQuery) {
-    return (
-      <SearchedSessionBookmarks
-        searchQuery={searchQuery}
-        sessionId={sessionId}
-      />
-    )
-  }
+  const filteredBookmarks = useMemo(
+    () =>
+      normalizedSearch
+        ? data.filter((bookmark) =>
+            bookmark.name.toLocaleLowerCase().includes(normalizedSearch)
+          )
+        : data,
+    [data, normalizedSearch]
+  )
 
-  return <SessionBookmarksList sessionId={sessionId} />
+  return (
+    <Bookmarks
+      bookmarks={filteredBookmarks}
+      fetchMore={fetchNextPage}
+      hasMore={hasNextPage}
+      isError={isError}
+      isFetchingMore={isFetchingNextPage}
+      isLoading={isLoading}
+    />
+  )
 }
-
-const SessionBookmarksList = ({ sessionId }: SessionBookmarksProps) => (
-  <Bookmarks {...useListSessionBookmarksQuery(sessionId)} />
-)
-
-const SearchedSessionBookmarks = ({
-  searchQuery,
-  sessionId,
-}: SessionBookmarksProps & { searchQuery: string }) => (
-  <Bookmarks {...useSearchSessionBookmarks(searchQuery, sessionId)} />
-)

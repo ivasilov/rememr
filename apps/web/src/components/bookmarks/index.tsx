@@ -17,7 +17,7 @@ const LOADING_ROW_IDS = Array.from(
   (_, index) => `loading-bookmark-${index}`
 )
 
-export type BookmarkListResult = {
+type BookmarksProps = {
   bookmarks: Bookmark[]
   fetchMore: () => void
   hasMore: boolean
@@ -33,7 +33,7 @@ export const Bookmarks = ({
   isError,
   isFetchingMore,
   isLoading,
-}: BookmarkListResult) => {
+}: BookmarksProps) => {
   const bookmarkIds = bookmarks.map((bookmark) => bookmark.id)
   const { isLoading: areTagsLoading, tagsByBookmarkId } =
     useBookmarkTags(bookmarkIds)
@@ -67,7 +67,7 @@ export const Bookmarks = ({
     )
   }
 
-  if (bookmarks.length === 0) {
+  if (bookmarks.length === 0 && !hasMore) {
     return (
       <div className="flex h-full">
         <div className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm">
