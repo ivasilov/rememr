@@ -6,7 +6,6 @@
     "dev": "next dev --turbopack",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "pnpm --workspace-root lint apps/docs",
     "test:types": "tsc --noEmit",
     "clean": "rimraf node_modules .next"
   },
