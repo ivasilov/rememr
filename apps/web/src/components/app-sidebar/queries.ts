@@ -1,9 +1,8 @@
 import { eq, useLiveQuery } from '@tanstack/react-db'
 import { useMemo } from 'react'
-import { useDatabase } from '@/lib/database'
+import { bookmarkSessions, bookmarkTags, sessions, tags } from '@/lib/database'
 
 export const useSidebarTags = (userId: string) => {
-  const { bookmarkTags, tags } = useDatabase()
   const tagsResult = useLiveQuery(
     (query) =>
       query
@@ -38,7 +37,6 @@ export const useSidebarTags = (userId: string) => {
 }
 
 export const useSidebarSessions = (userId: string) => {
-  const { bookmarkSessions, sessions } = useDatabase()
   const sessionsResult = useLiveQuery(
     (query) =>
       query

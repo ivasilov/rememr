@@ -3,11 +3,10 @@ import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
-import { type Tag, useDatabase } from '@/lib/database'
+import { bookmarkTags, type Tag, tags } from '@/lib/database'
 
 export const TagActions = ({ tag }: { tag: Tag }) => {
   const navigate = useNavigate()
-  const { bookmarkTags, tags } = useDatabase()
   const deleteTag = useMutation({
     mutationFn: async (tagId: string) => {
       const relations = bookmarkTags.toArray.filter(

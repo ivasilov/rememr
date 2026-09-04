@@ -7,7 +7,6 @@ import {
   SidebarTrigger,
 } from '@rememr/ui'
 import type { User } from '@supabase/supabase-js'
-import { useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, Link, Outlet, redirect } from '@tanstack/react-router'
 import { CircleUser } from 'lucide-react'
 import { z } from 'zod'
@@ -16,7 +15,6 @@ import { SearchInput } from '@/app/(dashboard)/search-input'
 import { AppSidebar } from '@/components/app-sidebar'
 import { Loading } from '@/components/loading'
 import { currentUserQueryOptions } from '@/lib/auth'
-import { DatabaseProvider } from '@/lib/database'
 
 export const Route = createFileRoute('/_authenticated')({
   ssr: false,
@@ -56,7 +54,6 @@ function AuthenticatedLayout() {
   const { user } = Route.useRouteContext()
   const { q } = Route.useSearch()
   const navigate = Route.useNavigate()
-  const queryClient = useQueryClient()
 
   const onSearchChange = (value: string | undefined) => {
     navigate({
@@ -66,46 +63,44 @@ function AuthenticatedLayout() {
   }
 
   return (
-    <DatabaseProvider key={user.id} queryClient={queryClient} userId={user.id}>
-      <SidebarProvider>
-        <AppSidebar user={user} />
-        <div className="grid min-h-screen w-full">
-          <div className="flex max-h-screen flex-col">
-            <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 shadow-md lg:h-[60px] lg:px-6">
-              <SidebarTrigger />
-              <SearchInput
-                onSearchChange={onSearchChange}
-                searchQuery={q}
-                user={user}
-              />
-              <Button asChild>
-                <Link to="/bookmarks/new">Add new bookmark</Link>
-              </Button>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    className="rounded-full"
-                    size="icon"
-                    variant="secondary"
-                  >
-                    <CircleUser className="h-5 w-5" />
-                    <span className="sr-only">Toggle user menu</span>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <LayoutDropdownMenuContent />
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </header>
-            <main
-              className="flex-1 overflow-auto bg-muted/40"
-              style={{ scrollbarGutter: 'stable' }}
-            >
-              <Outlet />
-            </main>
-          </div>
+    <SidebarProvider>
+      <AppSidebar user={user} />
+      <div className="grid min-h-screen w-full">
+        <div className="flex max-h-screen flex-col">
+          <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 shadow-md lg:h-[60px] lg:px-6">
+            <SidebarTrigger />
+            <SearchInput
+              onSearchChange={onSearchChange}
+              searchQuery={q}
+              user={user}
+            />
+            <Button asChild>
+              <Link to="/bookmarks/new">Add new bookmark</Link>
+            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  className="rounded-full"
+                  size="icon"
+                  variant="secondary"
+                >
+                  <CircleUser className="h-5 w-5" />
+                  <span className="sr-only">Toggle user menu</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <LayoutDropdownMenuContent />
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </header>
+          <main
+            className="flex-1 overflow-auto bg-muted/40"
+            style={{ scrollbarGutter: 'stable' }}
+          >
+            <Outlet />
+          </main>
         </div>
-      </SidebarProvider>
-    </DatabaseProvider>
+      </div>
+    </SidebarProvider>
   )
 }

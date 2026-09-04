@@ -44,9 +44,11 @@ const NewBookmarkSchema = z.object({
 export const NewBookmarkComponent = ({
   title = '',
   url = '',
+  userId,
 }: {
   title?: string
   url?: string
+  userId: string
 }) => {
   const navigate = useNavigate()
 
@@ -60,7 +62,8 @@ export const NewBookmarkComponent = ({
     },
   })
 
-  const { mutate: createBookmark, isPending } = useCreateBookmarkMutation()
+  const { mutate: createBookmark, isPending } =
+    useCreateBookmarkMutation(userId)
 
   const onSubmit: SubmitHandler<z.infer<typeof NewBookmarkSchema>> = (
     values

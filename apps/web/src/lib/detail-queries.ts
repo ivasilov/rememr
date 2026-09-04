@@ -1,9 +1,7 @@
 import { eq, useLiveQuery } from '@tanstack/react-db'
-import { useDatabase } from '@/lib/database'
+import { sessions, tags } from '@/lib/database'
 
 export const useTagDetail = (id: string) => {
-  const { tags } = useDatabase()
-
   return useLiveQuery(
     (query) =>
       query
@@ -16,8 +14,6 @@ export const useTagDetail = (id: string) => {
 }
 
 export const useSessionDetail = (id: string) => {
-  const { sessions } = useDatabase()
-
   return useLiveQuery(
     (query) =>
       query

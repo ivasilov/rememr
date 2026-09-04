@@ -7,7 +7,7 @@ import {
   TableRow,
 } from '@rememr/ui'
 import { Link } from '@tanstack/react-router'
-import type { BookmarkListResult } from '@/lib/database'
+import type { Bookmark } from '@/lib/database'
 import { BookmarkRow, LoadingBookmarkRow } from '../bookmark'
 import { LoadMoreBookmarks } from './load-more-bookmarks'
 import { useBookmarkTags } from './use-bookmark-tags'
@@ -16,6 +16,15 @@ const LOADING_ROW_IDS = Array.from(
   { length: 10 },
   (_, index) => `loading-bookmark-${index}`
 )
+
+export type BookmarkListResult = {
+  bookmarks: Bookmark[]
+  fetchMore: () => void
+  hasMore: boolean
+  isError: boolean
+  isFetchingMore: boolean
+  isLoading: boolean
+}
 
 export const Bookmarks = ({
   bookmarks,

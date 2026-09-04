@@ -43,7 +43,10 @@ const EditBookmarkSchema = z.object({
 })
 
 export const EditBookmarkDialog = ({ bookmark, onClose }: Props) => {
-  const { mutateAsync, isPending } = useEditBookmarkMutation(bookmark.tags)
+  const { mutateAsync, isPending } = useEditBookmarkMutation(
+    bookmark.tags,
+    bookmark.user_id
+  )
 
   const form = useForm<z.infer<typeof EditBookmarkSchema>>({
     resolver: zodResolver(EditBookmarkSchema),

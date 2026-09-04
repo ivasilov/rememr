@@ -1,7 +1,7 @@
 import { eq, useLiveQuery } from '@tanstack/react-db'
 import { useCallback, useMemo, useState } from 'react'
-import type { BookmarkListResult } from '@/lib/database'
-import { useDatabase } from '@/lib/database'
+import type { BookmarkListResult } from '@/components/bookmarks'
+import { bookmarkSessions, bookmarks } from '@/lib/database'
 
 const PAGE_SIZE = 20
 
@@ -9,7 +9,6 @@ export const useListSessionBookmarksQuery = (
   searchQuery: string | null,
   sessionId: string
 ): BookmarkListResult => {
-  const { bookmarks, bookmarkSessions } = useDatabase()
   const normalizedSearch = searchQuery?.toLocaleLowerCase() ?? ''
   const paginationKey = `${sessionId}:${normalizedSearch}`
   const [pagination, setPagination] = useState({

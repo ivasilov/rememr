@@ -1,6 +1,5 @@
 import { useMutation } from '@tanstack/react-query'
-import type { Tag } from '@/lib/database'
-import { useDatabase } from '@/lib/database'
+import { bookmarks, bookmarkTags, type Tag, tags } from '@/lib/database'
 
 const UUID_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
@@ -17,10 +16,9 @@ type EditBookmarkValues = {
 }
 
 export const useEditBookmarkMutation = (
-  originalTags: Pick<Tag, 'id' | 'name'>[]
+  originalTags: Pick<Tag, 'id' | 'name'>[],
+  userId: string
 ) => {
-  const { bookmarks, bookmarkTags, tags, userId } = useDatabase()
-
   return useMutation({
     mutationFn: async (values: EditBookmarkValues) => {
       const timestamp = new Date().toISOString()

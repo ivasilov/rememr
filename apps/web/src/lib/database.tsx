@@ -1,13 +1,6 @@
 import { supabaseCollectionOptions } from '@supabase-labs/tanstack-db'
-import { createCollection, eq, useLiveQuery } from '@tanstack/react-db'
-import type { QueryClient } from '@tanstack/react-query'
-import {
-  createContext,
-  type ReactNode,
-  useContext,
-  useEffect,
-  useMemo,
-} from 'react'
+import { createCollection } from '@tanstack/react-db'
+
 import { z } from 'zod'
 import { createClient } from '@/lib/supabase/client'
 
@@ -47,155 +40,70 @@ const bookmarkSessionSchema = z.object({
   session_id: z.string().uuid(),
 })
 
-const EMPTY_UUID = '00000000-0000-0000-0000-000000000000'
+const supabase = createClient()
 
-const createCollections = (queryClient: QueryClient) => {
-  const supabase = createClient()
+export const bookmarks = createCollection(
+  supabaseCollectionOptions({
+    tableName: 'bookmarks',
+    schema: bookmarkSchema,
+    keys: ['id'],
+    supabase,
+    realtime: true,
+  })
+)
+export const tags = createCollection(
+  supabaseCollectionOptions({
+    tableName: 'tags',
+    schema: tagSchema,
+    keys: ['id'],
+    supabase,
+    realtime: true,
+  })
+)
+export const sessions = createCollection(
+  supabaseCollectionOptions({
+    tableName: 'sessions',
+    schema: sessionSchema,
+    keys: ['id'],
+    supabase,
+    realtime: true,
+  })
+)
+export const bookmarkTags = createCollection(
+  supabaseCollectionOptions({
+    tableName: 'bookmarks_tags',
+    schema: bookmarkTagSchema,
+    keys: ['bookmark_id', 'tag_id'],
+    supabase,
+    realtime: true,
+  })
+)
+export const bookmarkSessions = createCollection(
+  supabaseCollectionOptions({
+    tableName: 'bookmarks_sessions',
+    schema: bookmarkSessionSchema,
+    keys: ['bookmark_id', 'session_id'],
+    supabase,
+    realtime: true,
+  })
+)
 
-  return {
-    bookmarks: createCollection(
-      supabaseCollectionOptions({
-        tableName: 'bookmarks',
-        schema: bookmarkSchema,
-        keys: ['id'],
-        supabase,
-        queryClient,
-        realtime: true,
-      })
-    ),
-    tags: createCollection(
-      supabaseCollectionOptions({
-        tableName: 'tags',
-        schema: tagSchema,
-        keys: ['id'],
-        supabase,
-        queryClient,
-        realtime: true,
-      })
-    ),
-    sessions: createCollection(
-      supabaseCollectionOptions({
-        tableName: 'sessions',
-        schema: sessionSchema,
-        keys: ['id'],
-        supabase,
-        queryClient,
-        realtime: true,
-      })
-    ),
-    bookmarkTags: createCollection(
-      supabaseCollectionOptions({
-        tableName: 'bookmarks_tags',
-        schema: bookmarkTagSchema,
-        keys: ['bookmark_id', 'tag_id'],
-        supabase,
-        queryClient,
-        realtime: true,
-      })
-    ),
-    bookmarkSessions: createCollection(
-      supabaseCollectionOptions({
-        tableName: 'bookmarks_sessions',
-        schema: bookmarkSessionSchema,
-        keys: ['bookmark_id', 'session_id'],
-        supabase,
-        queryClient,
-        realtime: true,
-      })
-    ),
-  }
+for (const collection of [
+  bookmarks,
+  tags,
+  sessions,
+  bookmarkTags,
+  bookmarkSessions,
+]) {
+  collection.startSyncImmediate()
 }
 
-export type RememrCollections = ReturnType<typeof createCollections>
-type RememrDatabase = RememrCollections & { userId: string }
-
-const DatabaseContext = createContext<RememrDatabase | null>(null)
-
-export const DatabaseProvider = ({
-  children,
-  queryClient,
-  userId,
-}: {
-  children: ReactNode
-  queryClient: QueryClient
-  userId: string
-}) => {
-  const database = useMemo(
-    () => ({ ...createCollections(queryClient), userId }),
-    [queryClient, userId]
-  )
-
-  useEffect(
-    () => () => {
-      const { userId: _, ...collections } = database
-
-      for (const collection of Object.values(collections)) {
-        collection.cleanup()
-      }
-    },
-    [database]
-  )
-
-  return (
-    <DatabaseContext.Provider value={database}>
-      <InitializeCollections database={database} />
-      {children}
-    </DatabaseContext.Provider>
-  )
-}
-
-const InitializeCollections = ({ database }: { database: RememrDatabase }) => {
-  // The experimental adapter needs an active on-demand query before collection
-  // mutations or manual refetches can write into its local sync context.
-  useLiveQuery(
-    (query) =>
-      query
-        .from({ bookmark: database.bookmarks })
-        .where(({ bookmark }) => eq(bookmark.id, EMPTY_UUID)),
-    [database.bookmarks]
-  )
-  useLiveQuery(
-    (query) =>
-      query
-        .from({ tag: database.tags })
-        .where(({ tag }) => eq(tag.id, EMPTY_UUID)),
-    [database.tags]
-  )
-  useLiveQuery(
-    (query) =>
-      query
-        .from({ session: database.sessions })
-        .where(({ session }) => eq(session.id, EMPTY_UUID)),
-    [database.sessions]
-  )
-  useLiveQuery(
-    (query) =>
-      query
-        .from({ bookmarkTag: database.bookmarkTags })
-        .where(({ bookmarkTag }) => eq(bookmarkTag.bookmark_id, EMPTY_UUID)),
-    [database.bookmarkTags]
-  )
-  useLiveQuery(
-    (query) =>
-      query
-        .from({ bookmarkSession: database.bookmarkSessions })
-        .where(({ bookmarkSession }) =>
-          eq(bookmarkSession.bookmark_id, EMPTY_UUID)
-        ),
-    [database.bookmarkSessions]
-  )
-
-  return null
-}
-
-export const useDatabase = () => {
-  const collections = useContext(DatabaseContext)
-
-  if (!collections) {
-    throw new Error('useDatabase must be used within DatabaseProvider')
-  }
-
-  return collections
+export type RememrCollections = {
+  bookmarks: typeof bookmarks
+  tags: typeof tags
+  sessions: typeof sessions
+  bookmarkTags: typeof bookmarkTags
+  bookmarkSessions: typeof bookmarkSessions
 }
 
 export type Bookmark = z.infer<typeof bookmarkSchema>
@@ -203,13 +111,4 @@ export type Tag = z.infer<typeof tagSchema>
 export type Session = z.infer<typeof sessionSchema>
 export type BookmarkRowModel = Bookmark & {
   tags: Pick<Tag, 'id' | 'name'>[]
-}
-
-export type BookmarkListResult = {
-  bookmarks: Bookmark[]
-  fetchMore: () => void
-  hasMore: boolean
-  isError: boolean
-  isFetchingMore: boolean
-  isLoading: boolean
 }

@@ -1,9 +1,8 @@
 import { eq, inArray, useLiveQuery } from '@tanstack/react-db'
 import { useMemo } from 'react'
-import { useDatabase } from '@/lib/database'
+import { bookmarkTags, tags } from '@/lib/database'
 
 export const useBookmarkTags = (bookmarkIds: string[]) => {
-  const { bookmarkTags, tags } = useDatabase()
   const idsKey = bookmarkIds.join(',')
   const { data = [], isLoading } = useLiveQuery(
     (query) => {

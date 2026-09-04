@@ -1,9 +1,7 @@
 import { useMutation } from '@tanstack/react-query'
-import { useDatabase } from '@/lib/database'
+import { bookmarkSessions, bookmarks, bookmarkTags } from '@/lib/database'
 
 export const useDeleteBookmarkMutation = () => {
-  const { bookmarks, bookmarkSessions, bookmarkTags } = useDatabase()
-
   return useMutation({
     mutationFn: async ({ id }: { id: string }) => {
       const tagRelations = bookmarkTags.toArray.filter(

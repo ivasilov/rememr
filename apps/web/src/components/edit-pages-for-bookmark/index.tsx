@@ -1,7 +1,7 @@
 import { MultipleSelector, type Option } from '@rememr/ui'
 import { useLiveQuery } from '@tanstack/react-db'
 import { useCallback, useMemo } from 'react'
-import { useDatabase } from '@/lib/database'
+import { tags } from '@/lib/database'
 import { Loading } from '../loading'
 
 export type IdName = { id?: string; name: string }
@@ -13,7 +13,6 @@ type Props = {
 }
 
 export const EditPagesForBookmark = ({ pages, onChange, disabled }: Props) => {
-  const { tags } = useDatabase()
   const { data, isLoading } = useLiveQuery((query) =>
     query
       .from({ tag: tags })

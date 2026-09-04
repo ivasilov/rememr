@@ -24,7 +24,7 @@ import { type SubmitHandler, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { ZodError, z } from 'zod'
 import { EditPagesForBookmark } from '@/components/edit-pages-for-bookmark'
-import { useDatabase } from '@/lib/database'
+import { bookmarks, bookmarkTags, tags } from '@/lib/database'
 import { importOnetabBookmarks } from './importers/onetab'
 import { importPinboardBookmarks } from './importers/pinboard'
 
@@ -80,13 +80,12 @@ const UploadDialog = (props: {
 }) => {
   const [loading, setLoading] = useState(false)
   const [progress, setProgress] = useState({ current: 0, max: 0 })
-  const { bookmarks, bookmarkTags, tags: tagCollection } = useDatabase()
 
   const refreshImportedData = () =>
     Promise.all([
       bookmarks.utils.refetch(),
       bookmarkTags.utils.refetch(),
-      tagCollection.utils.refetch(),
+      tags.utils.refetch(),
     ])
 
   const form = useForm<z.infer<typeof FormSchema>>({
