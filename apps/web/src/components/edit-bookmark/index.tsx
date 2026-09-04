@@ -15,7 +15,7 @@ import {
   Switch,
   Textarea,
 } from '@rememr/ui'
-import { useState } from 'react'
+import { useTransition } from 'react'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
@@ -44,7 +44,7 @@ const EditBookmarkSchema = z.object({
 })
 
 export const EditBookmarkDialog = ({ bookmark, onClose }: Props) => {
-  const [isPending, setIsPending] = useState(false)
+  const [isPending, startTransition] = useTransition()
 
   const form = useForm<z.infer<typeof EditBookmarkSchema>>({
     resolver: zodResolver(EditBookmarkSchema),
@@ -57,43 +57,41 @@ export const EditBookmarkDialog = ({ bookmark, onClose }: Props) => {
     },
   })
 
-  const onSubmit: SubmitHandler<z.infer<typeof EditBookmarkSchema>> = async (
+  const onSubmit: SubmitHandler<z.infer<typeof EditBookmarkSchema>> = (
     values
   ) => {
-    setIsPending(true)
-
-    try {
-      await editBookmark(
-        {
-          id: bookmark.id,
-          tagIds: values.tagIds.map((t) => ({ id: t.id, name: t.name })),
-          name: values.name,
-          url: values.url,
-          description: values.description,
-          read: values.read,
-        },
-        bookmark.tags,
-        bookmark.user_id
-      )
-      toast.success(
-        <span>
-          Succesfully updated{' '}
-          <span className="text-primary">{values.name}</span>.
-        </span>
-      )
-      onClose()
-    } catch (error: unknown) {
-      const message =
-        error instanceof Error ? error.message : 'An unknown error occurred'
-      toast.error(
-        <span>
-          Error happened while trying to edit a bookmark:{' '}
-          <span className="text-destructive">{message}</span>.
-        </span>
-      )
-    } finally {
-      setIsPending(false)
-    }
+    startTransition(async () => {
+      try {
+        await editBookmark(
+          {
+            id: bookmark.id,
+            tagIds: values.tagIds.map((t) => ({ id: t.id, name: t.name })),
+            name: values.name,
+            url: values.url,
+            description: values.description,
+            read: values.read,
+          },
+          bookmark.tags,
+          bookmark.user_id
+        )
+        toast.success(
+          <span>
+            Succesfully updated{' '}
+            <span className="text-primary">{values.name}</span>.
+          </span>
+        )
+        startTransition(onClose)
+      } catch (error: unknown) {
+        const message =
+          error instanceof Error ? error.message : 'An unknown error occurred'
+        toast.error(
+          <span>
+            Error happened while trying to edit a bookmark:{' '}
+            <span className="text-destructive">{message}</span>.
+          </span>
+        )
+      }
+    })
   }
 
   return (
