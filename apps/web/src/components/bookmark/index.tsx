@@ -57,6 +57,8 @@ export const BookmarkRow = (props: { bookmark: BookmarkWithTags }) => {
           <a
             className="text-foreground hover:underline"
             href={bookmark.url}
+            rel="noopener noreferrer"
+            target="_blank"
             title={bookmark.name}
           >
             {truncatedName}
