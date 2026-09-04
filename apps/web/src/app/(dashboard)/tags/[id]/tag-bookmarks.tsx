@@ -1,6 +1,9 @@
 import { useSearch } from '@tanstack/react-router'
 import { Bookmarks } from '@/components/bookmarks'
-import { useListTagBookmarksQuery } from './list-tag-bookmarks-query'
+import {
+  useListTagBookmarksQuery,
+  useSearchTagBookmarks,
+} from './list-tag-bookmarks-query'
 
 type TagBookmarksProps = {
   tags: string[]
@@ -12,7 +15,20 @@ export const TagBookmarks = ({ tags }: TagBookmarksProps) => {
     select: (search) => search.q as string | undefined,
   })
 
-  const result = useListTagBookmarksQuery(searchQuery ?? null, tags)
+  if (searchQuery) {
+    return <SearchedTagBookmarks searchQuery={searchQuery} tags={tags} />
+  }
 
-  return <Bookmarks {...result} />
+  return <TagBookmarksList tags={tags} />
 }
+
+const TagBookmarksList = ({ tags }: TagBookmarksProps) => (
+  <Bookmarks {...useListTagBookmarksQuery(tags)} />
+)
+
+const SearchedTagBookmarks = ({
+  searchQuery,
+  tags,
+}: TagBookmarksProps & { searchQuery: string }) => (
+  <Bookmarks {...useSearchTagBookmarks(searchQuery, tags)} />
+)

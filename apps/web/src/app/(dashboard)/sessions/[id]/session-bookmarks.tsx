@@ -1,6 +1,9 @@
 import { useSearch } from '@tanstack/react-router'
 import { Bookmarks } from '@/components/bookmarks'
-import { useListSessionBookmarksQuery } from './list-session-bookmarks-query'
+import {
+  useListSessionBookmarksQuery,
+  useSearchSessionBookmarks,
+} from './list-session-bookmarks-query'
 
 type SessionBookmarksProps = {
   sessionId: string
@@ -12,7 +15,25 @@ export const SessionBookmarks = ({ sessionId }: SessionBookmarksProps) => {
     select: (search) => search.q as string | undefined,
   })
 
-  const result = useListSessionBookmarksQuery(searchQuery ?? null, sessionId)
+  if (searchQuery) {
+    return (
+      <SearchedSessionBookmarks
+        searchQuery={searchQuery}
+        sessionId={sessionId}
+      />
+    )
+  }
 
-  return <Bookmarks {...result} />
+  return <SessionBookmarksList sessionId={sessionId} />
 }
+
+const SessionBookmarksList = ({ sessionId }: SessionBookmarksProps) => (
+  <Bookmarks {...useListSessionBookmarksQuery(sessionId)} />
+)
+
+const SearchedSessionBookmarks = ({
+  searchQuery,
+  sessionId,
+}: SessionBookmarksProps & { searchQuery: string }) => (
+  <Bookmarks {...useSearchSessionBookmarks(searchQuery, sessionId)} />
+)

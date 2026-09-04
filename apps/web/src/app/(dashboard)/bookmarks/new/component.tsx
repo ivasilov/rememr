@@ -17,12 +17,13 @@ import {
   Switch,
 } from '@rememr/ui'
 import { useNavigate } from '@tanstack/react-router'
+import { useState } from 'react'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
 import { EditPagesForBookmark } from '@/components/edit-pages-for-bookmark'
-import { useCreateBookmarkMutation } from './create-bookmark-mutation'
+import { createBookmark } from './create-bookmark-mutation'
 
 const formId = 'create-new-bookmark'
 
@@ -51,6 +52,7 @@ export const NewBookmarkComponent = ({
   userId: string
 }) => {
   const navigate = useNavigate()
+  const [isPending, setIsPending] = useState(false)
 
   const form = useForm<z.infer<typeof NewBookmarkSchema>>({
     resolver: zodResolver(NewBookmarkSchema),
@@ -62,21 +64,22 @@ export const NewBookmarkComponent = ({
     },
   })
 
-  const { mutate: createBookmark, isPending } =
-    useCreateBookmarkMutation(userId)
-
-  const onSubmit: SubmitHandler<z.infer<typeof NewBookmarkSchema>> = (
+  const onSubmit: SubmitHandler<z.infer<typeof NewBookmarkSchema>> = async (
     values
   ) => {
-    createBookmark(values, {
-      onSuccess: () => {
-        toast.success('Bookmark created successfully')
-        navigate({ to: '/bookmarks' })
-      },
-      onError: (error) => {
-        toast.error(`Failed to create bookmark: ${error.message}`)
-      },
-    })
+    setIsPending(true)
+
+    try {
+      await createBookmark(values, userId)
+      toast.success('Bookmark created successfully')
+      await navigate({ to: '/bookmarks' })
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : 'An unknown error occurred'
+      toast.error(`Failed to create bookmark: ${message}`)
+    } finally {
+      setIsPending(false)
+    }
   }
 
   return (

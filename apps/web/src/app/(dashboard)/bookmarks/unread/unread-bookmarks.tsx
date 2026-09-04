@@ -1,6 +1,9 @@
 import { useSearch } from '@tanstack/react-router'
 import { Bookmarks } from '@/components/bookmarks'
-import { useListUnreadBookmarksQuery } from './list-unread-bookmarks-query'
+import {
+  useListUnreadBookmarksQuery,
+  useSearchUnreadBookmarks,
+} from './list-unread-bookmarks-query'
 
 export const UnreadBookmarks = () => {
   const searchQuery = useSearch({
@@ -8,7 +11,17 @@ export const UnreadBookmarks = () => {
     select: (search) => search.q as string | undefined,
   })
 
-  const result = useListUnreadBookmarksQuery(searchQuery ?? null)
+  if (searchQuery) {
+    return <SearchedUnreadBookmarks searchQuery={searchQuery} />
+  }
 
-  return <Bookmarks {...result} />
+  return <UnreadBookmarksList />
 }
+
+const UnreadBookmarksList = () => (
+  <Bookmarks {...useListUnreadBookmarksQuery()} />
+)
+
+const SearchedUnreadBookmarks = ({ searchQuery }: { searchQuery: string }) => (
+  <Bookmarks {...useSearchUnreadBookmarks(searchQuery)} />
+)

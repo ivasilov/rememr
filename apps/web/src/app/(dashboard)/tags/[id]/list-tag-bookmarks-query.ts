@@ -1,4 +1,4 @@
-import { eq, useLiveQuery } from '@tanstack/react-db'
+import { eq, useLiveInfiniteQuery, useLiveQuery } from '@tanstack/react-db'
 import { useCallback, useMemo, useState } from 'react'
 import type { BookmarkListResult } from '@/components/bookmarks'
 import { bookmarks, bookmarkTags } from '@/lib/database'
@@ -6,10 +6,46 @@ import { bookmarks, bookmarkTags } from '@/lib/database'
 const PAGE_SIZE = 20
 
 export const useListTagBookmarksQuery = (
-  searchQuery: string | null,
   tags: string[]
 ): BookmarkListResult => {
-  const normalizedSearch = searchQuery?.toLocaleLowerCase() ?? ''
+  const tagId = tags.at(0) ?? ''
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isError,
+    isFetchingNextPage,
+    isLoading,
+  } = useLiveInfiniteQuery(
+    (query) =>
+      query
+        .from({ bookmarkTag: bookmarkTags })
+        .where(({ bookmarkTag }) => eq(bookmarkTag.tag_id, tagId))
+        .innerJoin({ bookmark: bookmarks }, ({ bookmarkTag, bookmark }) =>
+          eq(bookmarkTag.bookmark_id, bookmark.id)
+        )
+        .orderBy(({ bookmark }) => bookmark.created_at, 'desc')
+        .orderBy(({ bookmark }) => bookmark.id, 'desc')
+        .select(({ bookmark }) => ({ ...bookmark })),
+    { pageSize: PAGE_SIZE },
+    [tagId]
+  )
+
+  return {
+    bookmarks: data,
+    fetchMore: fetchNextPage,
+    hasMore: hasNextPage,
+    isError,
+    isFetchingMore: isFetchingNextPage,
+    isLoading,
+  }
+}
+
+export const useSearchTagBookmarks = (
+  searchQuery: string,
+  tags: string[]
+): BookmarkListResult => {
+  const normalizedSearch = searchQuery.toLocaleLowerCase()
   const tagId = tags.at(0) ?? ''
   const paginationKey = `${tagId}:${normalizedSearch}`
   const [pagination, setPagination] = useState({
@@ -20,8 +56,8 @@ export const useListTagBookmarksQuery = (
     pagination.key === paginationKey ? pagination.visibleCount : PAGE_SIZE
 
   const { data, isError, isLoading } = useLiveQuery(
-    (query) => {
-      const orderedQuery = query
+    (query) =>
+      query
         .from({ bookmarkTag: bookmarkTags })
         .where(({ bookmarkTag }) => eq(bookmarkTag.tag_id, tagId))
         .innerJoin({ bookmark: bookmarks }, ({ bookmarkTag, bookmark }) =>
@@ -29,24 +65,17 @@ export const useListTagBookmarksQuery = (
         )
         .orderBy(({ bookmark }) => bookmark.created_at, 'desc')
         .orderBy(({ bookmark }) => bookmark.id, 'desc')
-        .select(({ bookmark }) => ({ ...bookmark }))
-
-      return normalizedSearch
-        ? orderedQuery
-        : orderedQuery.limit(visibleCount + 1)
-    },
-    [normalizedSearch, tagId, visibleCount]
+        .select(({ bookmark }) => ({ ...bookmark })),
+    [normalizedSearch, tagId]
   )
 
-  const filteredBookmarks = useMemo(() => {
-    if (!normalizedSearch) {
-      return data
-    }
-
-    return data.filter((bookmark) =>
-      bookmark.name.toLocaleLowerCase().includes(normalizedSearch)
-    )
-  }, [data, normalizedSearch])
+  const filteredBookmarks = useMemo(
+    () =>
+      data.filter((bookmark) =>
+        bookmark.name.toLocaleLowerCase().includes(normalizedSearch)
+      ),
+    [data, normalizedSearch]
+  )
 
   const fetchMore = useCallback(
     () =>
@@ -64,7 +93,7 @@ export const useListTagBookmarksQuery = (
     fetchMore,
     hasMore: filteredBookmarks.length > visibleCount,
     isError,
-    isFetchingMore: isLoading && visibleCount > PAGE_SIZE,
+    isFetchingMore: false,
     isLoading,
   }
 }

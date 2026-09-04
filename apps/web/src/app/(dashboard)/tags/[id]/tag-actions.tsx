@@ -1,16 +1,20 @@
 import { Button } from '@rememr/ui'
-import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { Loader2 } from 'lucide-react'
+import { useState } from 'react'
 import { toast } from 'sonner'
 import { bookmarkTags, type Tag, tags } from '@/lib/database'
 
 export const TagActions = ({ tag }: { tag: Tag }) => {
   const navigate = useNavigate()
-  const deleteTag = useMutation({
-    mutationFn: async (tagId: string) => {
+  const [isPending, setIsPending] = useState(false)
+
+  const onDelete = async () => {
+    setIsPending(true)
+
+    try {
       const relations = bookmarkTags.toArray.filter(
-        (relation) => relation.tag_id === tagId
+        (relation) => relation.tag_id === tag.id
       )
 
       if (relations.length > 0) {
@@ -19,26 +23,21 @@ export const TagActions = ({ tag }: { tag: Tag }) => {
         ).isPersisted.promise
       }
 
-      await tags.delete(tagId).isPersisted.promise
-    },
-    onSuccess: async () => {
+      await tags.delete(tag.id).isPersisted.promise
       toast.success(`The tag ${tag.name} has been deleted.`)
       await navigate({ to: '/bookmarks' })
-    },
-    onError: (error) => {
-      toast.error(`Failed to delete tag: ${error.message}`)
-    },
-  })
-
-  const onDelete = () => deleteTag.mutate(tag.id)
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : 'An unknown error occurred'
+      toast.error(`Failed to delete tag: ${message}`)
+    } finally {
+      setIsPending(false)
+    }
+  }
 
   return (
-    <Button
-      disabled={deleteTag.isPending}
-      onClick={onDelete}
-      variant="destructive"
-    >
-      {deleteTag.isPending && <Loader2 className="animate-spin" />}
+    <Button disabled={isPending} onClick={onDelete} variant="destructive">
+      {isPending && <Loader2 className="animate-spin" />}
       Delete
     </Button>
   )

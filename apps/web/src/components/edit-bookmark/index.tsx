@@ -15,12 +15,13 @@ import {
   Switch,
   Textarea,
 } from '@rememr/ui'
+import { useState } from 'react'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
 import type { BookmarkRowModel } from '@/lib/database'
 import { EditPagesForBookmark } from '../edit-pages-for-bookmark'
-import { useEditBookmarkMutation } from './edit-bookmark-mutation'
+import { editBookmark } from './edit-bookmark-mutation'
 
 const formId = 'edit-bookmark'
 
@@ -43,10 +44,7 @@ const EditBookmarkSchema = z.object({
 })
 
 export const EditBookmarkDialog = ({ bookmark, onClose }: Props) => {
-  const { mutateAsync, isPending } = useEditBookmarkMutation(
-    bookmark.tags,
-    bookmark.user_id
-  )
+  const [isPending, setIsPending] = useState(false)
 
   const form = useForm<z.infer<typeof EditBookmarkSchema>>({
     resolver: zodResolver(EditBookmarkSchema),
@@ -62,15 +60,21 @@ export const EditBookmarkDialog = ({ bookmark, onClose }: Props) => {
   const onSubmit: SubmitHandler<z.infer<typeof EditBookmarkSchema>> = async (
     values
   ) => {
+    setIsPending(true)
+
     try {
-      await mutateAsync({
-        id: bookmark.id,
-        tagIds: values.tagIds.map((t) => ({ id: t.id, name: t.name })),
-        name: values.name,
-        url: values.url,
-        description: values.description,
-        read: values.read,
-      })
+      await editBookmark(
+        {
+          id: bookmark.id,
+          tagIds: values.tagIds.map((t) => ({ id: t.id, name: t.name })),
+          name: values.name,
+          url: values.url,
+          description: values.description,
+          read: values.read,
+        },
+        bookmark.tags,
+        bookmark.user_id
+      )
       toast.success(
         <span>
           Succesfully updated{' '}
@@ -87,6 +91,8 @@ export const EditBookmarkDialog = ({ bookmark, onClose }: Props) => {
           <span className="text-destructive">{message}</span>.
         </span>
       )
+    } finally {
+      setIsPending(false)
     }
   }
 

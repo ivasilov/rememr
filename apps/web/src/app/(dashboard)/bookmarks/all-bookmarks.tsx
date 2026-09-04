@@ -1,6 +1,9 @@
 import { useSearch } from '@tanstack/react-router'
 import { Bookmarks } from '@/components/bookmarks'
-import { useListAllBookmarksQuery } from './list-all-bookmarks-query'
+import {
+  useListAllBookmarksQuery,
+  useSearchAllBookmarks,
+} from './list-all-bookmarks-query'
 
 export const AllBookmarks = () => {
   const searchQuery = useSearch({
@@ -8,7 +11,15 @@ export const AllBookmarks = () => {
     select: (search) => search.q as string | undefined,
   })
 
-  const result = useListAllBookmarksQuery(searchQuery ?? null)
+  if (searchQuery) {
+    return <SearchedAllBookmarks searchQuery={searchQuery} />
+  }
 
-  return <Bookmarks {...result} />
+  return <AllBookmarksList />
 }
+
+const AllBookmarksList = () => <Bookmarks {...useListAllBookmarksQuery()} />
+
+const SearchedAllBookmarks = ({ searchQuery }: { searchQuery: string }) => (
+  <Bookmarks {...useSearchAllBookmarks(searchQuery)} />
+)

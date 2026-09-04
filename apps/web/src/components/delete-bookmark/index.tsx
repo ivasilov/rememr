@@ -1,6 +1,7 @@
 import { Button, DialogFooter, DialogHeader, DialogTitle } from '@rememr/ui'
+import { useState } from 'react'
 import { toast } from 'sonner'
-import { useDeleteBookmarkMutation } from './delete-bookmark-mutation'
+import { deleteBookmark } from './delete-bookmark-mutation'
 
 type Props = {
   bookmark: { id: string; name: string }
@@ -8,11 +9,13 @@ type Props = {
 }
 
 export const DeleteBookmarkDialog = ({ bookmark, onClose }: Props) => {
-  const { mutateAsync, isPending } = useDeleteBookmarkMutation()
+  const [isPending, setIsPending] = useState(false)
 
   const onDelete = async () => {
+    setIsPending(true)
+
     try {
-      await mutateAsync({ id: bookmark.id })
+      await deleteBookmark(bookmark.id)
       toast.success(
         <span>
           Succesfully deleted{' '}
@@ -29,6 +32,8 @@ export const DeleteBookmarkDialog = ({ bookmark, onClose }: Props) => {
           <span className="text-destructive">{message}</span>.
         </span>
       )
+    } finally {
+      setIsPending(false)
     }
   }
 
