@@ -38,6 +38,12 @@ const FormSchema = z.object({
 
 const FormId = 'import-bookmarks-form'
 const PERCENT_MULTIPLIER = 100
+const refreshImportedData = () =>
+  Promise.all([
+    bookmarks.utils.refetch(),
+    bookmarkTags.utils.refetch(),
+    tags.utils.refetch(),
+  ])
 
 export const Imports = () => {
   const [state, setState] = useState<{
@@ -80,13 +86,6 @@ const UploadDialog = (props: {
 }) => {
   const [loading, setLoading] = useState(false)
   const [progress, setProgress] = useState({ current: 0, max: 0 })
-
-  const refreshImportedData = () =>
-    Promise.all([
-      bookmarks.utils.refetch(),
-      bookmarkTags.utils.refetch(),
-      tags.utils.refetch(),
-    ])
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),

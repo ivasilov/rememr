@@ -28,10 +28,6 @@ export const createBookmark = async (
       user_id: userId,
     }))
 
-  if (newTags.length > 0) {
-    await tags.insert(newTags).isPersisted.promise
-  }
-
   const bookmark = {
     created_at: timestamp,
     description: values.description,
@@ -43,7 +39,13 @@ export const createBookmark = async (
     user_id: userId,
   }
 
-  await bookmarks.insert(bookmark).isPersisted.promise
+  const bookmarkTransaction = bookmarks.insert(bookmark)
+  const tagTransaction = newTags.length > 0 ? tags.insert(newTags) : undefined
+
+  await Promise.all([
+    bookmarkTransaction.isPersisted.promise,
+    ...(tagTransaction ? [tagTransaction.isPersisted.promise] : []),
+  ])
 
   const tagIds = values.tagIds.map((tag) => {
     if (isUuid(tag.id)) {

@@ -1,6 +1,6 @@
 import { eq, inArray, useLiveQuery } from '@tanstack/react-db'
 import { useMemo } from 'react'
-import { bookmarkTags, tags } from '@/lib/database'
+import { bookmarks, bookmarkTags, tags } from '@/lib/database'
 
 export const useBookmarkTags = (bookmarkIds: string[]) => {
   const idsKey = bookmarkIds.join(',')
@@ -11,15 +11,16 @@ export const useBookmarkTags = (bookmarkIds: string[]) => {
       }
 
       return query
-        .from({ bookmarkTag: bookmarkTags })
-        .where(({ bookmarkTag }) =>
-          inArray(bookmarkTag.bookmark_id, bookmarkIds)
+        .from({ bookmark: bookmarks })
+        .where(({ bookmark }) => inArray(bookmark.id, bookmarkIds))
+        .innerJoin({ bookmarkTag: bookmarkTags }, ({ bookmark, bookmarkTag }) =>
+          eq(bookmark.id, bookmarkTag.bookmark_id)
         )
         .innerJoin({ tag: tags }, ({ bookmarkTag, tag }) =>
           eq(bookmarkTag.tag_id, tag.id)
         )
-        .select(({ bookmarkTag, tag }) => ({
-          bookmarkId: bookmarkTag.bookmark_id,
+        .select(({ bookmark, tag }) => ({
+          bookmarkId: bookmark.id,
           id: tag.id,
           name: tag.name,
         }))

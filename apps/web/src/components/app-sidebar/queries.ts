@@ -1,74 +1,49 @@
-import { eq, useLiveQuery } from '@tanstack/react-db'
-import { useMemo } from 'react'
+import { count, eq, useLiveQuery } from '@tanstack/react-db'
 import { bookmarkSessions, bookmarkTags, sessions, tags } from '@/lib/database'
 
 export const useSidebarTags = (userId: string) => {
-  const tagsResult = useLiveQuery(
+  return useLiveQuery(
     (query) =>
       query
         .from({ tag: tags })
+        .leftJoin({ bookmarkTag: bookmarkTags }, ({ tag, bookmarkTag }) =>
+          eq(tag.id, bookmarkTag.tag_id)
+        )
         .where(({ tag }) => eq(tag.user_id, userId))
-        .orderBy(({ tag }) => tag.name)
-        .select(({ tag }) => ({ ...tag })),
+        .groupBy(({ tag }) => [tag.id, tag.name])
+        .select(({ tag, bookmarkTag }) => ({
+          count: count(bookmarkTag.bookmark_id),
+          id: tag.id,
+          name: tag.name,
+        }))
+        .orderBy(({ $selected }) => $selected.name),
     [userId]
   )
-  const relationsResult = useLiveQuery((query) =>
-    query.from({ bookmarkTag: bookmarkTags })
-  )
-
-  const data = useMemo(() => {
-    const counts = new Map<string, number>()
-    for (const relation of relationsResult.data) {
-      counts.set(relation.tag_id, (counts.get(relation.tag_id) ?? 0) + 1)
-    }
-
-    return tagsResult.data.map((tag) => ({
-      id: tag.id,
-      name: tag.name,
-      count: counts.get(tag.id) ?? 0,
-    }))
-  }, [relationsResult.data, tagsResult.data])
-
-  return {
-    data,
-    isError: tagsResult.isError || relationsResult.isError,
-    isLoading: tagsResult.isLoading || relationsResult.isLoading,
-  }
 }
 
 export const useSidebarSessions = (userId: string) => {
-  const sessionsResult = useLiveQuery(
+  return useLiveQuery(
     (query) =>
       query
         .from({ session: sessions })
+        .leftJoin(
+          { bookmarkSession: bookmarkSessions },
+          ({ session, bookmarkSession }) =>
+            eq(session.id, bookmarkSession.session_id)
+        )
         .where(({ session }) => eq(session.user_id, userId))
-        .orderBy(({ session }) => session.created_at, 'desc')
-        .select(({ session }) => ({ ...session })),
+        .groupBy(({ session }) => [
+          session.created_at,
+          session.id,
+          session.name,
+        ])
+        .select(({ session, bookmarkSession }) => ({
+          count: count(bookmarkSession.bookmark_id),
+          createdAt: session.created_at,
+          id: session.id,
+          name: session.name,
+        }))
+        .orderBy(({ $selected }) => $selected.createdAt, 'desc'),
     [userId]
   )
-  const relationsResult = useLiveQuery((query) =>
-    query.from({ bookmarkSession: bookmarkSessions })
-  )
-
-  const data = useMemo(() => {
-    const counts = new Map<string, number>()
-    for (const relation of relationsResult.data) {
-      counts.set(
-        relation.session_id,
-        (counts.get(relation.session_id) ?? 0) + 1
-      )
-    }
-
-    return sessionsResult.data.map((session) => ({
-      id: session.id,
-      name: session.name,
-      count: counts.get(session.id) ?? 0,
-    }))
-  }, [relationsResult.data, sessionsResult.data])
-
-  return {
-    data,
-    isError: sessionsResult.isError || relationsResult.isError,
-    isLoading: sessionsResult.isLoading || relationsResult.isLoading,
-  }
 }

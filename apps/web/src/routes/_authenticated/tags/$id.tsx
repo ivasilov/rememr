@@ -1,10 +1,11 @@
+import { eq, useLiveQuery } from '@tanstack/react-db'
 import { createFileRoute } from '@tanstack/react-router'
 import { Tag } from 'lucide-react'
 import { TagActions } from '@/app/(dashboard)/tags/[id]/tag-actions'
 import { TagBookmarks } from '@/app/(dashboard)/tags/[id]/tag-bookmarks'
 import { Loading } from '@/components/loading'
 import { MainContentLayout } from '@/components/main-content-layout'
-import { useTagDetail } from '@/lib/detail-queries'
+import { tags } from '@/lib/database'
 
 export const Route = createFileRoute('/_authenticated/tags/$id')({
   component: TagPage,
@@ -12,7 +13,19 @@ export const Route = createFileRoute('/_authenticated/tags/$id')({
 
 function TagPage() {
   const { id } = Route.useParams()
-  const { data: tag, isLoading, isError } = useTagDetail(id)
+  const {
+    data: tag,
+    isLoading,
+    isError,
+  } = useLiveQuery(
+    (query) =>
+      query
+        .from({ tag: tags })
+        .where(({ tag }) => eq(tag.id, id))
+        .select(({ tag }) => ({ ...tag }))
+        .findOne(),
+    [id]
+  )
 
   if (isLoading) {
     return <Loading />
