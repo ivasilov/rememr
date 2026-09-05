@@ -21,7 +21,9 @@
   "pnpm": {
     "overrides": {
       "@types/react": "~19.0.10",
-      "@types/react-dom": "~19.0.4"
+      "@types/react-dom": "~19.0.4",
+      "@tanstack/db": "^0.8.7",
+      "@tanstack/query-db-collection": "^1.2.12"
     }
   }
 }

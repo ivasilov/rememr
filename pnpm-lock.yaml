@@ -7,6 +7,8 @@ settings:
 overrides:
   '@types/react': ~19.0.10
   '@types/react-dom': ~19.0.4
+  '@tanstack/db': ^0.8.7
+  '@tanstack/query-db-collection': ^1.2.12
 
 importers:
 
@@ -3389,18 +3391,8 @@ packages:
     peerDependencies:
       vite: ^5.2.0 || ^6 || ^7 || ^8
 
-  '@tanstack/db-ivm@0.1.18':
-    resolution: {integrity: sha512-+pZJiRKdoKRM5Epq9T7otD9ZJl82pRFauo7LKuJGrarjVKQ7r+QQlPe3kGdN9LEKSnuNGIWjX9OOY4M8kH4eLw==}
-    peerDependencies:
-      typescript: '>=4.7'
-
   '@tanstack/db-ivm@0.1.19':
     resolution: {integrity: sha512-3VGvgNXAPSVqny/pL8Y6n/txnaZzV49WmgSQ9N5eyCQNgMtuOEOJHKDatqqCy3gDxVu6pkhSHDKxcNFOtxMouw==}
-    peerDependencies:
-      typescript: '>=4.7'
-
-  '@tanstack/db@0.6.17':
-    resolution: {integrity: sha512-/i6+dedEkOCVQbTQtCjQHx3Nqlkqe6zvi+9/JPnSgm47o+akoaPqcSwxTmesDZxc/efHokUtzeD2ocow257RdQ==}
     peerDependencies:
       typescript: '>=4.7'
 
@@ -9826,7 +9818,7 @@ snapshots:
       '@standard-schema/spec': 1.1.0
       '@supabase/postgrest-js': 2.114.0
       '@supabase/supabase-js': 2.114.0
-      '@tanstack/db': 0.6.17(typescript@5.9.3)
+      '@tanstack/db': 0.8.7(typescript@5.9.3)
       '@tanstack/query-core': 5.102.8
       '@tanstack/query-db-collection': 1.2.12(@tanstack/query-core@5.102.8)(typescript@5.9.3)
     transitivePeerDependencies:
@@ -10254,23 +10246,10 @@ snapshots:
       tailwindcss: 4.3.3
       vite: 8.2.2(@types/node@22.20.1)(jiti@2.7.0)(less@4.2.0)(sass@1.71.0)(yaml@2.6.1)
 
-  '@tanstack/db-ivm@0.1.18(typescript@5.9.3)':
-    dependencies:
-      fractional-indexing: 3.4.0
-      sorted-btree: 1.8.1
-      typescript: 5.9.3
-
   '@tanstack/db-ivm@0.1.19(typescript@5.9.3)':
     dependencies:
       fractional-indexing: 3.4.0
       sorted-btree: 1.8.1
-      typescript: 5.9.3
-
-  '@tanstack/db@0.6.17(typescript@5.9.3)':
-    dependencies:
-      '@standard-schema/spec': 1.1.0
-      '@tanstack/db-ivm': 0.1.18(typescript@5.9.3)
-      '@tanstack/pacer-lite': 0.2.2
       typescript: 5.9.3
 
   '@tanstack/db@0.8.7(typescript@5.9.3)':
