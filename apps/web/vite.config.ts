@@ -4,26 +4,16 @@ import viteReact from '@vitejs/plugin-react'
 import { nitro } from 'nitro/vite'
 import { defineConfig, loadEnv } from 'vite'
 
-const normalizeBasePath = (value: string | undefined) => {
-  if (!value || value === '/') {
-    return ''
-  }
-
-  return `/${value.replace(/^\/+|\/+$/g, '')}`
-}
-
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
-  const defaultBasePath = mode === 'production' ? '/dashboard' : ''
-  const configuredBasePath = env.VITE_APP_BASE_PATH ?? defaultBasePath
-  const basePath = normalizeBasePath(configuredBasePath)
+  const basePath = env.VITE_APP_BASE_PATH ?? '/'
 
   return {
-    base: basePath ? `${basePath}/` : '/',
+    base: basePath,
     plugins: [
       tailwindcss(),
       tanstackStart(),
-      nitro({ baseURL: basePath || '/' }),
+      nitro({ baseURL: basePath }),
       viteReact(),
     ],
     resolve: {
