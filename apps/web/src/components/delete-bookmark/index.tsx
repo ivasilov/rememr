@@ -1,6 +1,7 @@
 import { Button, DialogFooter, DialogHeader, DialogTitle } from '@rememr/ui'
+import { useTransition } from 'react'
 import { toast } from 'sonner'
-import { useDeleteBookmarkMutation } from './delete-bookmark-mutation'
+import { deleteBookmark } from './delete-bookmark-mutation'
 
 type Props = {
   bookmark: { id: string; name: string }
@@ -8,27 +9,30 @@ type Props = {
 }
 
 export const DeleteBookmarkDialog = ({ bookmark, onClose }: Props) => {
-  const { mutateAsync, isPending } = useDeleteBookmarkMutation()
+  const [isPending, startTransition] = useTransition()
 
-  const onDelete = async () => {
-    try {
-      await mutateAsync({ id: bookmark.id })
-      toast.success(
-        <span>
-          Succesfully deleted{' '}
-          <span className="text-destructive">{bookmark.name}</span>.
-        </span>
-      )
-      onClose()
-    } catch (e: any) {
-      console.log(e)
-      toast.error(
-        <span>
-          Error happened while trying to delete a bookmark:{' '}
-          <span className="text-destructive">{e?.message}</span>.
-        </span>
-      )
-    }
+  const onDelete = () => {
+    startTransition(async () => {
+      try {
+        await deleteBookmark(bookmark.id)
+        toast.success(
+          <span>
+            Succesfully deleted{' '}
+            <span className="text-destructive">{bookmark.name}</span>.
+          </span>
+        )
+        startTransition(onClose)
+      } catch (error: unknown) {
+        const message =
+          error instanceof Error ? error.message : 'An unknown error occurred'
+        toast.error(
+          <span>
+            Error happened while trying to delete a bookmark:{' '}
+            <span className="text-destructive">{message}</span>.
+          </span>
+        )
+      }
+    })
   }
 
   return (

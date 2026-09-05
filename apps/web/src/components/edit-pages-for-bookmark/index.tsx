@@ -1,6 +1,7 @@
 import { MultipleSelector, type Option } from '@rememr/ui'
-import { useEffect, useMemo } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { useLiveQuery } from '@tanstack/react-db'
+import { useCallback, useMemo } from 'react'
+import { tags } from '@/lib/database'
 import { Loading } from '../loading'
 
 export type IdName = { id?: string; name: string }
@@ -11,26 +12,13 @@ type Props = {
   disabled?: boolean
 }
 
-const memoizedSearchSet = new Map<string, { value: string; label: string }[]>()
-
-const memoizedOnSearch = async (value: string) => {
-  if (!memoizedSearchSet.has(value)) {
-    const supabase = createClient()
-    const { data: tags } = await supabase
-      .from('tags')
-      .select()
-      .ilike('name', `%${value}%`)
-      .limit(10)
-    const result = (tags || []).map((p) => ({ value: p.id, label: p.name }))
-    memoizedSearchSet.set(value, result)
-  }
-
-  return memoizedSearchSet.get(value)!
-}
-
 export const EditPagesForBookmark = ({ pages, onChange, disabled }: Props) => {
-  // clear the memoizedSearchSet on first render
-  useEffect(() => memoizedSearchSet.clear(), [])
+  const { data, isLoading } = useLiveQuery((query) =>
+    query
+      .from({ tag: tags })
+      .orderBy(({ tag }) => tag.name)
+      .select(({ tag }) => ({ id: tag.id, name: tag.name }))
+  )
 
   const value = useMemo(
     () =>
@@ -42,8 +30,27 @@ export const EditPagesForBookmark = ({ pages, onChange, disabled }: Props) => {
     [pages]
   )
 
-  const handleChange = (value: Option[]) => {
-    const newPages = value.map((v) => ({ id: v.value, name: v.label }))
+  const onSearchSync = useCallback(
+    (search: string) => {
+      const normalizedSearch = search.toLocaleLowerCase()
+
+      return data
+        .filter(
+          (tag) =>
+            !normalizedSearch ||
+            tag.name.toLocaleLowerCase().includes(normalizedSearch)
+        )
+        .slice(0, 10)
+        .map((tag) => ({ value: tag.id, label: tag.name }))
+    },
+    [data]
+  )
+
+  const handleChange = (options: Option[]) => {
+    const newPages = options.map((option) => ({
+      id: option.value,
+      name: option.label,
+    }))
 
     onChange(newPages)
   }
@@ -51,7 +58,7 @@ export const EditPagesForBookmark = ({ pages, onChange, disabled }: Props) => {
   return (
     <MultipleSelector
       creatable
-      disabled={disabled}
+      disabled={disabled || isLoading}
       emptyIndicator="No results found."
       hideClearAllButton
       loadingIndicator={
@@ -60,7 +67,7 @@ export const EditPagesForBookmark = ({ pages, onChange, disabled }: Props) => {
         </div>
       }
       onChange={handleChange}
-      onSearch={memoizedOnSearch}
+      onSearchSync={onSearchSync}
       placeholder=""
       triggerSearchOnFocus
       value={value}

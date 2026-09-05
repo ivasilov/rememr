@@ -1,10 +1,10 @@
-import { useQuery } from '@tanstack/react-query'
+import { eq, useLiveQuery } from '@tanstack/react-db'
 import { createFileRoute } from '@tanstack/react-router'
 import { FileStack } from 'lucide-react'
 import { SessionBookmarks } from '@/app/(dashboard)/sessions/[id]/session-bookmarks'
 import { Loading } from '@/components/loading'
 import { MainContentLayout } from '@/components/main-content-layout'
-import { sessionDetailQueryOptions } from '@/lib/detail-queries'
+import { sessions } from '@/lib/database'
 
 export const Route = createFileRoute('/_authenticated/sessions/$id')({
   component: SessionPage,
@@ -16,7 +16,15 @@ function SessionPage() {
     data: session,
     isLoading,
     isError,
-  } = useQuery(sessionDetailQueryOptions(id))
+  } = useLiveQuery(
+    (query) =>
+      query
+        .from({ session: sessions })
+        .where(({ session }) => eq(session.id, id))
+        .select(({ session }) => ({ ...session }))
+        .findOne(),
+    [id]
+  )
 
   if (isLoading) {
     return <Loading />

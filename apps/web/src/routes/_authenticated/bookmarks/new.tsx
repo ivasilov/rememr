@@ -13,10 +13,11 @@ export const Route = createFileRoute('/_authenticated/bookmarks/new')({
 
 function NewBookmarkPage() {
   const { title, url } = Route.useSearch()
+  const { user } = Route.useRouteContext()
 
   return (
     <div className="flex justify-center pt-8">
-      <NewBookmarkComponent title={title} url={url} />
+      <NewBookmarkComponent title={title} url={url} userId={user.id} />
     </div>
   )
 }

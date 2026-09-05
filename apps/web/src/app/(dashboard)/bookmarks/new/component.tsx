@@ -17,12 +17,13 @@ import {
   Switch,
 } from '@rememr/ui'
 import { useNavigate } from '@tanstack/react-router'
+import { useTransition } from 'react'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
 import { EditPagesForBookmark } from '@/components/edit-pages-for-bookmark'
-import { useCreateBookmarkMutation } from './create-bookmark-mutation'
+import { createBookmark } from './create-bookmark-mutation'
 
 const formId = 'create-new-bookmark'
 
@@ -44,11 +45,14 @@ const NewBookmarkSchema = z.object({
 export const NewBookmarkComponent = ({
   title = '',
   url = '',
+  userId,
 }: {
   title?: string
   url?: string
+  userId: string
 }) => {
   const navigate = useNavigate()
+  const [isPending, startTransition] = useTransition()
 
   const form = useForm<z.infer<typeof NewBookmarkSchema>>({
     resolver: zodResolver(NewBookmarkSchema),
@@ -60,27 +64,20 @@ export const NewBookmarkComponent = ({
     },
   })
 
-  const { mutate: createBookmark, isPending } = useCreateBookmarkMutation()
-
   const onSubmit: SubmitHandler<z.infer<typeof NewBookmarkSchema>> = (
     values
   ) => {
-    try {
-      createBookmark(values, {
-        onSuccess: () => {
-          toast.success('Bookmark created successfully')
-          navigate({ to: '/bookmarks' })
-        },
-        onError: (error) => {
-          toast.error(`Failed to create bookmark: ${error.message}`)
-        },
-      })
-
-      toast.success('Bookmark created')
-      navigate({ to: '/bookmarks' })
-    } catch (error) {
-      toast.error('An unexpected error occurred')
-    }
+    startTransition(async () => {
+      try {
+        await createBookmark(values, userId)
+        toast.success('Bookmark created successfully')
+        await navigate({ to: '/bookmarks' })
+      } catch (error: unknown) {
+        const message =
+          error instanceof Error ? error.message : 'An unknown error occurred'
+        toast.error(`Failed to create bookmark: ${message}`)
+      }
+    })
   }
 
   return (

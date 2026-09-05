@@ -1,46 +1,41 @@
 import { Button } from '@rememr/ui'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { Loader2 } from 'lucide-react'
+import { useTransition } from 'react'
 import { toast } from 'sonner'
-import type { TagType } from '@/lib/supabase'
-import { createClient } from '@/lib/supabase/client'
+import { bookmarkTags, type Tag, tags } from '@/lib/database'
 
-export const TagActions = ({ tag }: { tag: TagType }) => {
+export const TagActions = ({ tag }: { tag: Tag }) => {
   const navigate = useNavigate()
-  const queryClient = useQueryClient()
-  const deleteTag = useMutation({
-    mutationFn: async (tagId: string) => {
-      const supabase = createClient()
-      await supabase
-        .from('bookmarks_tags')
-        .delete()
-        .eq('tag_id', tagId)
-        .throwOnError()
-      await supabase.from('tags').delete().eq('id', tagId).throwOnError()
-    },
-    onSuccess: async () => {
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ['bookmarks'] }),
-        queryClient.invalidateQueries({ queryKey: ['tags'] }),
-      ])
-      toast.success(`The tag ${tag.name} has been deleted.`)
-      await navigate({ to: '/bookmarks' })
-    },
-    onError: (error) => {
-      toast.error(`Failed to delete tag: ${error.message}`)
-    },
-  })
+  const [isPending, startTransition] = useTransition()
 
-  const onDelete = () => deleteTag.mutate(tag.id)
+  const onDelete = () => {
+    startTransition(async () => {
+      try {
+        const relations = bookmarkTags.toArray.filter(
+          (relation) => relation.tag_id === tag.id
+        )
+
+        if (relations.length > 0) {
+          await bookmarkTags.delete(
+            relations.map((relation) => bookmarkTags.getKeyFromItem(relation))
+          ).isPersisted.promise
+        }
+
+        await tags.delete(tag.id).isPersisted.promise
+        toast.success(`The tag ${tag.name} has been deleted.`)
+        await navigate({ to: '/bookmarks' })
+      } catch (error: unknown) {
+        const message =
+          error instanceof Error ? error.message : 'An unknown error occurred'
+        toast.error(`Failed to delete tag: ${message}`)
+      }
+    })
+  }
 
   return (
-    <Button
-      disabled={deleteTag.isPending}
-      onClick={onDelete}
-      variant="destructive"
-    >
-      {deleteTag.isPending && <Loader2 className="animate-spin" />}
+    <Button disabled={isPending} onClick={onDelete} variant="destructive">
+      {isPending && <Loader2 className="animate-spin" />}
       Delete
     </Button>
   )

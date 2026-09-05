@@ -17,7 +17,6 @@ import {
   Progress,
   Switch,
 } from '@rememr/ui'
-import { useQueryClient } from '@tanstack/react-query'
 import { capitalize } from 'lodash'
 import { Loader2 } from 'lucide-react'
 import { useState } from 'react'
@@ -25,6 +24,7 @@ import { type SubmitHandler, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { ZodError, z } from 'zod'
 import { EditPagesForBookmark } from '@/components/edit-pages-for-bookmark'
+import { bookmarks, bookmarkTags, tags } from '@/lib/database'
 import { importOnetabBookmarks } from './importers/onetab'
 import { importPinboardBookmarks } from './importers/pinboard'
 
@@ -37,6 +37,13 @@ const FormSchema = z.object({
 })
 
 const FormId = 'import-bookmarks-form'
+const PERCENT_MULTIPLIER = 100
+const refreshImportedData = () =>
+  Promise.all([
+    bookmarks.utils.refetch(),
+    bookmarkTags.utils.refetch(),
+    tags.utils.refetch(),
+  ])
 
 export const Imports = () => {
   const [state, setState] = useState<{
@@ -79,7 +86,6 @@ const UploadDialog = (props: {
 }) => {
   const [loading, setLoading] = useState(false)
   const [progress, setProgress] = useState({ current: 0, max: 0 })
-  const queryClient = useQueryClient()
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -92,7 +98,7 @@ const UploadDialog = (props: {
   const onSubmit: SubmitHandler<z.infer<typeof FormSchema>> = async ({
     file,
     unread,
-    tags,
+    tags: selectedTags,
   }) => {
     setLoading(true)
 
@@ -102,28 +108,22 @@ const UploadDialog = (props: {
 
         if (props.type === 'onetab') {
           const count = await importOnetabBookmarks(text, {
-            tags: tags.map((t) => t.name),
+            tags: selectedTags.map((tag) => tag.name),
             unread: !!unread,
           })
-          await Promise.all([
-            queryClient.invalidateQueries({ queryKey: ['bookmarks'] }),
-            queryClient.invalidateQueries({ queryKey: ['tags'] }),
-          ])
+          await refreshImportedData()
           toast.success(`Successfully imported ${count} bookmarks`)
           props.onClose()
         }
         if (props.type === 'pinboard') {
           const count = await importPinboardBookmarks(
             text,
-            { tags: tags.map((t) => t.name) },
+            { tags: selectedTags.map((tag) => tag.name) },
             (current, max) => {
               setProgress({ current, max })
             }
           )
-          await Promise.all([
-            queryClient.invalidateQueries({ queryKey: ['bookmarks'] }),
-            queryClient.invalidateQueries({ queryKey: ['tags'] }),
-          ])
+          await refreshImportedData()
           toast.success(`Successfully imported ${count} bookmarks`)
           props.onClose()
         }
@@ -137,7 +137,11 @@ const UploadDialog = (props: {
           message: 'The uploaded file is not in the correct format.',
         })
       }
-      console.log(error)
+      if (!(error instanceof ZodError)) {
+        const message =
+          error instanceof Error ? error.message : 'An unknown error occurred'
+        toast.error(`Import failed: ${message}`)
+      }
     } finally {
       setLoading(false)
     }
@@ -145,14 +149,15 @@ const UploadDialog = (props: {
 
   const progressPercentage =
     progress.current && progress.max > 0
-      ? (progress.current / progress.max) * 100
+      ? (progress.current / progress.max) * PERCENT_MULTIPLIER
       : 0
 
-  const stage = loading
-    ? 'loading'
-    : progress.current > 0
-      ? 'finished'
-      : 'start'
+  let stage = 'start'
+  if (loading) {
+    stage = 'loading'
+  } else if (progress.current > 0) {
+    stage = 'finished'
+  }
 
   return (
     <>

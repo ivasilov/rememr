@@ -15,20 +15,18 @@ import {
   Switch,
   Textarea,
 } from '@rememr/ui'
-import { uniqBy } from 'lodash'
-import { useEffect } from 'react'
+import { useTransition } from 'react'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
-import type { BookmarkType } from '@/lib/supabase'
-import { createClient } from '@/lib/supabase/client'
+import type { BookmarkRowModel } from '@/lib/database'
 import { EditPagesForBookmark } from '../edit-pages-for-bookmark'
-import { useEditBookmarkMutation } from './edit-bookmark-mutation'
+import { editBookmark } from './edit-bookmark-mutation'
 
 const formId = 'edit-bookmark'
 
 type Props = {
-  bookmark: BookmarkType
+  bookmark: BookmarkRowModel
   onClose: () => void
 }
 
@@ -45,10 +43,8 @@ const EditBookmarkSchema = z.object({
   ),
 })
 
-const supabase = createClient()
-
 export const EditBookmarkDialog = ({ bookmark, onClose }: Props) => {
-  const { mutateAsync, isPending } = useEditBookmarkMutation()
+  const [isPending, startTransition] = useTransition()
 
   const form = useForm<z.infer<typeof EditBookmarkSchema>>({
     resolver: zodResolver(EditBookmarkSchema),
@@ -57,60 +53,45 @@ export const EditBookmarkDialog = ({ bookmark, onClose }: Props) => {
       url: bookmark.url,
       read: bookmark.read,
       description: bookmark.description || '',
-      tagIds: [],
+      tagIds: bookmark.tags,
     },
   })
 
-  // TODO: loading the bookmark in useEffect is an anti-pattern. Get rid of it.
-  useEffect(() => {
-    supabase
-      .from('bookmarks')
-      .select('*, tags (*)')
-      .eq('id', bookmark.id)
-      .then(({ data }) => {
-        const bookmark = data![0]
-
-        const pages = bookmark.tags.map((p) => ({ id: p.id, name: p.name }))
-        const tagIds = uniqBy(pages, (p) => p.name)
-
-        form.reset({
-          name: bookmark.name,
-          url: bookmark.url,
-          read: bookmark.read,
-          description: bookmark.description || '',
-          tagIds,
-        })
-      })
-  }, [bookmark.id, supabase])
-
-  const onSubmit: SubmitHandler<z.infer<typeof EditBookmarkSchema>> = async (
+  const onSubmit: SubmitHandler<z.infer<typeof EditBookmarkSchema>> = (
     values
   ) => {
-    try {
-      await mutateAsync({
-        id: bookmark.id,
-        tagIds: values.tagIds.map((t) => ({ id: t.id, name: t.name })),
-        name: values.name,
-        url: values.url,
-        description: values.description,
-        read: values.read,
-      })
-      toast.success(
-        <span>
-          Succesfully updated{' '}
-          <span className="text-primary">{values.name}</span>.
-        </span>
-      )
-      onClose()
-    } catch (e: any) {
-      console.log(e)
-      toast.error(
-        <span>
-          Error happened while trying to edit a bookmark:{' '}
-          <span className="text-destructive">{e?.message}</span>.
-        </span>
-      )
-    }
+    startTransition(async () => {
+      try {
+        await editBookmark(
+          {
+            id: bookmark.id,
+            tagIds: values.tagIds.map((t) => ({ id: t.id, name: t.name })),
+            name: values.name,
+            url: values.url,
+            description: values.description,
+            read: values.read,
+          },
+          bookmark.tags,
+          bookmark.user_id
+        )
+        toast.success(
+          <span>
+            Succesfully updated{' '}
+            <span className="text-primary">{values.name}</span>.
+          </span>
+        )
+        startTransition(onClose)
+      } catch (error: unknown) {
+        const message =
+          error instanceof Error ? error.message : 'An unknown error occurred'
+        toast.error(
+          <span>
+            Error happened while trying to edit a bookmark:{' '}
+            <span className="text-destructive">{message}</span>.
+          </span>
+        )
+      }
+    })
   }
 
   return (

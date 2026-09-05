@@ -1,13 +1,12 @@
 import { SidebarMenuBadge, SidebarMenuItem } from '@rememr/ui'
 import type { User } from '@supabase/supabase-js'
-import { useQuery } from '@tanstack/react-query'
 import { Tag } from 'lucide-react'
 import { Loading } from '@/components/loading'
-import { sidebarTagsQueryOptions } from './queries'
+import { useSidebarTags } from './queries'
 import { SidebarMenuLink } from './sidebar-menu-link'
 
 export const TagsMenu = ({ user }: { user: User }) => {
-  const { data: tags, isLoading } = useQuery(sidebarTagsQueryOptions(user.id))
+  const { data: tags, isLoading } = useSidebarTags(user.id)
 
   if (isLoading) {
     return <Loading size={18} />
@@ -21,7 +20,7 @@ export const TagsMenu = ({ user }: { user: User }) => {
     )
   }
 
-  return tags?.map((t) => (
+  return tags.map((t) => (
     <SidebarMenuItem key={t.id}>
       <SidebarMenuLink
         className="flex items-center align-center"
