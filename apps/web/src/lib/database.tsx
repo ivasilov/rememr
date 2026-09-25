@@ -49,6 +49,7 @@ export const bookmarks = createCollection(
     keys: ['id'],
     supabase,
     realtime: true,
+    realtimeUseFilter: true,
   })
 )
 export const tags = createCollection(
@@ -58,6 +59,7 @@ export const tags = createCollection(
     keys: ['id'],
     supabase,
     realtime: true,
+    realtimeUseFilter: true,
   })
 )
 export const sessions = createCollection(
@@ -67,6 +69,7 @@ export const sessions = createCollection(
     keys: ['id'],
     supabase,
     realtime: true,
+    realtimeUseFilter: true,
   })
 )
 export const bookmarkTags = createCollection(
@@ -76,6 +79,7 @@ export const bookmarkTags = createCollection(
     keys: ['bookmark_id', 'tag_id'],
     supabase,
     realtime: true,
+    realtimeUseFilter: true,
   })
 )
 export const bookmarkSessions = createCollection(
@@ -85,6 +89,7 @@ export const bookmarkSessions = createCollection(
     keys: ['bookmark_id', 'session_id'],
     supabase,
     realtime: true,
+    realtimeUseFilter: true,
   })
 )
 
