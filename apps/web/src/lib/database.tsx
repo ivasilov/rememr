@@ -1,5 +1,5 @@
 import { supabaseCollectionOptions } from '@supabase-labs/tanstack-db'
-import { createCollection } from '@tanstack/react-db'
+import { createCollection } from '@tanstack/db'
 
 import { z } from 'zod'
 import { createClient } from '@/lib/supabase/client'
@@ -42,74 +42,73 @@ const bookmarkSessionSchema = z.object({
 
 const supabase = createClient()
 
+const withDefaultStringCollation = <TOptions extends object>(
+  options: TOptions
+) => ({
+  ...options,
+  defaultStringCollation: { stringSort: 'lexical' } as const,
+})
+
 export const bookmarks = createCollection(
-  supabaseCollectionOptions({
-    tableName: 'bookmarks',
-    schema: bookmarkSchema,
-    keys: ['id'],
-    supabase,
-    realtime: true,
-    realtimeUseFilter: true,
-  })
+  withDefaultStringCollation(
+    supabaseCollectionOptions({
+      tableName: 'bookmarks',
+      schema: bookmarkSchema,
+      keys: ['id'],
+      supabase,
+      realtime: true,
+      realtimeUseFilter: true,
+    })
+  )
 )
 export const tags = createCollection(
-  supabaseCollectionOptions({
-    tableName: 'tags',
-    schema: tagSchema,
-    keys: ['id'],
-    supabase,
-    realtime: true,
-    realtimeUseFilter: true,
-  })
+  withDefaultStringCollation(
+    supabaseCollectionOptions({
+      tableName: 'tags',
+      schema: tagSchema,
+      keys: ['id'],
+      supabase,
+      realtime: true,
+      realtimeUseFilter: true,
+    })
+  )
 )
 export const sessions = createCollection(
-  supabaseCollectionOptions({
-    tableName: 'sessions',
-    schema: sessionSchema,
-    keys: ['id'],
-    supabase,
-    realtime: true,
-    realtimeUseFilter: true,
-  })
+  withDefaultStringCollation(
+    supabaseCollectionOptions({
+      tableName: 'sessions',
+      schema: sessionSchema,
+      keys: ['id'],
+      supabase,
+      realtime: true,
+      realtimeUseFilter: true,
+    })
+  )
 )
 export const bookmarkTags = createCollection(
-  supabaseCollectionOptions({
-    tableName: 'bookmarks_tags',
-    schema: bookmarkTagSchema,
-    keys: ['bookmark_id', 'tag_id'],
-    supabase,
-    realtime: true,
-    realtimeUseFilter: true,
-  })
+  withDefaultStringCollation(
+    supabaseCollectionOptions({
+      tableName: 'bookmarks_tags',
+      schema: bookmarkTagSchema,
+      keys: ['bookmark_id', 'tag_id'],
+      supabase,
+      realtime: true,
+      realtimeUseFilter: true,
+    })
+  )
 )
 export const bookmarkSessions = createCollection(
-  supabaseCollectionOptions({
-    tableName: 'bookmarks_sessions',
-    schema: bookmarkSessionSchema,
-    keys: ['bookmark_id', 'session_id'],
-    supabase,
-    realtime: true,
-    realtimeUseFilter: true,
-  })
+  withDefaultStringCollation(
+    supabaseCollectionOptions({
+      tableName: 'bookmarks_sessions',
+      schema: bookmarkSessionSchema,
+      keys: ['bookmark_id', 'session_id'],
+      supabase,
+      realtime: true,
+      realtimeUseFilter: true,
+    })
+  )
 )
-
-for (const collection of [
-  bookmarks,
-  tags,
-  sessions,
-  bookmarkTags,
-  bookmarkSessions,
-]) {
-  collection.startSyncImmediate()
-}
-
-export type RememrCollections = {
-  bookmarks: typeof bookmarks
-  tags: typeof tags
-  sessions: typeof sessions
-  bookmarkTags: typeof bookmarkTags
-  bookmarkSessions: typeof bookmarkSessions
-}
 
 export type Bookmark = z.infer<typeof bookmarkSchema>
 export type Tag = z.infer<typeof tagSchema>
