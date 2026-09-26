@@ -1,10 +1,10 @@
+import { queryOnce } from '@supabase-labs/tanstack-db'
 import type {
   ExtractContext,
   InferResultType,
   InitialQueryBuilder,
   QueryBuilder,
 } from '@tanstack/db'
-import { queryOnce } from '@tanstack/db'
 import type { DependencyList } from 'react'
 import { useEffect, useRef, useState } from 'react'
 
