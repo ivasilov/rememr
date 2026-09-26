@@ -1,8 +1,8 @@
-import { eq, useLiveInfiniteQuery } from '@tanstack/react-db'
+import { eq, materialize, useLiveInfiniteQuery } from '@tanstack/react-db'
 import { useSearch } from '@tanstack/react-router'
 import { useMemo } from 'react'
 import { Bookmarks } from '@/components/bookmarks'
-import { bookmarks } from '@/lib/database'
+import { bookmarks, bookmarkTags, tags } from '@/lib/database'
 
 const PAGE_SIZE = 20
 
@@ -26,7 +26,20 @@ export const UnreadBookmarks = () => {
         .where(({ bookmark }) => eq(bookmark.read, false))
         .orderBy(({ bookmark }) => bookmark.created_at, 'desc')
         .orderBy(({ bookmark }) => bookmark.id, 'desc')
-        .select(({ bookmark }) => ({ ...bookmark })),
+        .select(({ bookmark }) => ({
+          ...bookmark,
+          tags: materialize(
+            query
+              .from({ bookmarkTag: bookmarkTags })
+              .where(({ bookmarkTag }) =>
+                eq(bookmarkTag.bookmark_id, bookmark.id)
+              )
+              .innerJoin({ tag: tags }, ({ bookmarkTag, tag }) =>
+                eq(bookmarkTag.tag_id, tag.id)
+              )
+              .select(({ tag }) => ({ id: tag.id, name: tag.name }))
+          ),
+        })),
     { pageSize: PAGE_SIZE },
     [normalizedSearch]
   )

@@ -7,10 +7,9 @@ import {
   TableRow,
 } from '@rememr/ui'
 import { Link } from '@tanstack/react-router'
-import type { Bookmark } from '@/lib/database'
+import type { BookmarkRowModel } from '@/lib/database'
 import { BookmarkRow, LoadingBookmarkRow } from '../bookmark'
 import { LoadMoreBookmarks } from './load-more-bookmarks'
-import { useBookmarkTags } from './use-bookmark-tags'
 
 const LOADING_ROW_IDS = Array.from(
   { length: 10 },
@@ -18,7 +17,7 @@ const LOADING_ROW_IDS = Array.from(
 )
 
 type BookmarksProps = {
-  bookmarks: Bookmark[]
+  bookmarks: BookmarkRowModel[]
   fetchMore: () => void
   hasMore: boolean
   isError: boolean
@@ -34,10 +33,6 @@ export const Bookmarks = ({
   isFetchingMore,
   isLoading,
 }: BookmarksProps) => {
-  const bookmarkIds = bookmarks.map((bookmark) => bookmark.id)
-  const { isLoading: areTagsLoading, tagsByBookmarkId } =
-    useBookmarkTags(bookmarkIds)
-
   if (isLoading) {
     return (
       <Table>
@@ -95,14 +90,7 @@ export const Bookmarks = ({
       <Table>
         <TableBody>
           {bookmarks.map((bookmark) => (
-            <BookmarkRow
-              bookmark={{
-                ...bookmark,
-                tags: tagsByBookmarkId.get(bookmark.id) ?? [],
-              }}
-              key={bookmark.id}
-              tagsLoading={areTagsLoading}
-            />
+            <BookmarkRow bookmark={bookmark} key={bookmark.id} />
           ))}
 
           <LoadMoreBookmarks

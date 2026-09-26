@@ -19,13 +19,7 @@ import { TagsBadge } from './tags-badge'
 
 const MAX_NAME_LENGTH = 60
 
-export const BookmarkRow = ({
-  bookmark,
-  tagsLoading,
-}: {
-  bookmark: BookmarkRowModel
-  tagsLoading: boolean
-}) => {
+export const BookmarkRow = ({ bookmark }: { bookmark: BookmarkRowModel }) => {
   const [editBookmarkDialogShown, setEditBookmarkDialogShown] = useState(false)
   const [deleteBookmarkDialogShown, setDeleteBookmarkDialogShown] =
     useState(false)
@@ -69,7 +63,7 @@ export const BookmarkRow = ({
         </TableCell>
         <TableCell className="text-muted-foreground">{hostname}</TableCell>
         <TableCell>
-          {tagsLoading ? null : <TagsBadge tags={bookmark.tags} />}
+          <TagsBadge tags={bookmark.tags} />
         </TableCell>
         <TableCell className="w-32">
           <div className="flex items-center justify-end gap-2">
