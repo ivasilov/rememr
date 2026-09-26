@@ -1,5 +1,6 @@
 import type { User } from '@supabase/supabase-js'
-import { useSidebarTags } from '@/components/app-sidebar/queries'
+import { eq, useLiveQuery } from '@tanstack/react-db'
+import { tags as tagCollection } from '@/lib/database'
 import { SearchInputInner } from './inner'
 
 export const SearchInput = ({
@@ -11,7 +12,12 @@ export const SearchInput = ({
   searchQuery: string | undefined
   user: User
 }) => {
-  const { data: tags } = useSidebarTags(user.id)
+  const { data: tags } = useLiveQuery((query) =>
+    query
+      .from({ tag: tagCollection })
+      .where(({ tag }) => eq(tag.user_id, user.id))
+      .orderBy(({ tag }) => tag.name)
+  )
 
   return (
     <div className="w-full flex-1">
@@ -19,7 +25,7 @@ export const SearchInput = ({
         <SearchInputInner
           onSearchChange={onSearchChange}
           searchQuery={searchQuery}
-          tags={tags}
+          tags={tags ?? []}
         />
       </div>
     </div>
