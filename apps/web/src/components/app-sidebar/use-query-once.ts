@@ -7,6 +7,9 @@ import type {
 } from '@tanstack/db'
 import type { DependencyList } from 'react'
 import { useEffect, useRef, useState } from 'react'
+import { createClient } from '@/lib/supabase/client'
+
+const supabase = createClient()
 
 export const useQueryOnce = <
   TQueryFn extends (query: InitialQueryBuilder) => QueryBuilder<any>,
@@ -29,7 +32,7 @@ export const useQueryOnce = <
     setIsLoading(true)
     setError(undefined)
 
-    queryOnce(queryRef.current)
+    queryOnce(queryRef.current, supabase)
       .then((result) => {
         if (isCurrent) {
           setData(result as Result)
