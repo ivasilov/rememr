@@ -5,21 +5,21 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Project Overview
 
 Rememr is a bookmark management application built as a monorepo with two main applications:
-- **Web App**: Next.js 15 application with React 19, Supabase backend, TailwindCSS styling
+- **Web App**: TanStack Start (Vite) application with React 19, Supabase backend, TailwindCSS styling
 - **Browser Extension**: Plasmo-based Chrome/Firefox extension for bookmark capture
 
 ## Architecture
 
 The project uses a **monorepo structure** managed by pnpm workspaces and Turbo:
-- `apps/web/` - Next.js web application
+- `apps/web/` - TanStack Start web application
 - `apps/extension/` - Browser extension
 - `packages/` - Shared packages (UI components, utilities)
 - `supabase/` - Database schema, migrations, and configuration
 
 ### Web Application Architecture
-- **Framework**: Next.js 15 with App Router and React Server Components
+- **Framework**: TanStack Start (Vite) with TanStack Router for file-based routing
 - **Database**: Supabase (PostgreSQL) with Row Level Security (RLS)
-- **Authentication**: Supabase Auth
+- **Authentication**: Supabase Auth (browser client only, no server-side session middleware yet)
 - **Styling**: TailwindCSS 4.0 with shadcn/ui components
 - **State Management**: TanStack Query for server state, React Hook Form for forms
 - **AI Integration**: OpenAI integration for bookmark analysis
@@ -49,10 +49,10 @@ pnpm run migration:create
 
 ### Web App (`apps/web/`)
 ```bash
-# Development server with Turbopack
+# Development server (Vite)
 pnpm run dev
 
-# Build for production
+# Build for production (Vite)
 pnpm run build
 
 # Start production server
@@ -97,14 +97,13 @@ Database types are auto-generated to `src/lib/database.types.ts` using `supabase
 
 Follow the existing patterns established in `.cursorrules`:
 - Use **kebab-case** for component filenames (e.g., `my-component.tsx`)
-- Prefer **React Server Components** and Next.js SSR features
-- Minimize **client components** (`'use client'`) to isolated, interactive components
+- Prefer TanStack Start's SSR-capable route loaders where it makes sense
 - Always include **loading and error states** for data fetching
 - Use **semantic HTML elements**
 - Focus on **readability over performance**
 
 ### File Organization
-- Server components in `app/` directory using App Router conventions
+- File-based routes in `src/routes/` using TanStack Router conventions
 - Reusable components in `components/` directory
 - Database queries and mutations co-located with components
 - Shared utilities in `lib/` directory

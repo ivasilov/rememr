@@ -12,19 +12,21 @@ export const TagsMenu = ({ user }: { user: User }) => {
     (query) =>
       query
         .from({ tag: tagCollection })
+        .where(({ tag }) => eq(tag.user_id, user.id))
+        .orderBy(({ tag }) => tag.name)
         .leftJoin({ bookmarkTag: bookmarkTags }, ({ tag, bookmarkTag }) =>
           eq(tag.id, bookmarkTag.tag_id)
         )
-        .where(({ tag }) => eq(tag.user_id, user.id))
-        .groupBy(({ tag }) => [tag.id, tag.name])
+        .groupBy(({ tag }) => [tag.id])
         .select(({ tag, bookmarkTag }) => ({
           count: count(bookmarkTag.bookmark_id),
           id: tag.id,
           name: tag.name,
-        }))
-        .orderBy(({ $selected }) => $selected.name),
+        })),
     [user.id]
   )
+  // https://ygwqnbxleufbvsnulzwp.supabase.co/rest/v1/tags?select=*,bookmarks_tags!tag_id(*)&user_id=eq.8999b3f3-6465-4135-9b4f-42c750b90ffb&order=name.asc
+  // https://ygwqnbxleufbvsnulzwp.supabase.co/rest/v1/tags?select=*,bookmarks_tags!tag_id(*)&user_id=eq.8999b3f3-6465-4135-9b4f-42c750b90ffb&order=name.asc
 
   if (isLoading) {
     return <Loading size={18} />
